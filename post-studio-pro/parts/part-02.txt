@@ -1,0 +1,231 @@
+button>
+          <button class="swatch" data-color="#c8ae4d" style="background:#c8ae4d" title="Capra ochre"></button>
+          <button class="swatch" data-color="#0a0a0a" style="background:#0a0a0a" title="Black"></button>
+          <button class="swatch" data-color="#f1efe8" style="background:#f1efe8" title="Paper"></button>
+          <button class="swatch" data-color="#ffffff" style="background:#ffffff" title="White"></button>
+          <button class="swatch" data-color="#34352f" style="background:#34352f" title="Charcoal"></button>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">4 — Lisää elementti</div>
+        <div class="row">
+          <button class="btn" id="addTextBtn">+ Teksti</button>
+          <button class="btn" id="addImageBtn">+ Kuva</button>
+        </div>
+        <div class="row" style="margin-top:8px">
+          <button class="btn" id="addRectBtn">+ Laatikko</button>
+          <button class="btn" id="addLogoBtn">+ Logo</button>
+        </div>
+        <input class="file-input" type="file" id="imageFile" accept="image/*">
+        <div class="hint">Kaikkia elementtejä voi siirtää, skaalata, kiertää, kopioida ja järjestää tasoihin.</div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">5 — Työkalut</div>
+        <div class="toggle-row">
+          <button class="chip" id="guidesBtn">Safe area</button>
+          <button class="chip" id="gridBtn">Grid</button>
+          <button class="chip active" id="textureBtn">Texture</button>
+        </div>
+        <div class="field">
+          <label>Texture <em id="textureVal">8%</em></label>
+          <input type="range" id="textureOpacity" min="0" max="30" value="8">
+        </div>
+        <div class="row">
+          <button class="btn" id="undoBtn">↶ Undo</button>
+          <button class="btn" id="redoBtn">↷ Redo</button>
+        </div>
+        <button class="btn danger full" id="resetBtn" style="margin-top:8px">Palauta template</button>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Pikaohje</div>
+        <div class="hint">
+          • Klikkaa elementtiä valitaksesi.<br>
+          • Vedä elementti haluamaasi kohtaan.<br>
+          • Tuplaklikkaa tekstiä ja kirjoita suoraan.<br>
+          • Nuolinäppäimet siirtävät 1 px.<br>
+          • <span class="kbd">Shift</span> + nuoli = 10 px.<br>
+          • <span class="kbd">Delete</span> poistaa valitun.<br>
+          • Lopuksi <b>Vie PNG</b>.
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="workspace">
+    <div class="topbar">
+      <div class="left-tools">
+        <span class="status" id="templateStatus">Template</span>
+        <button class="btn small mobile-warning" id="openInspector">Muokkaa elementtiä</button>
+      </div>
+      <div class="right-tools">
+        <button class="btn small" id="zoomOut">−</button>
+        <span class="status" id="zoomLabel">50%</span>
+        <button class="btn small" id="zoomIn">+</button>
+        <button class="btn primary" id="exportBtn">Vie PNG</button>
+      </div>
+    </div>
+    <div class="canvas-area">
+      <div id="canvasShell">
+        <div id="postCanvas">
+          <div class="grid-guides"></div>
+          <div class="safe-guides"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <aside class="panel right" id="inspectorPanel">
+    <div class="panel-inner">
+      <div class="brand-row" style="margin-bottom:12px">
+        <div>
+          <h1>Elementin asetukset</h1>
+          <small>Valitse elementti canvaksesta</small>
+        </div>
+      </div>
+      <div id="inspectorEmpty" class="empty-note">
+        Valitse teksti, kuva, laatikko tai logo. Sen jälkeen voit säätää paikkaa, kokoa, värejä, fonttia, kuvan käsittelyä ja järjestystä.
+      </div>
+      <div id="inspector" style="display:none">
+        <div class="selected-title">
+          <strong id="selName">Elementti</strong>
+          <code id="selType">text</code>
+        </div>
+
+        <div id="textControls">
+          <div class="field"><label>Teksti</label><textarea id="textValue"></textarea></div>
+          <div class="row">
+            <div class="field">
+              <label>Fontti</label>
+              <select id="fontFamily">
+                <option value="'Inter', sans-serif">Inter</option>
+                <option value="'Michroma', sans-serif">Michroma</option>
+                <option value="'League Spartan', sans-serif">League Spartan</option>
+                <option value="'Anton', sans-serif">Anton</option>
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="Georgia, serif">Georgia</option>
+              </select>
+            </div>
+            <div class="field"><label>Koko</label><input id="fontSize" type="number" min="10" max="300" step="1"></div>
+          </div>
+          <div class="row3">
+            <div class="field"><label>Väri</label><input id="textColor" type="color"></div>
+            <div class="field"><label>Vahvuus</label><select id="fontWeight">
+              <option value="400">400</option><option value="500">500</option><option value="600">600</option>
+              <option value="700">700</option><option value="800">800</option><option value="900">900</option>
+            </select></div>
+            <div class="field"><label>Tasaus</label><select id="textAlign">
+              <option value="left">Vasen</option><option value="center">Keski</option><option value="right">Oikea</option>
+            </select></div>
+          </div>
+          <div class="row">
+            <div class="field"><label>Kirjainväli</label><input id="letterSpacing" type="number" min="-10" max="40" step=".5"></div>
+            <div class="field"><label>Riviväli</label><input id="lineHeight" type="number" min=".7" max="2.5" step=".05"></div>
+          </div>
+          <div class="toggle-row">
+            <button class="chip" id="upperBtn">VERSAALI</button>
+            <button class="chip" id="italicBtn">Kursiivi</button>
+          </div>
+        </div>
+
+        <div id="imageControls" style="display:none">
+          <div class="image-drop">
+            <button class="btn small" id="replaceImageBtn">Vaihda kuva</button>
+            <div class="hint">Kuvan rajaus ja ilme säädetään alta.</div>
+          </div>
+          <div class="field"><label>Zoom <em id="imgZoomVal"></em></label><input id="imgZoom" type="range" min="100" max="230" value="100"></div>
+          <div class="row">
+            <div class="field"><label>Kohdistus X</label><input id="objX" type="range" min="0" max="100" value="50"></div>
+            <div class="field"><label>Kohdistus Y</label><input id="objY" type="range" min="0" max="100" value="50"></div>
+          </div>
+          <div class="field"><label>Mustavalko <em id="grayVal"></em></label><input id="gray" type="range" min="0" max="100" value="0"></div>
+          <div class="field"><label>Kontrasti <em id="contrastVal"></em></label><input id="contrast" type="range" min="50" max="180" value="100"></div>
+          <div class="field"><label>Kirkkaus <em id="brightnessVal"></em></label><input id="brightness" type="range" min="40" max="160" value="100"></div>
+          <div class="field"><label>Saturaatio <em id="saturationVal"></em></label><input id="saturation" type="range" min="0" max="180" value="100"></div>
+          <div class="row">
+            <div class="field"><label>Overlay</label><input id="overlayColor" type="color" value="#000000"></div>
+            <div class="field"><label>Overlay %</label><input id="overlayAlpha" type="number" min="0" max="100" value="0"></div>
+          </div>
+        </div>
+
+        <div id="shapeControls" style="display:none">
+          <div class="row">
+            <div class="field"><label>Täyttö</label><input id="shapeFill" type="color"></div>
+            <div class="field"><label>Pyöristys</label><input id="radius" type="number" min="0" max="500"></div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Sijainti ja koko</div>
+          <div class="row">
+            <div class="field"><label>X</label><input id="posX" type="number" step="1"></div>
+            <div class="field"><label>Y</label><input id="posY" type="number" step="1"></div>
+          </div>
+          <div class="row">
+            <div class="field"><label>Leveys</label><input id="elW" type="number" min="10" max="2000"></div>
+            <div class="field"><label>Korkeus</label><input id="elH" type="number" min="10" max="2500"></div>
+          </div>
+          <div class="row">
+            <div class="field"><label>Kierto °</label><input id="rotation" type="number" min="-180" max="180"></div>
+            <div class="field"><label>Opacity %</label><input id="opacity" type="number" min="0" max="100"></div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Järjestys</div>
+          <div class="mini-actions">
+            <button class="btn small" id="backBtn" title="Taakse">↓</button>
+            <button class="btn small" id="frontBtn" title="Eteen">↑</button>
+            <button class="btn small" id="duplicateBtn" title="Kopioi">⧉</button>
+            <button class="btn small danger" id="deleteBtn" title="Poista">✕</button>
+          </div>
+          <div class="toggle-row" style="margin-top:8px">
+            <button class="chip" id="lockBtn">Lukitse</button>
+            <button class="chip" id="visibleBtn">Näkyvä</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<script>
+(() => {
+  const LOGO = "../peruskurssi-mainos-pro/assets/asset-01-9e479d7f0165.png";
+  const canvas = document.getElementById('postCanvas');
+  const shell = document.getElementById('canvasShell');
+  const inspector = document.getElementById('inspector');
+  const inspectorEmpty = document.getElementById('inspectorEmpty');
+  const inspectorPanel = document.getElementById('inspectorPanel');
+  const templateGrid = document.getElementById('templateGrid');
+  const imageFile = document.getElementById('imageFile');
+
+  const formats = {
+    portrait:{w:1080,h:1350},
+    square:{w:1080,h:1080},
+    story:{w:1080,h:1920}
+  };
+
+  const placeholder = (label='LISÄÄ OMA KUVA') => `data:image/svg+xml;charset=utf-8,${encodeURIComponent(`
+    <svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350">
+      <defs>
+        <linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#33352f"/><stop offset="1" stop-color="#10110f"/></linearGradient>
+        <pattern id="p" width="42" height="42" patternUnits="userSpaceOnUse"><path d="M0 42L42 0" stroke="#ffffff" stroke-opacity=".035" stroke-width="2"/></pattern>
+      </defs>
+      <rect width="1080" height="1350" fill="url(#g)"/><rect width="1080" height="1350" fill="url(#p)"/>
+      <text x="540" y="675" text-anchor="middle" fill="#c8ae4d" font-family="Arial,sans-serif" font-size="52" font-weight="700" letter-spacing="6">${label}</text>
+    </svg>`)}`;
+
+  const T = {
+    training:{
+      name:'Treenifiilis',
+      desc:'Iso kuva + editorial-otsikko',
+      elements:[
+        {type:'image',name:'Taustakuva',x:0,y:0,w:1080,h:1350,z:1,src:placeholder('LISÄÄ TREENIKUVA'),gray:18,contrast:116,brightness:78,saturation:82,overlay:'#000000',overlayAlpha:18},
+        {type:'shape',name:'Yläviiva',x:64,y:64,w:952,h:10,z:5,fill:'$ochre'},
+        {type:'text',name:'Eyebrow',x:68,y:100,w:820,h:50,z:6,text:'CAPRA COMBAT · KUOPIO',font:"'Michroma', sans-serif",size:22,weight:400,color:'$fg',spacing:3,line:1},
+        {type:'text',name:'Pääotsikko',x:68,y:770,w:900,h:280,z:6,text:'TÄNÄÄN\nMATOLLA.',font:"'Inter', sans-serif",size:112,weight:900,color:'$fg',spacing:-4,line:.88},
+        {type:'text',name:'Alateksti',x:72,y:1080,w:770,h:105,z:6,text:'Harjoittele. Opi. Kehity.',font:"'Inter', sans-serif",size:35,weight:700,color:'$fg',spacing:0,line:1.15},
+        {type:'logo',name:'Capra logo',x:720,y:1160,w:300,h:100,
