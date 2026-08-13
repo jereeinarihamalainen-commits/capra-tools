@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Capra Combat — Post Studio</title>
+  <meta name="theme-color" content="#0a0a0a">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800;900&family=League+Spartan:wght@500;600;700;800&family=Michroma&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <style>
+    :root{
+      --ui-bg:#090a09;
+      --ui-panel:#10110f;
+      --ui-panel-2:#171815;
+      --ui-border:#2a2d28;
+      --ui-text:#f4f3ef;
+      --ui-muted:#999c94;
+      --ui-accent:#68724a;
+      --ui-accent-2:#c8ae4d;
+
+      --canvas-bg:#0a0a0a;
+      --canvas-fg:#f6f4ef;
+      --canvas-paper:#f1efe8;
+      --canvas-olive:#68724a;
+      --canvas-ochre:#c8ae4d;
+      --canvas-muted:#b7b7af;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0}
+    body{
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:var(--ui-bg);color:var(--ui-text);overflow:hidden;
+    }
+    button,input,select,textarea{font:inherit}
+    button{cursor:pointer}
+    .app{height:100vh;display:grid;grid-template-columns:350px 1fr 326px;background:var(--ui-bg)}
+    .panel{min-width:0;background:var(--ui-panel);border-color:var(--ui-border);overflow:auto;scrollbar-width:thin;scrollbar-color:#4b4e47 #10110f}
+    .panel.left{border-right:1px solid var(--ui-border)}
+    .panel.right{border-left:1px solid var(--ui-border)}
+    .panel-inner{padding:18px}
+    .brand-row{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+    .brand-thumb{width:68px;height:44px;object-fit:contain;background:#080808;border:1px solid #2a2d28;border-radius:8px;padding:3px}
+    .brand-row h1{margin:0;font-size:13px;line-height:1.18;letter-spacing:.11em;text-transform:uppercase}
+    .brand-row small{display:block;color:var(--ui-muted);font-weight:500;margin-top:4px;letter-spacing:0}
+    .section{border-top:1px solid var(--ui-border);padding-top:16px;margin-top:16px}
+    .section:first-of-type{border-top:0;margin-top:0;padding-top:0}
+    .section-title{font-size:10px;text-transform:uppercase;letter-spacing:.16em;color:#b8baaf;font-weight:800;margin-bottom:10px}
+    .template-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .tpl-btn{
+      text-align:left;background:#171815;border:1px solid #2c2f29;color:#fff;border-radius:8px;
+      padding:11px;min-height:78px;transition:.15s
+    }
+    .tpl-btn:hover{border-color:#5c6155;transform:translateY(-1px)}
+    .tpl-btn.active{border-color:var(--ui-accent-2);box-shadow:0 0 0 1px var(--ui-accent-2) inset}
+    .tpl-btn b{display:block;font-size:11px;line-height:1.25}
+    .tpl-btn span{display:block;color:var(--ui-muted);font-size:9.5px;margin-top:5px;line-height:1.35}
+    .field{margin:10px 0}
+    .field label{display:flex;align-items:center;justify-content:space-between;gap:8px;color:#c8cabf;font-size:10.5px;font-weight:700;margin-bottom:6px}
+    .field label em{font-style:normal;color:var(--ui-muted);font-weight:500}
+    .field input[type="text"],.field input[type="number"],.field input[type="url"],.field select,.field textarea{
+      width:100%;background:#0c0d0b;border:1px solid #31342e;color:#fff;border-radius:7px;padding:9px 10px;outline:none
+    }
+    .field textarea{min-height:74px;resize:vertical}
+    .field input:focus,.field textarea:focus,.field select:focus{border-color:#6f7569}
+    .field input[type="color"]{width:48px;height:34px;border:1px solid #31342e;background:#0c0d0b;border-radius:7px;padding:3px}
+    .field input[type="range"]{width:100%;accent-color:var(--ui-accent-2)}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+    .btn{border:1px solid #343730;background:#191a17;color:#fff;border-radius:7px;padding:10px 12px;font-weight:700;font-size:11px}
+    .btn:hover{background:#22241f}
+    .btn.primary{background:var(--ui-accent-2);border-color:var(--ui-accent-2);color:#0a0a0a}
+    .btn.primary:hover{filter:brightness(1.06)}
+    .btn.danger{color:#e5b0a4;border-color:#5a3931}
+    .btn.full{width:100%}
+    .btn.small{padding:7px 9px;font-size:10px}
+    .toggle-row{display:flex;gap:7px;flex-wrap:wrap}
+    .chip{border:1px solid #34372f;background:#151613;color:#c6c8bd;border-radius:999px;padding:7px 10px;font-size:9.5px;font-weight:800;letter-spacing:.03em}
+    .chip.active{border-color:var(--ui-accent-2);color:#fff;background:#2a2615}
+    .hint{font-size:9.5px;color:var(--ui-muted);line-height:1.5;margin-top:8px}
+    .palette-row{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+    .palette-btn{border:1px solid #34372f;background:#151613;color:#d7d8d1;border-radius:7px;padding:8px 6px;font-size:9px;font-weight:800}
+    .palette-btn:hover{border-color:#62675c}
+    .swatches{display:grid;grid-template-columns:repeat(6,1fr);gap:7px}
+    .swatch{height:30px;border-radius:5px;border:1px solid #444;cursor:pointer}
+
+    .workspace{position:relative;overflow:auto;background:radial-gradient(circle at 50% 14%,#22251f 0,#12130f 34%,#090a08 74%)}
+    .topbar{
+      position:sticky;top:0;z-index:20;height:58px;display:flex;align-items:center;justify-content:space-between;
+      padding:0 18px;background:rgba(9,10,8,.88);backdrop-filter:blur(12px);border-bottom:1px solid #242720
+    }
+    .topbar .left-tools,.topbar .right-tools{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+    .canvas-area{padding:34px;min-height:calc(100vh - 58px);display:flex;justify-content:center;align-items:flex-start}
+    #canvasShell{position:relative;box-shadow:0 24px 70px rgba(0,0,0,.55);background:#111;overflow:visible;flex:0 0 auto}
+    #postCanvas{
+      position:absolute;left:0;top:0;width:1080px;height:1350px;transform-origin:top left;overflow:hidden;
+      background:var(--canvas-bg);color:var(--canvas-fg);
+    }
+    #postCanvas::after{
+      content:"";position:absolute;inset:0;pointer-events:none;opacity:var(--texture-opacity,.075);
+      background-image:
+        linear-gradient(90deg,rgba(255,255,255,.028) 1px,transparent 1px),
+        linear-gradient(rgba(255,255,255,.022) 1px,transparent 1px);
+      background-size:4px 4px,5px 5px;mix-blend-mode:soft-light;z-index:990;
+    }
+    #postCanvas.no-texture::after{display:none}
+    .safe-guides{position:absolute;inset:72px;z-index:995;pointer-events:none;border:2px dashed rgba(255,255,255,.22);display:none}
+    #postCanvas.show-guides .safe-guides{display:block}
+    .grid-guides{
+      position:absolute;inset:0;z-index:994;pointer-events:none;display:none;
+      background-image:linear-gradient(to right,rgba(255,255,255,.09) 1px,transparent 1px),linear-gradient(to bottom,rgba(255,255,255,.09) 1px,transparent 1px);
+      background-size:90px 90px;
+    }
+    #postCanvas.show-grid .grid-guides{display:block}
+    .canvas-el{position:absolute;min-width:28px;min-height:24px;transform-origin:center center;cursor:move;user-select:none;touch-action:none}
+    .canvas-el.selected{outline:2px solid rgba(200,174,77,.98);outline-offset:4px}
+    .canvas-el.locked{cursor:default}
+    .canvas-el .text-inner{width:100%;height:100%;outline:none;white-space:pre-wrap;overflow-wrap:break-word}
+    .canvas-el.editing{cursor:text;user-select:text}
+    .canvas-el.editing .text-inner{cursor:text}
+    .image-el{overflow:hidden;background:#242622}
+    .image-el img{
+      width:100%;height:100%;object-fit:cover;display:block;
+      filter:grayscale(var(--gray,0)) contrast(var(--contrast,1)) brightness(var(--brightness,1)) saturate(var(--saturation,1));
+      transform:scale(var(--imgzoom,1));transform-origin:var(--objx,50%) var(--objy,50%);
+    }
+    .image-el::after{content:"";position:absolute;inset:0;background:var(--overlay,transparent);pointer-events:none}
+    .shape-el{background:var(--fill,#fff)}
+    .logo-el img{width:100%;height:100%;display:block;object-fit:contain}
+
+    .empty-note{color:var(--ui-muted);font-size:11px;line-height:1.55;padding:12px;border:1px dashed #373a34;border-radius:8px}
+    .selected-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+    .selected-title strong{font-size:12px}.selected-title code{font-size:9.5px;color:#aaa}
+    .mini-actions{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+    .file-input{display:none}
+    .image-drop{border:1px dashed #484b43;border-radius:8px;padding:12px;text-align:center;color:#c8c9c2;font-size:10px;background:#0c0d0b}
+    .status{font-size:10px;color:#a6a89f}
+    .kbd{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;border:1px solid #34372f;border-bottom-width:2px;border-radius:4px;padding:1px 5px;color:#cfd0c8;background:#171815}
+    .mobile-warning{display:none}
+    @media(max-width:1120px){
+      .app{grid-template-columns:290px 1fr}
+      .panel.right{position:fixed;right:0;top:58px;bottom:0;width:326px;z-index:40;transform:translateX(100%);transition:.2s;box-shadow:-15px 0 50px rgba(0,0,0,.3)}
+      .panel.right.open{transform:translateX(0)}.mobile-warning{display:block}
+    }
+    @media(max-width:760px){
+      body{overflow:auto}.app{display:block;height:auto;min-height:100vh}.panel.left{height:auto;border-right:0;border-bottom:1px solid var(--ui-border)}
+      .workspace{min-height:740px}.topbar{position:sticky}.canvas-area{padding:18px}.panel.right{top:0}
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <aside class="panel left">
+    <div class="panel-inner">
+      <div class="brand-row">
+        <img class="brand-thumb" src="../peruskurssi-mainos-pro/assets/asset-01-9e479d7f0165.png" alt="Capra Combat logo">
+        <div>
+          <h1>Capra Combat<br>Post Studio</h1>
+          <small>Somegeneraattori</small>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">1 — Valitse template</div>
+        <div class="template-grid" id="templateGrid"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">2 — Julkaisun koko</div>
+        <div class="field">
+          <select id="formatSelect">
+            <option value="portrait">Feed 4:5 — 1080×1350</option>
+            <option value="square">Neliö — 1080×1080</option>
+            <option value="story">Story / Reel — 1080×1920</option>
+          </select>
+        </div>
+        <div class="hint">4:5 on ensisijainen feed-formaatti. Story-koko sopii myös Reels-kansiin.</div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">3 — Capra-paletti</div>
+        <div class="palette-row">
+          <button class="palette-btn" data-palette="core">Core</button>
+          <button class="palette-btn" data-palette="junior">Juniorit</button>
+          <button class="palette-btn" data-palette="comp">Kilpailu</button>
+          <button class="palette-btn" data-palette="mono">Mono</button>
+        </div>
+        <div class="row">
+          <div class="field"><label>Tausta</label><input type="color" id="globalBg" value="#0a0a0a"></div>
+          <div class="field"><label>Teksti</label><input type="color" id="globalFg" value="#f6f4ef"></div>
+        </div>
+        <div class="row">
+          <div class="field"><label>Oliivi</label><input type="color" id="globalOlive" value="#68724a"></div>
+          <div class="field"><label>Okra</label><input type="color" id="globalOchre" value="#c8ae4d"></div>
+        </div>
+        <div class="row">
+          <div class="field"><label>Paperi</label><input type="color" id="globalPaper" value="#f1efe8"></div>
+          <div class="field"><label>Harmaa</label><input type="color" id="globalMuted" value="#b7b7af"></div>
+        </div>
+        <div class="swatches">
+          <button class="swatch" data-color="#68724a" style="background:#68724a" title="Capra olive"></button>
