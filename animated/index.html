@@ -1,3 +1,190 @@
-<!doctype html><html lang="fi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"><meta name="theme-color" content="#090a08"><title>Capra Motion Studio</title><style>:root{--olive:#68724a;--gold:#c8ae4d;--ink:#090a08;--paper:#f3f0e8;--panel:#151713;--line:#30342b}*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;background:#070806;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",Inter,Arial,sans-serif}body{height:100dvh;overflow:hidden}button,input,textarea,select{font:inherit}button{min-height:44px;border:1px solid var(--line);background:#20231d;color:#fff;border-radius:12px;font-weight:850;padding:9px 12px}.app{height:100dvh;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top)}header{height:58px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 10px;background:#0d0f0cf5;border-bottom:1px solid #292c25;z-index:30}.brand{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:950;letter-spacing:.07em}.brand img{width:38px;height:38px;object-fit:contain}.actions{display:flex;gap:6px}.actions button{font-size:11px;padding:8px 9px}.goldBtn{background:var(--gold);color:#111;border-color:var(--gold)}.work{position:relative;flex:1;min-height:0}.viewport{height:100%;overflow:auto;padding:10px 8px 94px;display:flex;justify-content:center}.shell{position:relative;width:min(100%,430px);aspect-ratio:4/5;flex:none}.stage{position:absolute;inset:0 auto auto 0;width:1080px;height:1350px;transform-origin:0 0;overflow:hidden;background:#111;border-radius:18px;box-shadow:0 18px 50px #0009}.scene{position:absolute;inset:0;opacity:0;pointer-events:none}.scene.active{opacity:1}.photo{position:absolute;inset:-25px;background-size:cover;background-position:center;transform:scale(1.03);animation:ken 7s ease-in-out infinite alternate}.shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(6,7,5,.94) 0%,rgba(6,7,5,.72) 43%,rgba(6,7,5,.18) 78%),linear-gradient(0deg,rgba(6,7,5,.9),transparent 42%)}.texture{position:absolute;inset:0;opacity:.08;background-image:linear-gradient(120deg,transparent 0 46%,#fff 47% 47.3%,transparent 48%),linear-gradient(#fff2 1px,transparent 1px);background-size:100% 100%,100% 92px}.rail{position:absolute;left:58px;top:62px;bottom:62px;width:5px;background:var(--olive)}.rail:after{content:"";display:block;width:5px;height:28%;background:var(--gold)}.logo{position:absolute;left:88px;top:74px;width:175px;height:150px;object-fit:contain;filter:drop-shadow(0 4px 14px #0008);animation:fadeIn 7s infinite}.kicker{position:absolute;left:88px;top:278px;font-size:22px;font-weight:900;letter-spacing:.18em;color:#d8d8ce;text-transform:uppercase;animation:fadeIn 7s infinite}.headline{position:absolute;left:82px;top:348px;width:790px;font-size:112px;line-height:.82;letter-spacing:-.065em;font-weight:1000;text-transform:uppercase;animation:headline 7s cubic-bezier(.16,.84,.28,1) infinite}.headline em{font-style:normal;color:var(--gold)}.accent{position:absolute;left:88px;top:682px;width:130px;height:7px;background:var(--gold);animation:wipe 7s infinite;transform-origin:left}.body{position:absolute;left:88px;top:735px;width:650px;font-size:31px;line-height:1.22;font-weight:620;color:#e1dfd8;animation:late 7s infinite}.sports{position:absolute;left:88px;bottom:185px;width:780px;font-size:20px;font-weight:900;letter-spacing:.11em;text-transform:uppercase;color:#d5d7ce;animation:late 7s infinite}.cta{position:absolute;left:88px;bottom:84px;background:var(--gold);color:#111;padding:20px 27px;font-size:25px;font-weight:1000;letter-spacing:.05em;text-transform:uppercase;animation:cta 7s infinite}.meta{position:absolute;right:76px;bottom:92px;text-align:right;font-size:18px;line-height:1.45;color:#c7c9c0;font-weight:750}.sceneNum{position:absolute;right:72px;top:72px;font-size:18px;letter-spacing:.16em;color:#d4d5cc;font-weight:900}.sheet{display:none;position:absolute;left:8px;right:8px;bottom:calc(88px + env(safe-area-inset-bottom));max-height:min(52dvh,500px);overflow:auto;background:#151713fb;border:1px solid var(--line);border-radius:22px;padding:14px;z-index:25;backdrop-filter:blur(20px)}.sheet.open{display:block}.sheet h3{margin:4px 0 12px;font-size:12px;letter-spacing:.13em;text-transform:uppercase}.mode{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:10px}.mode button.active{background:var(--olive);border-color:var(--olive)}.toolbar{position:absolute;left:8px;right:8px;bottom:calc(8px + env(safe-area-inset-bottom));height:72px;background:#171915f7;border:1px solid var(--line);border-radius:20px;display:grid;grid-template-columns:repeat(4,1fr);padding:6px;z-index:26;backdrop-filter:blur(20px)}.tool{border:0;background:transparent;font-size:11px;padding:4px}.tool b{display:block;font-size:20px;margin-bottom:3px}.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}label{display:block;font-size:11px;color:#adb1a6;margin:8px 0}input,textarea,select{width:100%;margin-top:5px;padding:11px;background:#0f100e;color:#fff;border:1px solid #393d34;border-radius:11px;font-size:16px}textarea{min-height:66px}.sceneTabs{display:flex;gap:7px;margin:8px 0 12px}.sceneTabs button{flex:1}.sceneTabs button.active{background:var(--gold);color:#111;border-color:var(--gold)}.preview header,.preview .toolbar,.preview .sheet{display:none!important}.preview .viewport{padding:0;align-items:center;background:#000}.preview .shell{width:100vw;max-width:none}.preview .stage{border-radius:0;box-shadow:none}@keyframes ken{from{transform:scale(1.03) translate(0,0)}to{transform:scale(1.09) translate(-12px,-7px)}}@keyframes headline{0%,8%{opacity:0;transform:translateY(70px)}17%,76%{opacity:1;transform:none}90%,100%{opacity:0;transform:translateY(-25px)}}@keyframes fadeIn{0%,6%{opacity:0}15%,82%{opacity:1}94%,100%{opacity:0}}@keyframes wipe{0%,16%{transform:scaleX(0)}25%,80%{transform:scaleX(1)}94%,100%{transform:scaleX(0)}}@keyframes late{0%,22%{opacity:0;transform:translateY(20px)}32%,82%{opacity:1;transform:none}94%,100%{opacity:0}}@keyframes cta{0%,34%{opacity:0;transform:translateY(25px)}44%,84%{opacity:1;transform:none}94%,100%{opacity:0}}.three .scene{transition:opacity .45s ease}.three .scene .photo,.three .scene .logo,.three .scene .headline,.three .scene .kicker,.three .scene .accent,.three .scene .body,.three .scene .sports,.three .scene .cta{animation-duration:3.6s}@media(max-width:430px){header{height:54px}.brand span{display:none}.actions button{padding:7px 8px}.sheet{max-height:55dvh}}</style></head><body><div class="app" id="app"><header><div class="brand"><img src="../assets/capra-logo.png"><span>CAPRA MOTION STUDIO</span></div><div class="actions"><button onclick="save()">Tallenna</button><button class="goldBtn" id="previewBtn" onclick="preview()">Preview</button></div></header><div class="work"><div class="viewport"><div class="shell" id="shell"><div class="stage" id="stage"></div></div></div><div class="sheet" id="sheet"></div><div class="toolbar"><button class="tool" onclick="edit()"><b>✎</b>Sisältö</button><button class="tool" onclick="images()"><b>▧</b>Kuvat</button><button class="tool" onclick="settings()"><b>◐</b>Tyyli</button><button class="tool" onclick="play()"><b>▶</b>Toisto</button></div></div></div><input id="imgInput" type="file" accept="image/*" hidden><script>
-const app=document.getElementById('app'),stage=document.getElementById('stage'),shell=document.getElementById('shell'),sheet=document.getElementById('sheet');let mode='one',current=0,imageTarget=0,timer=null;let scenes=[{k:'PERUSKURSSIT · KUOPIO',h:'ALOITA\nKAMPPAILU.',b:'Et tarvitse aiempaa kokemusta tai valmista kuntoa. Tule sellaisena kuin olet.',s:'BJJ · LUKKOPAINI · VAPAAOTTELU · MUAY THAI / K1',c:'VARAA PAIKKASI →',m:'8 VKO · 120 €\ncapracombat.fi',img:''},{k:'01 · ENSIMMÄINEN ASKEL',h:'HALUATKO\nKOKEILLA?',b:'Peruskurssi on tehty juuri ensimmäistä askelta varten.',s:'CAPRA COMBAT · KUOPIO',c:'ALOITA NYT →',m:'Ei aiempaa kokemusta',img:''},{k:'02 · MATALA KYNNYS',h:'SINUN EI\nTARVITSE OSATA.',b:'Lähdemme liikkeelle perusteista. Lähtötasosi saa olla mikä tahansa.',s:'TURVALLINEN · SELKEÄ · VAATIVA',c:'TULE MUKAAN →',m:'Kaikki perusteet opetetaan',img:''},{k:'03 · CTA',h:'PERUSKURSSIT\nALKAVAT.',b:'Ota ensimmäinen askel. Tule harjoituksiin ja katso, voisiko tästä tulla sinun lajisi.',s:'BJJ · LUKKOPAINI · VAPAAOTTELU · MUAY THAI / K1',c:'VARAA PAIKKASI →',m:'8 VKO · 120 €\ncapracombat.fi',img:''}];function fit(){const s=shell.clientWidth/1080;stage.style.transform=`scale(${s})`;shell.style.height=1350*s+'px'}addEventListener('resize',fit);function esc(s){return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}function sceneHTML(x,n){return `<div class="scene ${n===current?'active':''}" data-n="${n}"><div class="photo" style="${x.img?`background-image:url('${x.img}')`:'background:radial-gradient(circle at 76% 28%,#586046 0,#22261d 28%,#0a0b09 70%)'}"></div><div class="shade"></div><div class="texture"></div><div class="rail"></div><img class="logo" src="../assets/capra-logo.png"><div class="kicker">${esc(x.k)}</div><div class="headline">${x.h.split('\n').map((v,i,a)=>i===a.length-1?`<em>${esc(v)}</em>`:esc(v)).join('<br>')}</div><div class="accent"></div><div class="body">${esc(x.b)}</div><div class="sports">${esc(x.s)}</div><div class="cta">${esc(x.c)}</div><div class="meta">${esc(x.m).replace(/\n/g,'<br>')}</div>${mode==='three'?`<div class="sceneNum">0${n}/03</div>`:''}</div>`}function render(){stage.className='stage '+(mode==='three'?'three':'');stage.innerHTML=mode==='one'?sceneHTML(scenes[0],0):scenes.slice(1).map((x,i)=>sceneHTML(x,i+1)).join('');fit()}function setMode(m){mode=m;current=m==='one'?0:1;clearInterval(timer);render();edit()}function tabs(){return `<div class="mode"><button class="${mode==='one'?'active':''}" onclick="setMode('one')">1 vaihe</button><button class="${mode==='three'?'active':''}" onclick="setMode('three')">3 vaihetta</button></div>${mode==='three'?`<div class="sceneTabs">${[1,2,3].map(i=>`<button class="${current===i?'active':''}" onclick="current=${i};render();edit()">${i}</button>`).join('')}</div>`:''}`}function openSheet(h){sheet.innerHTML=h;sheet.classList.add('open')}function edit(){const x=scenes[current];openSheet(`${tabs()}<h3>Sisältö · ${mode==='one'?'mainos':'scene '+current}</h3><label>Yläteksti<input id="k" value="${esc(x.k)}"></label><label>Iso otsikko<textarea id="h">${esc(x.h)}</textarea></label><label>Leipäteksti<textarea id="b">${esc(x.b)}</textarea></label><label>Lajit / alarivi<input id="s" value="${esc(x.s)}"></label><div class="row"><label>CTA<input id="c" value="${esc(x.c)}"></label><label>Info<textarea id="m">${esc(x.m)}</textarea></label></div>`);['k','h','b','s','c','m'].forEach(id=>document.getElementById(id).oninput=e=>{scenes[current][id]=e.target.value;render()})}function images(){openSheet(`${tabs()}<h3>Kuva · ${mode==='one'?'mainos':'scene '+current}</h3><button class="goldBtn" style="width:100%" onclick="imageTarget=current;imgInput.click()">Valitse kuva iPhonesta</button><p style="font-size:12px;color:#999">Jokaiselle 3-vaiheisen mainoksen kohtaukselle voi valita oman kuvan.</p>`)}imgInput.onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{scenes[imageTarget].img=r.result;render()};r.readAsDataURL(f)};function settings(){openSheet(`${tabs()}<h3>Capra-tyyli</h3><div class="row"><label>Oliivi<input id="ol" type="color" value="#68724a"></label><label>Okra<input id="go" type="color" value="#c8ae4d"></label></div><p style="font-size:12px;color:#999">Nordic Fight Editorial: kuva pääosassa, tumma gradientti, yksi oliiviraide ja okra aksenttina. Virallinen Capra-logo on lukittu mukaan.</p>`);ol.oninput=e=>document.documentElement.style.setProperty('--olive',e.target.value);go.oninput=e=>document.documentElement.style.setProperty('--gold',e.target.value)}function play(){sheet.classList.remove('open');clearInterval(timer);if(mode==='three'){current=1;render();timer=setInterval(()=>{current=current===3?1:current+1;render()},3600)}else{current=0;render();stage.style.display='none';void stage.offsetHeight;stage.style.display='block'}}function preview(){app.classList.toggle('preview');sheet.classList.remove('open');previewBtn.textContent=app.classList.contains('preview')?'Muokkaa':'Preview';fit();play()}function save(){try{localStorage.setItem('capraMotionV2',JSON.stringify({mode,scenes}));alert('Tallennettu tähän selaimeen')}catch(e){alert('Tallennus ei onnistunut – kuvat voivat olla liian suuria.')}}try{const v=JSON.parse(localStorage.getItem('capraMotionV2'));if(v){mode=v.mode||'one';scenes=v.scenes||scenes;current=mode==='one'?0:1}}catch(e){}render();
-</script></body></html>
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#090a08">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<title>Capra Motion Studio v4</title>
+<style>
+:root{--olive:#68724a;--gold:#c8ae4d;--ink:#090a08;--panel:#151713;--line:#30342b}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:#070806;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",Inter,Arial,sans-serif}
+body{height:100dvh;overflow:hidden}
+button,input,textarea,select{font:inherit}
+button,.uploadLabel{min-height:44px;border:1px solid var(--line);background:#20231d;color:#fff;border-radius:12px;font-weight:850;padding:9px 12px}
+button{cursor:pointer}.gold{background:var(--gold)!important;color:#111!important;border-color:var(--gold)!important}
+.app{height:100dvh;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top)}
+header{height:56px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 10px;background:#0d0f0cf5;border-bottom:1px solid #292c25;z-index:40}
+.brand{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:950;letter-spacing:.07em;min-width:0}
+.brand img{width:42px;height:42px;object-fit:contain;border-radius:6px}.brand span{white-space:nowrap}
+.actions{display:flex;gap:6px}.actions button{font-size:11px;padding:7px 9px}
+.modebar{flex:none;padding:7px 8px;background:#0d0f0c;border-bottom:1px solid #292c25;display:grid;grid-template-columns:1fr 1fr;gap:7px;z-index:35}
+.modebar button.active{background:var(--olive);border-color:var(--olive)}
+.sceneBar{display:none;flex:none;padding:7px 8px;background:#0b0c0a;border-bottom:1px solid #272a23;gap:7px;z-index:34}
+.sceneBar.show{display:flex}.sceneBar button{flex:1;font-size:12px}.sceneBar button.active{background:var(--gold);border-color:var(--gold);color:#111}
+.work{position:relative;flex:1;min-height:0}
+.viewport{height:100%;overflow:auto;padding:10px 8px 96px;display:flex;justify-content:center}
+.shell{position:relative;width:min(100%,430px);aspect-ratio:4/5;flex:none}
+.stage{position:absolute;left:0;top:0;width:1080px;height:1350px;transform-origin:0 0;overflow:hidden;background:#111;border-radius:18px;box-shadow:0 18px 50px #0009}
+.scene{position:absolute;inset:0;opacity:0;pointer-events:none}.scene.active{opacity:1}
+.photo{position:absolute;inset:-28px;background-size:cover;background-position:center;transform:scale(1.03);animation:ken 7s ease-in-out infinite alternate}
+.shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(6,7,5,.94) 0%,rgba(6,7,5,.73) 43%,rgba(6,7,5,.18) 78%),linear-gradient(0deg,rgba(6,7,5,.9),transparent 42%)}
+.texture{position:absolute;inset:0;opacity:.07;background-image:linear-gradient(120deg,transparent 0 46%,#fff 47% 47.3%,transparent 48%),linear-gradient(#fff2 1px,transparent 1px);background-size:100% 100%,100% 92px}
+.rail{position:absolute;left:58px;top:62px;bottom:62px;width:5px;background:var(--olive)}.rail:after{content:"";display:block;width:5px;height:28%;background:var(--gold)}
+.logoLockup{position:absolute;left:86px;top:66px;width:255px;height:210px;animation:fadeIn 7s infinite;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start}
+.logoLockup .sym{width:118px;height:118px;object-fit:contain;object-position:left top;display:block}
+.logoLockup .capraWord{font-size:42px;line-height:.92;letter-spacing:.19em;font-weight:650;color:#f4f2ed;margin-top:2px}
+.logoLockup .combatWord{font-size:19px;letter-spacing:.32em;font-weight:650;color:#777b63;margin-top:8px}
+.logoLockup .goldLine{width:92px;height:5px;background:var(--gold);margin-top:10px}
+.kicker{position:absolute;left:88px;top:292px;font-size:22px;font-weight:900;letter-spacing:.18em;color:#d8d8ce;text-transform:uppercase;animation:fadeIn 7s infinite}
+.headline{position:absolute;left:82px;top:365px;width:820px;font-size:112px;line-height:.82;letter-spacing:-.065em;font-weight:1000;text-transform:uppercase;animation:headline 7s cubic-bezier(.16,.84,.28,1) infinite}
+.headline em{font-style:normal;color:var(--gold)}
+.accent{position:absolute;left:88px;top:705px;width:130px;height:7px;background:var(--gold);animation:wipe 7s infinite;transform-origin:left}
+.body{position:absolute;left:88px;top:755px;width:680px;font-size:31px;line-height:1.22;font-weight:620;color:#e1dfd8;animation:late 7s infinite}
+.sports{position:absolute;left:88px;bottom:185px;width:790px;font-size:20px;font-weight:900;letter-spacing:.11em;text-transform:uppercase;color:#d5d7ce;animation:late 7s infinite}
+.cta{position:absolute;left:88px;bottom:84px;background:var(--gold);color:#111;padding:20px 27px;font-size:25px;font-weight:1000;letter-spacing:.05em;text-transform:uppercase;animation:cta 7s infinite}
+.meta{position:absolute;right:76px;bottom:92px;text-align:right;font-size:18px;line-height:1.45;color:#c7c9c0;font-weight:750}
+.sceneNum{position:absolute;right:72px;top:72px;font-size:18px;letter-spacing:.16em;color:#d4d5cc;font-weight:900}
+.sheet{display:none;position:absolute;left:8px;right:8px;bottom:calc(88px + env(safe-area-inset-bottom));max-height:min(54dvh,520px);overflow:auto;background:#151713fb;border:1px solid var(--line);border-radius:22px;padding:14px;z-index:25;backdrop-filter:blur(20px)}
+.sheet.open{display:block}.sheet h3{margin:4px 0 12px;font-size:12px;letter-spacing:.13em;text-transform:uppercase}.sheet p{font-size:12px;color:#9ea298;line-height:1.45}
+.toolbar{position:absolute;left:8px;right:8px;bottom:calc(8px + env(safe-area-inset-bottom));height:72px;background:#171915f7;border:1px solid var(--line);border-radius:20px;display:grid;grid-template-columns:repeat(4,1fr);padding:6px;z-index:26;backdrop-filter:blur(20px)}
+.tool{border:0;background:transparent;font-size:11px;padding:4px}.tool b{display:block;font-size:20px;margin-bottom:3px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+label{display:block;font-size:11px;color:#adb1a6;margin:8px 0}
+input,textarea,select{width:100%;margin-top:5px;padding:11px;background:#0f100e;color:#fff;border:1px solid #393d34;border-radius:11px;font-size:16px}
+textarea{min-height:66px}.uploadLabel{display:flex;align-items:center;justify-content:center;width:100%;margin:8px 0 6px;background:var(--gold);color:#111;border-color:var(--gold)}
+.fileName{font-size:11px;color:#c7c9c0;margin:5px 0 12px}.mini{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.preview header,.preview .modebar,.preview .sceneBar,.preview .toolbar,.preview .sheet{display:none!important}
+.preview .viewport{padding:0;align-items:center;background:#000}.preview .shell{width:100vw;max-width:none}.preview .stage{border-radius:0;box-shadow:none}
+.three .scene{transition:opacity .35s ease}.three .scene .photo,.three .scene .logoLockup,.three .scene .headline,.three .scene .kicker,.three .scene .accent,.three .scene .body,.three .scene .sports,.three .scene .cta{animation-duration:3.6s}
+@keyframes ken{from{transform:scale(1.03) translate(0,0)}to{transform:scale(1.09) translate(-12px,-7px)}}
+@keyframes headline{0%,8%{opacity:0;transform:translateY(70px)}17%,76%{opacity:1;transform:none}90%,100%{opacity:0;transform:translateY(-25px)}}
+@keyframes fadeIn{0%,6%{opacity:0}15%,82%{opacity:1}94%,100%{opacity:0}}
+@keyframes wipe{0%,16%{transform:scaleX(0)}25%,80%{transform:scaleX(1)}94%,100%{transform:scaleX(0)}}
+@keyframes late{0%,22%{opacity:0;transform:translateY(20px)}32%,82%{opacity:1;transform:none}94%,100%{opacity:0}}
+@keyframes cta{0%,34%{opacity:0;transform:translateY(25px)}44%,84%{opacity:1;transform:none}94%,100%{opacity:0}}
+@media(max-width:430px){.brand span{display:none}.actions button{padding:7px 8px}.sheet{max-height:56dvh}}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+<header>
+  <div class="brand"><img src="../assets/capra-logo.png?v=4" alt="Capra Combat"><span>CAPRA MOTION STUDIO · V4</span></div>
+  <div class="actions"><button id="saveBtn">Tallenna</button><button class="gold" id="previewBtn">Preview</button></div>
+</header>
+<div class="modebar">
+  <button id="oneModeBtn" class="active">1 VAIHE</button>
+  <button id="threeModeBtn">3 VAIHETTA</button>
+</div>
+<div class="sceneBar" id="sceneBar">
+  <button data-scene="1" class="active">1 · HOOK</button>
+  <button data-scene="2">2 · HYÖTY</button>
+  <button data-scene="3">3 · CTA</button>
+</div>
+<div class="work">
+  <div class="viewport"><div class="shell" id="shell"><div class="stage" id="stage"></div></div></div>
+  <div class="sheet" id="sheet"></div>
+  <div class="toolbar">
+    <button class="tool" id="contentBtn"><b>✎</b>Sisältö</button>
+    <button class="tool" id="imagesBtn"><b>▧</b>Kuvat</button>
+    <button class="tool" id="styleBtn"><b>◐</b>Tyyli</button>
+    <button class="tool" id="playBtn"><b>▶</b>Toisto</button>
+  </div>
+</div>
+</div>
+<input id="imgInput" type="file" accept="image/*" style="position:fixed;left:-9999px;width:1px;height:1px;opacity:0">
+<script>
+const $=id=>document.getElementById(id);
+const app=$('app'),stage=$('stage'),shell=$('shell'),sheet=$('sheet'),imgInput=$('imgInput'),sceneBar=$('sceneBar');
+let mode='one',current=0,imageTarget=0,timer=null;
+let scenes=[
+ {k:'PERUSKURSSIT · KUOPIO',h:'ALOITA\nKAMPPAILU.',b:'Et tarvitse aiempaa kokemusta tai valmista kuntoa. Tule sellaisena kuin olet.',s:'BJJ · LUKKOPAINI · VAPAAOTTELU · MUAY THAI / K1',c:'VARAA PAIKKASI →',m:'8 VKO · 120 €\ncapracombat.fi',img:'',file:''},
+ {k:'01 · ENSIMMÄINEN ASKEL',h:'HALUATKO\nKOKEILLA?',b:'Peruskurssi on tehty juuri ensimmäistä askelta varten.',s:'CAPRA COMBAT · KUOPIO',c:'ALOITA NYT →',m:'Ei aiempaa kokemusta',img:'',file:''},
+ {k:'02 · MATALA KYNNYS',h:'SINUN EI\nTARVITSE OSATA.',b:'Lähdemme liikkeelle perusteista. Lähtötasosi saa olla mikä tahansa.',s:'TURVALLINEN · SELKEÄ · VAATIVA',c:'TULE MUKAAN →',m:'Kaikki perusteet opetetaan',img:'',file:''},
+ {k:'03 · CTA',h:'PERUSKURSSIT\nALKAVAT.',b:'Ota ensimmäinen askel. Tule harjoituksiin ja katso, voisiko tästä tulla sinun lajisi.',s:'BJJ · LUKKOPAINI · VAPAAOTTELU · MUAY THAI / K1',c:'VARAA PAIKKASI →',m:'8 VKO · 120 €\ncapracombat.fi',img:'',file:''}
+];
+function esc(v=''){return String(v).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function fit(){const sc=shell.clientWidth/1080;stage.style.transform=`scale(${sc})`;shell.style.height=1350*sc+'px'}
+function photoStyle(x){return x.img?`background-image:url("${x.img}")`:'background:radial-gradient(circle at 76% 28%,#586046 0,#22261d 28%,#0a0b09 70%)'}
+function sceneHTML(x,n){
+ const last=x.h.split('\n');const head=last.map((v,i)=>i===last.length-1?`<em>${esc(v)}</em>`:esc(v)).join('<br>');
+ return `<div class="scene ${n===current?'active':''}" data-n="${n}">
+ <div class="photo" style='${photoStyle(x)}'></div><div class="shade"></div><div class="texture"></div><div class="rail"></div>
+ <div class="logoLockup"><img class="sym" src="../assets/capra-logo.png?v=4" alt=""><div class="capraWord">CAPRA</div><div class="combatWord">COMBAT</div><div class="goldLine"></div></div>
+ <div class="kicker">${esc(x.k)}</div><div class="headline">${head}</div><div class="accent"></div>
+ <div class="body">${esc(x.b)}</div><div class="sports">${esc(x.s)}</div><div class="cta">${esc(x.c)}</div>
+ <div class="meta">${esc(x.m).replace(/\n/g,'<br>')}</div>${mode==='three'?`<div class="sceneNum">0${n}/03</div>`:''}</div>`;
+}
+function render(){
+ stage.className='stage '+(mode==='three'?'three':'');
+ stage.innerHTML=mode==='one'?sceneHTML(scenes[0],0):[1,2,3].map(i=>sceneHTML(scenes[i],i)).join('');
+ [...sceneBar.querySelectorAll('button')].forEach(b=>b.classList.toggle('active',+b.dataset.scene===current));
+ fit();
+}
+function setMode(m){
+ clearInterval(timer);mode=m;current=m==='three'?1:0;imageTarget=current;
+ $('oneModeBtn').classList.toggle('active',m==='one');$('threeModeBtn').classList.toggle('active',m==='three');
+ sceneBar.classList.toggle('show',m==='three');sheet.classList.remove('open');render();
+}
+function openSheet(html){sheet.innerHTML=html;sheet.classList.add('open')}
+function contentPanel(){
+ const x=scenes[current];
+ openSheet(`<h3>${mode==='three'?`VAIHE ${current} / 3`:'1 VAIHE'} · SISÄLTÖ</h3>
+ <label>Yläteksti<input id="k" value="${esc(x.k)}"></label>
+ <label>Iso otsikko<textarea id="h">${esc(x.h)}</textarea></label>
+ <label>Leipäteksti<textarea id="b">${esc(x.b)}</textarea></label>
+ <label>Lajit / alarivi<input id="s" value="${esc(x.s)}"></label>
+ <div class="row"><label>CTA<input id="c" value="${esc(x.c)}"></label><label>Info<textarea id="m">${esc(x.m)}</textarea></label></div>`);
+ ['k','h','b','s','c','m'].forEach(id=>$(id).addEventListener('input',e=>{scenes[current][id]=e.target.value;render()}));
+}
+function imagePanel(){
+ imageTarget=current;const x=scenes[imageTarget];
+ openSheet(`<h3>${mode==='three'?`VAIHE ${imageTarget} / 3`:'MAINOS'} · KUVA</h3>
+ <p>${mode==='three'?'Jokaiselle vaiheelle voi valita oman kuvan. Valitse vaihe yläreunan 1–3-painikkeista.':'Valitse mainoksen taustakuva iPhonen kuvakirjastosta.'}</p>
+ <label class="uploadLabel" for="imgInput">VALITSE / VAIHDA KUVA</label>
+ <div class="fileName">${x.file?`Nykyinen: ${esc(x.file)}`:'Ei omaa kuvaa valittuna'}</div>
+ <div class="mini"><button id="removeImgBtn">Poista kuva</button><button id="copyAllBtn" ${mode!=='three'?'disabled':''}>Sama kaikkiin</button></div>`);
+ $('removeImgBtn').onclick=()=>{scenes[imageTarget].img='';scenes[imageTarget].file='';render();imagePanel()};
+ if(mode==='three')$('copyAllBtn').onclick=()=>{const src=scenes[imageTarget].img,name=scenes[imageTarget].file;[1,2,3].forEach(i=>{scenes[i].img=src;scenes[i].file=name});render();imagePanel()};
+}
+function stylePanel(){
+ openSheet(`<h3>CAPRA-TYYLI</h3><div class="row"><label>Oliivi<input id="ol" type="color" value="${getComputedStyle(document.documentElement).getPropertyValue('--olive').trim()}"></label><label>Okra<input id="go" type="color" value="${getComputedStyle(document.documentElement).getPropertyValue('--gold').trim()}"></label></div><p>Virallinen Capra Combat -logo on käytössä kaikissa vaiheissa.</p>`);
+ $('ol').oninput=e=>document.documentElement.style.setProperty('--olive',e.target.value);
+ $('go').oninput=e=>document.documentElement.style.setProperty('--gold',e.target.value);
+}
+function play(){
+ sheet.classList.remove('open');clearInterval(timer);
+ if(mode==='three'){
+   current=1;render();
+   timer=setInterval(()=>{current=current===3?1:current+1;imageTarget=current;render()},3600);
+ }else{
+   current=0;render();stage.style.display='none';void stage.offsetHeight;stage.style.display='block';
+ }
+}
+function preview(){
+ app.classList.toggle('preview');$('previewBtn').textContent=app.classList.contains('preview')?'Muokkaa':'Preview';
+ sheet.classList.remove('open');fit();play();
+}
+function save(){
+ try{localStorage.setItem('capraMotionV4',JSON.stringify({mode,current,scenes}));flash('Tallennettu')}catch(e){flash('Tallennus epäonnistui')}
+}
+function load(){
+ try{const raw=localStorage.getItem('capraMotionV4');if(raw){const d=JSON.parse(raw);if(Array.isArray(d.scenes))scenes=d.scenes;setMode(d.mode==='three'?'three':'one');flash('Projekti palautettu')}}catch(e){}
+}
+function flash(msg){const old=document.title;document.title=msg;setTimeout(()=>document.title=old,1200)}
+imgInput.addEventListener('change',e=>{
+ const f=e.target.files&&e.target.files[0];if(!f)return;
+ const target=imageTarget;const r=new FileReader();
+ r.onload=()=>{scenes[target].img=r.result;scenes[target].file=f.name||'Kuva';render();imagePanel();};
+ r.onerror=()=>flash('Kuvan lukeminen epäonnistui');
+ r.readAsDataURL(f);e.target.value='';
+});
+$('oneModeBtn').onclick=()=>setMode('one');$('threeModeBtn').onclick=()=>setMode('three');
+[...sceneBar.querySelectorAll('button')].forEach(b=>b.onclick=()=>{current=+b.dataset.scene;imageTarget=current;render();if(sheet.classList.contains('open'))imagePanel()});
+$('contentBtn').onclick=contentPanel;$('imagesBtn').onclick=imagePanel;$('styleBtn').onclick=stylePanel;$('playBtn').onclick=play;
+$('previewBtn').onclick=preview;$('saveBtn').onclick=save;
+addEventListener('resize',fit);setMode('one');load();fit();
+</script>
+</body></html>
