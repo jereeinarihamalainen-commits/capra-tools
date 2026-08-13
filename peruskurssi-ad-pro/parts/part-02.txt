@@ -1,12 +1,12 @@
-button id="selectBackgroundBtn">Siirrä taustakuvaa</button>
+   <button id="selectBackgroundBtn">Siirrä taustakuvaa</button>
    <button id="fitPhotoBtn">Palauta rajaus</button>
    <button id="addTextBtn">+ Teksti</button>
    <button id="addShapeBtn">+ Laatikko</button>
    <button id="addLineBtn">+ Viiva</button>
    <button id="addLogoBtn">+ Logo</button>
   </div>
-  <input type="file" id="photoInput" accept="image/*" hidden>
-  <input type="file" id="projectInput" accept=".json,application/json" hidden>
+  <input class="file-input" type="file" id="photoInput" accept="image/*,.heic,.heif">
+  <input class="file-input" type="file" id="projectInput" accept=".json,application/json">
  </section>
 
  <aside class="sidebar right">
@@ -91,8 +91,8 @@ button id="selectBackgroundBtn">Siirrä taustakuvaa</button>
     </div>
     <div id="logoOptions">
      <div class="row2">
-      <div class="field"><label>Logon väri</label><select id="elLogoVariant"><option value="light">Vaalea</option><option value="dark">Tumma</option><option value="olive">Oliivi</option></select></div>
-      <div class="field"><label>Logo</label><select id="elLogoStyle"><option value="lockup">Tunnus + nimi</option><option value="symbol">Pelkkä tunnus</option></select></div>
+      <div class="field"><label>Logon versio</label><select id="elLogoVariant"><option value="light">Vaalea master</option><option value="dark">Tumma master</option></select></div>
+      <div class="field"><label>Logo</label><select id="elLogoStyle"><option value="lockup">Virallinen täysi logo</option></select></div>
      </div>
     </div>
     <label class="toggle"><input id="elLocked" type="checkbox"> Lukitse elementti</label>
@@ -121,7 +121,7 @@ button id="selectBackgroundBtn">Siirrä taustakuvaa</button>
   <section class="panel" id="panel-project">
    <div class="section-title">Projektin hallinta</div>
    <button class="fullbtn" id="downloadProjectBtn">Lataa projektitiedosto (.json)</button>
-   <button class="fullbtn" id="openProjectBtn">Avaa projektitiedosto</button>
+   <label class="fullbtn fullbtn-label" id="openProjectBtn" for="projectInput">Avaa projektitiedosto</label>
    <button class="fullbtn" id="duplicateSlideBtn">Kopioi nykyinen sivu</button>
    <button class="fullbtn danger" id="resetProjectBtn">Palauta koko generaattori</button>
    <div class="note">Projekti tallentuu myös automaattisesti tämän selaimen paikalliseen muistiin.</div>
@@ -134,9 +134,8 @@ button id="selectBackgroundBtn">Siirrä taustakuvaa</button>
 <div class="status" id="status"></div>
 
 <script>
-const SYMBOL_WHITE="../peruskurssi-mainos-pro/assets/asset-01-9e479d7f0165.png";
-const SYMBOL_OLIVE="../peruskurssi-mainos-pro/assets/asset-01-9e479d7f0165.png";
-const SYMBOL_BLACK="../peruskurssi-mainos-pro/assets/asset-01-9e479d7f0165.png";
+const LOGO_LIGHT="../assets/capra-logo-light.jpeg";
+const LOGO_DARK="../assets/capra-logo-dark.jpeg";
 const W=1080,H=1350;
 const C={black:"#0a0a0a",charcoal:"#171916",off:"#f5f2ea",paper:"#e8e4da",olive:"#68724a",olive2:"#41492f",ochre:"#c8ae4d",white:"#ffffff"};
 
@@ -184,4 +183,4 @@ let state={
 };
 let undoStack=[],redoStack=[],drag=null,resizeObserver=null;
 
-const $=s=>document.querySelector(s), $$=s=>[...docu
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];

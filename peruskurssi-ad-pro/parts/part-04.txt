@@ -1,6 +1,5 @@
-st s=baseSlide(name);
  s.elements=[
-  logo(50,45,215,70,"light","lockup"),
+  logo(45,30,160,160,"light","lockup"),
   text(85,570,910,85,title,38,600,C.white,{align:"center",letter:3,name:"Keskiteksti"}),
   text(190,675,700,45,sub,18,500,accent(),{align:"center",letter:4,name:"Alaotsikko"}),
   text(50,1270,440,25,"CAPRA COMBAT · KUOPIO",15,600,C.white,{letter:3,name:"Alatunniste"})
@@ -87,7 +86,7 @@ function redo(){if(!redoStack.length)return;undoStack.push(JSON.stringify(state)
 function ensureState(){
  state.courses=state.courses||clone(courseDefaults);state.campaign=state.campaign||{};
  if(!state.slides?.length)state.slides=[templateHero()];
- state.slides.forEach(s=>{s.photo=s.photo||photoObj();s.elements=s.elements||[]});
+ state.slides.forEach(s=>{s.photo=s.photo||photoObj();s.elements=s.elements||[];s.elements.forEach(e=>{if(e.type==="logo"){e.variant=e.variant==="dark"?"dark":"light";e.style="lockup"}})});
 }
 
 function renderTemplateLibraries(){
@@ -139,9 +138,7 @@ function renderStage(){
  $("#gridOverlay").style.display=stage.dataset.grid==="1"?"block":"none";
 }
 function renderLogoDom(node,e,sc){
- const light=e.variant==="light",olive=e.variant==="olive";
- const img=document.createElement("img");img.src=light?SYMBOL_WHITE:olive?SYMBOL_OLIVE:SYMBOL_BLACK;node.appendChild(img);
- if(e.style==="lockup"){const words=document.createElement("span");words.className="logo-words";const b=document.createElement("b");b.textContent="CAPRA";const small=document.createElement("small");small.textContent="COMBAT";const col=light?C.off:olive?C.olive:C.black;b.style.color=col;small.style.color=olive?C.olive:light?C.olive:C.olive;words.append(b,small);node.appendChild(words);words.style.fontSize=(e.h*.32*sc)+"px"}
+ const img=document.createElement("img");img.src=e.variant==="dark"?LOGO_DARK:LOGO_LIGHT;img.alt="Capra Combat";node.appendChild(img);
 }
 function startDragElement(ev,id){
  const e=findEl(id);if(!e||e.locked)return;ev.preventDefault();ev.stopPropagation();pushHistory();state.selected=id;state.backgroundSelected=false;
@@ -150,4 +147,4 @@ function startDragElement(ev,id){
 }
 function startResize(ev,id,dir){
  const e=findEl(id);ev.preventDefault();ev.stopPropagation();pushHistory();drag={type:"resize",id,dir,startX:ev.clientX,startY:ev.clientY,x:e.x,y:e.y,w:e.w,h:e.h};ev.currentTarget.setPointerCapture(ev.pointerId);
- ev.currentTarget.onpointermove=onPointerMove;ev.currentT
+ ev.currentTarget.onpointermove=onPointerMove;ev.currentTarget.onpointerup=endPointer;

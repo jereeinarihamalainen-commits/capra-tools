@@ -1,4 +1,3 @@
-o(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}
 function drawTextCanvas(ctx,e){
  if(e.bgOpacity){ctx.fillStyle=hexAlpha(e.bg,e.bgOpacity);roundRect(ctx,0,0,e.w,e.h,0);ctx.fill()}
  const p=e.padding||0,txt=e.uppercase?String(e.text).toUpperCase():String(e.text),font=`${e.weight} ${e.fontSize}px "${e.font}",Arial,sans-serif`;ctx.font=font;ctx.fillStyle=e.color;ctx.textBaseline="top";
@@ -6,8 +5,7 @@ function drawTextCanvas(ctx,e){
  lines.forEach(l=>{drawSpaced(ctx,l,p,y,e.letter,e.align,e.w-p*2);y+=lh})
 }
 async function drawLogoCanvas(ctx,e){
- const light=e.variant==="light",olive=e.variant==="olive",im=await loadImage(light?SYMBOL_WHITE:olive?SYMBOL_OLIVE:SYMBOL_BLACK);const sh=e.h,sw=sh*(im.naturalWidth/im.naturalHeight);ctx.drawImage(im,0,0,sw,sh);
- if(e.style==="lockup"){const start=sw+e.h*.18;ctx.textBaseline="middle";ctx.textAlign="left";ctx.fillStyle=light?C.off:olive?C.olive:C.black;ctx.font=`500 ${e.h*.34}px Inter,Arial`;drawSpaced(ctx,"CAPRA",start,e.h*.34,e.h*.08,"left",e.w-start);ctx.fillStyle=C.olive;ctx.font=`600 ${e.h*.16}px Inter,Arial`;drawSpaced(ctx,"COMBAT",start,e.h*.75,e.h*.09,"left",e.w-start)}
+ const im=await loadImage(e.variant==="dark"?LOGO_DARK:LOGO_LIGHT),fit=Math.min(e.w/im.naturalWidth,e.h/im.naturalHeight),w=im.naturalWidth*fit,h=im.naturalHeight*fit;ctx.drawImage(im,(e.w-w)/2,(e.h-h)/2,w,h);
 }
 async function exportCurrent(){
  const btn=$("#exportBtn"),old=btn.textContent;btn.disabled=true;btn.textContent="Luodaan…";try{const c=await renderExport(),fmt=$("#exportFormat").value,mime=fmt==="jpg"?"image/jpeg":"image/png",q=+$("#jpgQuality").value;downloadData(c.toDataURL(mime,q),`capra-${state.course}-${slug(currentSlide().name)}.${fmt}`)}finally{btn.disabled=false;btn.textContent=old}
@@ -24,7 +22,7 @@ function downloadBlob(blob,name){const u=URL.createObjectURL(blob),a=document.cr
 
 function saveProject(){const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});downloadBlob(blob,`capra-peruskurssi-projekti-${state.course}.json`)}
 function openProject(file){const r=new FileReader();r.onload=()=>{try{pushHistory();state=JSON.parse(r.result);ensureState();syncAll();toast("Projekti avattu")}catch(e){toast("Projektitiedosto ei kelpaa")}};r.readAsText(file)}
-function autosave(){localStorage.setItem("capraCourseAdStudioV1",JSON.stringify(state))}
+function autosave(){if(!CapraImage.persist("capraCourseAdStudioV1",JSON.stringify(state)))console.warn("Projektia ei voitu tallentaa selaimen muistiin")}
 function resetProject(){if(!confirm("Palautetaanko generaattori? Kaikki nykyiset muutokset poistuvat."))return;localStorage.removeItem("capraCourseAdStudioV1");location.reload()}
 
 function switchMode(mode){
@@ -43,12 +41,12 @@ function bindUi(){
  $("#undoBtn").onclick=undo;$("#redoBtn").onclick=redo;
  $("#safeBtn").onclick=()=>{$("#stage").dataset.safe=$("#stage").dataset.safe==="1"?"0":"1";renderStage()};
  $("#gridBtn").onclick=()=>{$("#stage").dataset.grid=$("#stage").dataset.grid==="1"?"0":"1";renderStage()};
- $("#uploadPhotoBtn").onclick=()=>$("#photoInput").click();$("#photoInput").onchange=e=>uploadPhoto(e.target.files[0]);
+ $("#photoInput").onchange=async e=>{await uploadPhoto(e.target.files[0]);e.target.value=""};
  $("#selectBackgroundBtn").onclick=()=>{state.backgroundSelected=true;state.selected=null;renderStage();renderElementEditor();toast("Vedä kuvaa esikatselussa")};
  $("#fitPhotoBtn").onclick=fitPhoto;$("#addTextBtn").onclick=addText;$("#addShapeBtn").onclick=addShape;$("#addLineBtn").onclick=addLine;$("#addLogoBtn").onclick=addLogo;
  $("#refreshContentBtn").onclick=refreshRoles;$("#regenCopyBtn").onclick=generateCopy;
  $("#exportBtn").onclick=exportCurrent;$("#exportAllBtn").onclick=exportAll;
- $("#saveProjectBtn").onclick=saveProject;$("#downloadProjectBtn").onclick=saveProject;$("#openProjectBtn").onclick=()=>$("#projectInput").click();$("#projectInput").onchange=e=>openProject(e.target.files[0]);
+ $("#saveProjectBtn").onclick=saveProject;$("#downloadProjectBtn").onclick=saveProject;$("#projectInput").onchange=e=>{openProject(e.target.files[0]);e.target.value=""};
  $("#resetProjectBtn").onclick=resetProject;$("#duplicateSlideBtn").onclick=()=>{pushHistory();const n=clone(currentSlide());n.id=uid();n.name+=" kopio";n.elements.forEach(e=>e.id=uid());state.slides.splice(state.activeSlide+1,0,n);state.activeSlide++;syncAll()};
  $("#addSlideBtn").onclick=()=>{pushHistory();state.slides.push(baseSlide("Tyhjä sivu",C.black));state.activeSlide=state.slides.length-1;syncAll()};
  $$(".tab").forEach(b=>b.onclick=()=>{$$(".tab").forEach(x=>x.classList.remove("active"));$$(".panel").forEach(x=>x.classList.remove("active"));b.classList.add("active");$("#panel-"+b.dataset.tab).classList.add("active")});
