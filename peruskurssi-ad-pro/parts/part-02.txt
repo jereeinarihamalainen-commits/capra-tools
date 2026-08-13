@@ -1,0 +1,187 @@
+button id="selectBackgroundBtn">Siirrä taustakuvaa</button>
+   <button id="fitPhotoBtn">Palauta rajaus</button>
+   <button id="addTextBtn">+ Teksti</button>
+   <button id="addShapeBtn">+ Laatikko</button>
+   <button id="addLineBtn">+ Viiva</button>
+   <button id="addLogoBtn">+ Logo</button>
+  </div>
+  <input type="file" id="photoInput" accept="image/*" hidden>
+  <input type="file" id="projectInput" accept=".json,application/json" hidden>
+ </section>
+
+ <aside class="sidebar right">
+  <div class="tabs">
+   <button class="tab active" data-tab="content">Sisältö</button>
+   <button class="tab" data-tab="element">Elementti</button>
+   <button class="tab" data-tab="copy">Tekstit</button>
+   <button class="tab" data-tab="project">Projekti</button>
+  </div>
+
+  <section class="panel active" id="panel-content">
+   <div class="section-title">Kurssin tiedot</div>
+   <div class="field"><label>Kurssin nimi</label><input id="courseName"></div>
+   <div class="field"><label>Lyhyt nimi</label><input id="courseShort"></div>
+   <div class="field"><label>Lyhyt kuvaus</label><textarea id="courseSubtitle"></textarea></div>
+   <div class="row2">
+    <div class="field"><label>Aloitus</label><input id="startDate"></div>
+    <div class="field"><label>Kesto</label><input id="duration"></div>
+   </div>
+   <div class="row2">
+    <div class="field"><label>Hinta</label><input id="price"></div>
+    <div class="field"><label>Kaverihinta</label><input id="friendPrice"></div>
+   </div>
+   <div class="field"><label>Harjoitusajat, yksi rivi / harjoitus</label><textarea id="schedule"></textarea></div>
+   <div class="field"><label>Maksaminen</label><textarea id="payment"></textarea></div>
+   <div class="field"><label>Verkkosivu</label><input id="website"></div>
+   <div class="field"><label>Sähköposti</label><input id="email"></div>
+   <label class="toggle"><input type="checkbox" id="friendEnabled"> Näytä kaverietu sisällöissä</label>
+   <div class="field"><label>Kaveriedun päättymispäivä</label><input id="friendDeadline"></div>
+   <button class="fullbtn" id="refreshContentBtn">Päivitä tiedot kaikkiin sivuihin</button>
+   <div class="note"><strong>Lightroom-tila:</strong> ladattu kuva säilyy väreiltään ja sävyiltään sellaisena kuin olet sen käsitellyt. Generaattori ei lisää filtteriä.</div>
+
+   <div class="section-title" style="margin-top:16px">Taustakuvan rajaus</div>
+   <div class="range"><label>Zoom</label><input id="photoZoom" type="range" min="1" max="3" step=".01"><output id="photoZoomOut"></output></div>
+   <div class="range"><label>Vaaka</label><input id="photoX" type="range" min="-700" max="700" step="1"><output id="photoXOut"></output></div>
+   <div class="range"><label>Pysty</label><input id="photoY" type="range" min="-850" max="850" step="1"><output id="photoYOut"></output></div>
+  </section>
+
+  <section class="panel" id="panel-element">
+   <div id="noSelection" class="note">Valitse elementti kuvasta tai kerroslistasta. Voit siirtää elementtejä vetämällä ja muuttaa kokoa kulmakahvoista.</div>
+   <div id="elementEditor" style="display:none">
+    <div class="section-title">Valittu elementti</div>
+    <div class="field" id="textFieldWrap"><label>Teksti</label><textarea id="elText"></textarea></div>
+    <div class="row2">
+     <div class="field"><label>X</label><input id="elX" type="number"></div>
+     <div class="field"><label>Y</label><input id="elY" type="number"></div>
+    </div>
+    <div class="row2">
+     <div class="field"><label>Leveys</label><input id="elW" type="number"></div>
+     <div class="field"><label>Korkeus</label><input id="elH" type="number"></div>
+    </div>
+    <div class="row2">
+     <div class="field"><label>Kierto</label><input id="elRotation" type="number"></div>
+     <div class="field"><label>Läpinäkyvyys %</label><input id="elOpacity" type="number" min="0" max="100"></div>
+    </div>
+    <div id="textOptions">
+     <div class="row2">
+      <div class="field"><label>Fontti</label><select id="elFont"><option value="Inter">Inter</option><option value="Barlow Condensed">Barlow Condensed</option><option value="Arial">Arial</option><option value="Georgia">Georgia</option></select></div>
+      <div class="field"><label>Paino</label><select id="elWeight"><option>300</option><option>400</option><option>500</option><option>600</option><option>700</option><option>800</option><option>900</option></select></div>
+     </div>
+     <div class="row3">
+      <div class="field"><label>Koko</label><input id="elFontSize" type="number"></div>
+      <div class="field"><label>Riviväli</label><input id="elLineHeight" type="number" step=".05"></div>
+      <div class="field"><label>Kirjainväli</label><input id="elLetter" type="number" step=".5"></div>
+     </div>
+     <div class="row2">
+      <div class="field"><label>Tekstin väri</label><input id="elColor" type="color"></div>
+      <div class="field"><label>Kohdistus</label><select id="elAlign"><option value="left">Vasen</option><option value="center">Keskelle</option><option value="right">Oikea</option></select></div>
+     </div>
+     <label class="toggle"><input id="elUppercase" type="checkbox"> Isot kirjaimet</label>
+     <div class="row2">
+      <div class="field"><label>Taustaväri</label><input id="elBg" type="color"></div>
+      <div class="field"><label>Tausta %</label><input id="elBgOpacity" type="number" min="0" max="100"></div>
+     </div>
+     <div class="field"><label>Sisämarginaali</label><input id="elPadding" type="number"></div>
+    </div>
+    <div id="shapeOptions">
+     <div class="row2">
+      <div class="field"><label>Täyttöväri</label><input id="elFill" type="color"></div>
+      <div class="field"><label>Kulman pyöristys</label><input id="elRadius" type="number"></div>
+     </div>
+    </div>
+    <div id="logoOptions">
+     <div class="row2">
+      <div class="field"><label>Logon väri</label><select id="elLogoVariant"><option value="light">Vaalea</option><option value="dark">Tumma</option><option value="olive">Oliivi</option></select></div>
+      <div class="field"><label>Logo</label><select id="elLogoStyle"><option value="lockup">Tunnus + nimi</option><option value="symbol">Pelkkä tunnus</option></select></div>
+     </div>
+    </div>
+    <label class="toggle"><input id="elLocked" type="checkbox"> Lukitse elementti</label>
+    <label class="toggle"><input id="elHidden" type="checkbox"> Piilota elementti</label>
+    <div class="actions">
+     <button id="duplicateElBtn">Kopioi</button><button id="deleteElBtn" class="danger">Poista</button>
+     <button id="bringFrontBtn">Päällimmäiseksi</button><button id="sendBackBtn">Alimmaiseksi</button>
+     <button id="moveUpBtn">Kerros ylös</button><button id="moveDownBtn">Kerros alas</button>
+    </div>
+   </div>
+   <div class="section-title" style="margin-top:16px">Kerrokset</div>
+   <div class="layer-list" id="layerList"></div>
+  </section>
+
+  <section class="panel" id="panel-copy">
+   <div class="section-title">Instagram-caption</div>
+   <textarea class="caption-box" id="captionText"></textarea>
+   <div class="copyrow"><button data-copy="captionText">Kopioi caption</button><button id="regenCopyBtn">Luo uudelleen</button></div>
+   <div class="section-title">Meta-mainoksen pääteksti</div>
+   <textarea class="caption-box" id="adPrimaryText" style="min-height:150px"></textarea>
+   <div class="copyrow"><button data-copy="adPrimaryText">Kopioi pääteksti</button></div>
+   <div class="field"><label>Mainoksen otsikko</label><input id="adHeadlineText"></div>
+   <div class="field"><label>Mainoksen kuvaus</label><input id="adDescriptionText"></div>
+  </section>
+
+  <section class="panel" id="panel-project">
+   <div class="section-title">Projektin hallinta</div>
+   <button class="fullbtn" id="downloadProjectBtn">Lataa projektitiedosto (.json)</button>
+   <button class="fullbtn" id="openProjectBtn">Avaa projektitiedosto</button>
+   <button class="fullbtn" id="duplicateSlideBtn">Kopioi nykyinen sivu</button>
+   <button class="fullbtn danger" id="resetProjectBtn">Palauta koko generaattori</button>
+   <div class="note">Projekti tallentuu myös automaattisesti tämän selaimen paikalliseen muistiin.</div>
+   <div class="section-title" style="margin-top:16px">Vientiasetukset</div>
+   <div class="field"><label>Tiedostomuoto</label><select id="exportFormat"><option value="png">PNG</option><option value="jpg">JPG</option></select></div>
+   <div class="field"><label>JPG-laatu</label><input id="jpgQuality" type="range" min=".5" max="1" step=".01" value=".92"></div>
+  </section>
+ </aside>
+</main>
+<div class="status" id="status"></div>
+
+<script>
+const SYMBOL_WHITE="../peruskurssi-mainos-pro/assets/asset-01-9e479d7f0165.png";
+const SYMBOL_OLIVE="../peruskurssi-mainos-pro/assets/asset-01-9e479d7f0165.png";
+const SYMBOL_BLACK="../peruskurssi-mainos-pro/assets/asset-01-9e479d7f0165.png";
+const W=1080,H=1350;
+const C={black:"#0a0a0a",charcoal:"#171916",off:"#f5f2ea",paper:"#e8e4da",olive:"#68724a",olive2:"#41492f",ochre:"#c8ae4d",white:"#ffffff"};
+
+const courseDefaults={
+ mma:{
+  name:"VAPAAOTTELUN PERUSKURSSI",short:"VAPAAOTTELU",
+  subtitle:"Turvallinen ja ohjattu tapa aloittaa vapaaottelu aivan perusteista.",
+  schedule:"MA 17.00–18.30\nKE 17.00–18.30\nLA 12.30–14.00",
+  accent:"ochre",
+  bullets:["Lyöntien, potkujen ja painin perusteet","Etäisyyden, tasapainon ja liikkumisen hallinta","Ohjattuja pari- ja tilanneharjoitteita"],
+  first:["Liikuntavaatteet ilman vetoketjuja","Juomapullo","Suihkutossut","Aikaisempaa kokemusta ei tarvita"]
+ },
+ bjj:{
+  name:"BRASILIALAISEN JUJUTSUN / LUKKOPAININ PERUSKURSSI",short:"BJJ / LUKKOPAINI",
+  subtitle:"Brasilialaisen jujutsun ja lukkopainin perusteet turvallisesti ja ohjatusti.",
+  schedule:"MA 17.00–18.30\nKE 17.00–18.30",
+  accent:"olive",
+  bullets:["Hallinta, pakeneminen ja ohittaminen","Kehon käyttö, tasapaino ja tilanteiden ratkaiseminen","Gi- ja lukkopainin perusteet turvallisesti"],
+  first:["Liikuntavaatteet ilman vetoketjuja","Juomapullo","Suihkutossut","Aikaisempaa kokemusta ei tarvita"]
+ }
+};
+
+const singleTemplateMeta=[
+ {id:"hero",name:"Hero – iso otsikko",desc:"Myyvä kansi ja tärkeimmät tiedot",thumb:"",tag:"mainos"},
+ {id:"editorial",name:"Editorial – pieni otsikko",desc:"Kuva pääosassa, hillitty teksti",thumb:"",tag:"brändi"},
+ {id:"center",name:"Editorial – teksti keskellä",desc:"Minimalistinen ja premium",thumb:"center",tag:"editorial"},
+ {id:"split",name:"Jaettu kuva + info",desc:"Selkeä kurssi- ja hintapaneeli",thumb:"light",tag:"mainos"},
+ {id:"poster",name:"Kuva + tietokortit",desc:"Paljon tietoa ilman sekavuutta",thumb:"light",tag:"info"},
+ {id:"friend",name:"Kaverietu – oliivi",desc:"Kaverikampanjan oma mainos",thumb:"olive",tag:"tarjous"},
+ {id:"schedule",name:"Harjoitusajat ja hinta",desc:"Aikataulupainotteinen mainos",thumb:"",tag:"info"},
+ {id:"lastspots",name:"Viimeiset paikat",desc:"Vahva CTA ja kiireellisyys",thumb:"",tag:"cta"}
+];
+const deckTemplateMeta=[
+ {id:"sales7",name:"Myyvä peruskurssikaruselli",desc:"7 sivua: laji, hyödyt, ajat, hinta ja CTA",thumb:"",tag:"7 sivua"},
+ {id:"beginner6",name:"Aloittajan kysymykset",desc:"6 sivua, jotka madaltavat aloituskynnystä",thumb:"light",tag:"6 sivua"},
+ {id:"editorial5",name:"Editorial-lajiesittely",desc:"5 kuvapainotteista premium-sivua",thumb:"center",tag:"5 sivua"},
+ {id:"friend5",name:"Aloita kaverin kanssa",desc:"5 sivun kaverietukampanja",thumb:"olive",tag:"5 sivua"}
+];
+
+let state={
+ mode:"single",course:"mma",activeTemplate:"hero",activeDeck:"sales7",activeSlide:0,selected:null,backgroundSelected:false,
+ campaign:{start:"MA 31.8.2026",duration:"8 VIIKKOA",price:"120 €",friendPrice:"99 € / HLÖ",friendEnabled:true,friendDeadline:"17.8.2026",payment:"Maksu viimeistään ensimmäisen harjoituksen jälkeen.",website:"capracombat.fi/peruskurssit",email:"info@capracombat.fi"},
+ courses:JSON.parse(JSON.stringify(courseDefaults)),
+ slides:[],copy:{caption:"",primary:"",headline:"",description:""}
+};
+let undoStack=[],redoStack=[],drag=null,resizeObserver=null;
+
+const $=s=>document.querySelector(s), $$=s=>[...docu
