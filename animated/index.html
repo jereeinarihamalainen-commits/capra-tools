@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#090a08">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
-<title>Capra Motion Studio v4</title>
+<title>Capra Motion Studio v5</title>
 <style>
 :root{--olive:#68724a;--gold:#c8ae4d;--ink:#090a08;--panel:#151713;--line:#30342b}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -33,11 +33,7 @@ header{height:56px;flex:none;display:flex;align-items:center;justify-content:spa
 .shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(6,7,5,.94) 0%,rgba(6,7,5,.73) 43%,rgba(6,7,5,.18) 78%),linear-gradient(0deg,rgba(6,7,5,.9),transparent 42%)}
 .texture{position:absolute;inset:0;opacity:.07;background-image:linear-gradient(120deg,transparent 0 46%,#fff 47% 47.3%,transparent 48%),linear-gradient(#fff2 1px,transparent 1px);background-size:100% 100%,100% 92px}
 .rail{position:absolute;left:58px;top:62px;bottom:62px;width:5px;background:var(--olive)}.rail:after{content:"";display:block;width:5px;height:28%;background:var(--gold)}
-.logoLockup{position:absolute;left:86px;top:66px;width:255px;height:210px;animation:fadeIn 7s infinite;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start}
-.logoLockup .sym{width:118px;height:118px;object-fit:contain;object-position:left top;display:block}
-.logoLockup .capraWord{font-size:42px;line-height:.92;letter-spacing:.19em;font-weight:650;color:#f4f2ed;margin-top:2px}
-.logoLockup .combatWord{font-size:19px;letter-spacing:.32em;font-weight:650;color:#777b63;margin-top:8px}
-.logoLockup .goldLine{width:92px;height:5px;background:var(--gold);margin-top:10px}
+.logoFull{position:absolute;left:62px;top:36px;width:300px;height:300px;object-fit:contain;object-position:left top;animation:fadeIn 7s infinite}
 .kicker{position:absolute;left:88px;top:292px;font-size:22px;font-weight:900;letter-spacing:.18em;color:#d8d8ce;text-transform:uppercase;animation:fadeIn 7s infinite}
 .headline{position:absolute;left:82px;top:365px;width:820px;font-size:112px;line-height:.82;letter-spacing:-.065em;font-weight:1000;text-transform:uppercase;animation:headline 7s cubic-bezier(.16,.84,.28,1) infinite}
 .headline em{font-style:normal;color:var(--gold)}
@@ -58,7 +54,7 @@ textarea{min-height:66px}.uploadLabel{display:flex;align-items:center;justify-co
 .fileName{font-size:11px;color:#c7c9c0;margin:5px 0 12px}.mini{display:grid;grid-template-columns:1fr 1fr;gap:7px}
 .preview header,.preview .modebar,.preview .sceneBar,.preview .toolbar,.preview .sheet{display:none!important}
 .preview .viewport{padding:0;align-items:center;background:#000}.preview .shell{width:100vw;max-width:none}.preview .stage{border-radius:0;box-shadow:none}
-.three .scene{transition:opacity .35s ease}.three .scene .photo,.three .scene .logoLockup,.three .scene .headline,.three .scene .kicker,.three .scene .accent,.three .scene .body,.three .scene .sports,.three .scene .cta{animation-duration:3.6s}
+.three .scene{transition:opacity .35s ease}.three .scene .photo,.three .scene .logoFull,.three .scene .headline,.three .scene .kicker,.three .scene .accent,.three .scene .body,.three .scene .sports,.three .scene .cta{animation-duration:3.6s}
 @keyframes ken{from{transform:scale(1.03) translate(0,0)}to{transform:scale(1.09) translate(-12px,-7px)}}
 @keyframes headline{0%,8%{opacity:0;transform:translateY(70px)}17%,76%{opacity:1;transform:none}90%,100%{opacity:0;transform:translateY(-25px)}}
 @keyframes fadeIn{0%,6%{opacity:0}15%,82%{opacity:1}94%,100%{opacity:0}}
@@ -71,7 +67,7 @@ textarea{min-height:66px}.uploadLabel{display:flex;align-items:center;justify-co
 <body>
 <div class="app" id="app">
 <header>
-  <div class="brand"><img src="../assets/capra-logo.png?v=4" alt="Capra Combat"><span>CAPRA MOTION STUDIO · V4</span></div>
+  <div class="brand"><img src="../assets/capra-logo-full.svg?v=5" alt="Capra Combat"><span>CAPRA MOTION STUDIO · V5</span></div>
   <div class="actions"><button id="saveBtn">Tallenna</button><button class="gold" id="previewBtn">Preview</button></div>
 </header>
 <div class="modebar">
@@ -112,7 +108,7 @@ function sceneHTML(x,n){
  const last=x.h.split('\n');const head=last.map((v,i)=>i===last.length-1?`<em>${esc(v)}</em>`:esc(v)).join('<br>');
  return `<div class="scene ${n===current?'active':''}" data-n="${n}">
  <div class="photo" style='${photoStyle(x)}'></div><div class="shade"></div><div class="texture"></div><div class="rail"></div>
- <div class="logoLockup"><img class="sym" src="../assets/capra-logo.png?v=4" alt=""><div class="capraWord">CAPRA</div><div class="combatWord">COMBAT</div><div class="goldLine"></div></div>
+ <img class="logoFull" src="../assets/capra-logo-full.svg?v=5" alt="Capra Combat">
  <div class="kicker">${esc(x.k)}</div><div class="headline">${head}</div><div class="accent"></div>
  <div class="body">${esc(x.b)}</div><div class="sports">${esc(x.s)}</div><div class="cta">${esc(x.c)}</div>
  <div class="meta">${esc(x.m).replace(/\n/g,'<br>')}</div>${mode==='three'?`<div class="sceneNum">0${n}/03</div>`:''}</div>`;
