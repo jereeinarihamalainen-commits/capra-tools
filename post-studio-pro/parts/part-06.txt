@@ -1,0 +1,16 @@
+ontent=old;btn.disabled=false}
+  });
+
+  function hexToRgba(hex,a=1){
+    let h=hex.replace('#','');if(h.length===3)h=h.split('').map(c=>c+c).join('');const n=parseInt(h,16);return `rgba(${(n>>16)&255},${(n>>8)&255},${n&255},${a})`;
+  }
+  function rgbToHex(rgb){
+    if(!rgb)return'#ffffff';if(rgb.startsWith('#'))return rgb.slice(0,7);const m=rgb.match(/\d+/g);if(!m)return'#ffffff';
+    return'#'+m.slice(0,3).map(n=>(+n).toString(16).padStart(2,'0')).join('');
+  }
+
+  loadTemplate('training');setCanvasSize();requestAnimationFrame(fitCanvas);
+})();
+</script>
+</body>
+</html>
