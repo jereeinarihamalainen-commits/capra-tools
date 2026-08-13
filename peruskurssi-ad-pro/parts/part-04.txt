@@ -1,0 +1,153 @@
+st s=baseSlide(name);
+ s.elements=[
+  logo(50,45,215,70,"light","lockup"),
+  text(85,570,910,85,title,38,600,C.white,{align:"center",letter:3,name:"Keskiteksti"}),
+  text(190,675,700,45,sub,18,500,accent(),{align:"center",letter:4,name:"Alaotsikko"}),
+  text(50,1270,440,25,"CAPRA COMBAT · KUOPIO",15,600,C.white,{letter:3,name:"Alatunniste"})
+ ];return s;
+}
+function buildDeck(id){
+ const q=state.courses[state.course],c=state.campaign;
+ if(id==="sales7"){
+  let cover=templateHero();cover.name="1. Kansi";
+  let what=infoSlide("MITÄ HARJOITTELET?",q.bullets.map(x=>"• "+x).join("\n\n"),"2. Mitä harjoitellaan");
+  let who=infoSlide("ALOITA OMALTA TASOLTASI.","• Kurssi alkaa aivan perusteista\n\n• Et tarvitse aikaisempaa kokemusta\n\n• Valmista kuntoa ei tarvita\n\n• Harjoittelet turvallisesti ohjatussa ryhmässä","3. Kenelle");
+  let sched=templateSchedule();sched.name="4. Ajat ja hinta";
+  let friend=templateFriend();friend.name="5. Kaverietu";
+  let first=infoSlide("ENSIMMÄISEEN TREENIIN",q.first.map(x=>"• "+x).join("\n\n"),"6. Ensimmäinen treeni");
+  let cta=templateLastSpots();cta.name="7. Ilmoittaudu";
+  return [cover,what,who,sched,friend,first,cta];
+ }
+ if(id==="beginner6"){
+  return[
+   photoEditorialSlide("VOINKO ALOITTAA ILMAN KOKEMUSTA?","KYLLÄ. KURSSI ALKAA PERUSTEISTA.","1. Kansi"),
+   infoSlide("AIKAISEMPAA KOKEMUSTA EI TARVITA","Kurssi on rakennettu ihmisille, jotka aloittavat lajin ensimmäistä kertaa. Opit liikkumisen, turvallisuuden ja keskeiset perustilanteet vaiheittain.","2. Kokemus"),
+   infoSlide("VALMISTA KUNTOA EI TARVITA","Jokainen aloittaa omalta tasoltaan. Kunto, varmuus ja lajitaidot kehittyvät harjoittelun mukana.","3. Kunto"),
+   infoSlide("TURVALLINEN TAPA ALOITTAA","Harjoittelu etenee ohjatusti. Tekniikat, pari­harjoitteet ja kuormitus sovitetaan peruskurssille.","4. Turvallisuus"),
+   templateSchedule(),
+   templateLastSpots()
+  ].map((s,i)=>{s.name=s.name.match(/^\d/) ? s.name : `${i+1}. ${s.name}`;return s});
+ }
+ if(id==="editorial5"){
+  return[
+   photoEditorialSlide("ALOITA OMALTA TASOLTASI.",q.short,"1. Aloita"),
+   photoEditorialSlide("OPI TEKEMÄLLÄ.","OHJATTUA HARJOITTELUA PERUSTEISTA","2. Opi"),
+   photoEditorialSlide("YHDESSÄ ETEENPÄIN.","PAIKKA KAIKILLE","3. Yhteisö"),
+   infoSlide("PERUSKURSSIN TIEDOT",`${c.start}\n\n${c.duration}\n\n${c.price}\n\n${q.schedule}\n\n${c.payment}`,"4. Tiedot"),
+   templateLastSpots()
+  ].map((s,i)=>{s.name=s.name.match(/^\d/) ? s.name : `${i+1}. ${s.name}`;return s});
+ }
+ if(id==="friend5"){
+  return[
+   templateFriend(),
+   infoSlide("ALOITTAMINEN ON HELPOMPAA YHDESSÄ",`Kaverietu ${c.friendPrice}\n\nNormaalihinta ${c.price} / henkilö.\n\nMolemmat täyttävät oman ilmoittautumisen ja ilmoittavat toisensa kaveriksi.`,"2. Etu",C.olive),
+   infoSlide("NÄIN SE TOIMII","1. Valitkaa sama peruskurssi\n\n2. Molemmat ilmoittautuvat itse\n\n3. Merkitkää toistenne nimet lomakkeelle\n\n4. Etu vahvistetaan, kun molemmat ilmoittautumiset löytyvät","3. Ohje",C.olive),
+   templateSchedule(),
+   templateLastSpots()
+  ].map((s,i)=>{s.name=s.name.match(/^\d/) ? s.name : `${i+1}. ${s.name}`;return s});
+ }
+ return [templateHero()];
+}
+
+function applySingleTemplate(id,keepPhoto=true){
+ pushHistory();
+ const old=currentSlide(),s=singleBuilders[id]();
+ if(keepPhoto && old?.photo?.src)s.photo=clone(old.photo);
+ state.slides=[s];state.activeSlide=0;state.activeTemplate=id;state.selected=null;state.backgroundSelected=false;
+ syncAll();toast("Template vaihdettu");
+}
+function applyDeck(id,keepPhotos=true){
+ pushHistory();
+ const old=state.slides.map(s=>s.photo),slides=buildDeck(id);
+ if(keepPhotos)slides.forEach((s,i)=>{if(old[i]?.src)s.photo=clone(old[i])});
+ state.slides=slides;state.activeSlide=0;state.activeDeck=id;state.selected=null;state.backgroundSelected=false;
+ syncAll();toast("Karusellipaketti luotu");
+}
+
+function refreshRoles(){
+ state.slides.forEach(s=>s.elements.forEach(e=>{if(e.role)e.text=roleText(e.role)}));
+ generateCopy();syncAll();
+}
+function generateCopy(){
+ const q=state.courses[state.course],c=state.campaign;
+ const schedule=q.schedule.split("\n").filter(Boolean).join(" · ");
+ const offer=c.friendEnabled?`\n\nALOITA KAVERIN KANSSA: ${c.friendPrice} (norm. ${c.price}). Molemmat täyttävät oman ilmoittautumisen ja ilmoittavat toisensa kaveriksi. Etu voimassa ${c.friendDeadline} asti.`:"";
+ state.copy.caption=`ALOITA KAMPPAILU OMALTA TASOLTASI.\n\nCapra Combatin ${q.name.toLowerCase()} alkaa ${c.start.toLowerCase()}. Aikaisempaa kokemusta ei tarvita — kurssi lähtee liikkeelle aivan perusteista.\n\n✓ ${c.duration.toLowerCase()}\n✓ ${schedule}\n✓ Hinta ${c.price}\n✓ ${c.payment}${offer}\n\nIlmoittautuminen: ${c.website}\nKysyttävää: ${c.email}\n\nPaikka kaikille. Polku huipulle.\n\n#capracombat #kuopio #kamppailu #peruskurssi`;
+ state.copy.primary=`Aloita ${q.short.toLowerCase()} turvallisesti ja ohjatusti Capra Combatin peruskurssilla Kuopiossa. Aikaisempaa kokemusta tai valmista kuntoa ei tarvita. Kurssi alkaa ${c.start}. ${c.friendEnabled?`Aloita kaverin kanssa ${c.friendPrice}.`:""}`;
+ state.copy.headline=`${q.short} – peruskurssi Kuopiossa`;
+ state.copy.description=`${c.start} · ${c.duration} · ${c.price}`;
+ $("#captionText").value=state.copy.caption;$("#adPrimaryText").value=state.copy.primary;$("#adHeadlineText").value=state.copy.headline;$("#adDescriptionText").value=state.copy.description;
+}
+
+function pushHistory(){
+ undoStack.push(JSON.stringify(state));if(undoStack.length>60)undoStack.shift();redoStack=[];
+}
+function undo(){if(!undoStack.length)return;redoStack.push(JSON.stringify(state));state=JSON.parse(undoStack.pop());ensureState();syncAll()}
+function redo(){if(!redoStack.length)return;undoStack.push(JSON.stringify(state));state=JSON.parse(redoStack.pop());ensureState();syncAll()}
+function ensureState(){
+ state.courses=state.courses||clone(courseDefaults);state.campaign=state.campaign||{};
+ if(!state.slides?.length)state.slides=[templateHero()];
+ state.slides.forEach(s=>{s.photo=s.photo||photoObj();s.elements=s.elements||[]});
+}
+
+function renderTemplateLibraries(){
+ $("#singleTemplates").innerHTML=singleTemplateMeta.map(t=>`<button class="template-card ${state.activeTemplate===t.id?"active":""}" data-single="${t.id}"><span class="thumb ${t.thumb||""}"></span><span class="template-copy"><strong>${t.name}</strong><small>${t.desc}</small><span class="template-tag">${t.tag}</span></span></button>`).join("");
+ $("#deckTemplates").innerHTML=deckTemplateMeta.map(t=>`<button class="template-card ${state.activeDeck===t.id?"active":""}" data-deck="${t.id}"><span class="thumb ${t.thumb||""}"></span><span class="template-copy"><strong>${t.name}</strong><small>${t.desc}</small><span class="template-tag">${t.tag}</span></span></button>`).join("");
+ $$("[data-single]").forEach(b=>b.onclick=()=>applySingleTemplate(b.dataset.single,true));
+ $$("[data-deck]").forEach(b=>b.onclick=()=>applyDeck(b.dataset.deck,true));
+}
+function renderSlideList(){
+ $("#slideList").innerHTML=state.slides.map((s,i)=>`<div class="slide-card ${i===state.activeSlide?"active":""}" data-slide="${i}"><div class="slide-index">${i+1}</div><div class="slide-name">${escapeHtml(s.name)}</div><div class="slide-controls"><button class="iconbtn" data-up="${i}">↑</button><button class="iconbtn" data-down="${i}">↓</button><button class="iconbtn" data-del="${i}">×</button></div></div>`).join("");
+ $$("[data-slide]").forEach(x=>x.onclick=e=>{if(e.target.closest("button"))return;state.activeSlide=+x.dataset.slide;state.selected=null;state.backgroundSelected=false;syncAll()});
+ $$("[data-up]").forEach(b=>b.onclick=e=>{e.stopPropagation();moveSlide(+b.dataset.up,-1)});
+ $$("[data-down]").forEach(b=>b.onclick=e=>{e.stopPropagation();moveSlide(+b.dataset.down,1)});
+ $$("[data-del]").forEach(b=>b.onclick=e=>{e.stopPropagation();deleteSlide(+b.dataset.del)});
+}
+function moveSlide(i,d){let j=i+d;if(j<0||j>=state.slides.length)return;pushHistory();[state.slides[i],state.slides[j]]=[state.slides[j],state.slides[i]];state.activeSlide=j;syncAll()}
+function deleteSlide(i){if(state.slides.length===1)return toast("Vähintään yksi sivu tarvitaan");pushHistory();state.slides.splice(i,1);state.activeSlide=Math.min(state.activeSlide,state.slides.length-1);syncAll()}
+
+function scale(){return $("#stage").clientWidth/W}
+function photoGeometry(photo,imgW,imgH){
+ const base=Math.max(W/imgW,H/imgH),dw=imgW*base*photo.zoom,dh=imgH*base*photo.zoom;
+ return{x:(W-dw)/2+photo.x,y:(H-dh)/2+photo.y,w:dw,h:dh};
+}
+function renderStage(){
+ const stage=$("#stage"),s=currentSlide(),sc=scale();
+ stage.style.background=s.bg||C.black;
+ $$(".el").forEach(x=>x.remove());
+ const img=$("#bgImg"),ph=$("#placeholder");
+ if(s.photo.src){
+  img.src=s.photo.src;img.style.display="block";ph.style.display="none";
+  const set=()=>{const g=photoGeometry(s.photo,img.naturalWidth||1000,img.naturalHeight||1000);Object.assign(img.style,{left:g.x*sc+"px",top:g.y*sc+"px",width:g.w*sc+"px",height:g.h*sc+"px"})};
+  if(img.complete)set();else img.onload=set;
+ }else{img.style.display="none";ph.style.display="grid"}
+ s.elements.forEach((e,i)=>{if(e.hidden)return;const node=document.createElement("div");node.className=`el ${e.type}-el${e.locked?" locked":""}${state.selected===e.id?" selected":""}`;node.dataset.id=e.id;
+  Object.assign(node.style,{left:e.x*sc+"px",top:e.y*sc+"px",width:e.w*sc+"px",height:e.h*sc+"px",opacity:e.opacity??1,transform:`rotate(${e.rotation||0}deg)`,zIndex:i+2});
+  if(e.type==="text"){
+   node.textContent=e.uppercase?String(e.text).toUpperCase():e.text;
+   Object.assign(node.style,{fontFamily:`"${e.font}",Arial,sans-serif`,fontSize:e.fontSize*sc+"px",fontWeight:e.weight,color:e.color,textAlign:e.align,lineHeight:e.lineHeight,letterSpacing:e.letter*sc+"px",padding:(e.padding||0)*sc+"px",background:hexAlpha(e.bg,e.bgOpacity||0),alignItems:"flex-start",justifyContent:e.align==="center"?"center":e.align==="right"?"flex-end":"flex-start"});
+  }else if(e.type==="shape"){Object.assign(node.style,{background:e.fill,borderRadius:(e.radius||0)*sc+"px"})}
+  else if(e.type==="logo"){renderLogoDom(node,e,sc)}
+  node.onpointerdown=ev=>startDragElement(ev,e.id);
+  node.onclick=ev=>{ev.stopPropagation();state.selected=e.id;state.backgroundSelected=false;renderStage();renderElementEditor()};
+  if(state.selected===e.id&&!e.locked){
+   ["nw","ne","sw","se"].forEach(dir=>{const h=document.createElement("i");h.className=`handle ${dir}`;h.onpointerdown=ev=>startResize(ev,e.id,dir);node.appendChild(h)})
+  }
+  stage.insertBefore(node,$("#safeOverlay"));
+ });
+ $("#safeOverlay").style.display=stage.dataset.safe==="1"?"block":"none";
+ $("#gridOverlay").style.display=stage.dataset.grid==="1"?"block":"none";
+}
+function renderLogoDom(node,e,sc){
+ const light=e.variant==="light",olive=e.variant==="olive";
+ const img=document.createElement("img");img.src=light?SYMBOL_WHITE:olive?SYMBOL_OLIVE:SYMBOL_BLACK;node.appendChild(img);
+ if(e.style==="lockup"){const words=document.createElement("span");words.className="logo-words";const b=document.createElement("b");b.textContent="CAPRA";const small=document.createElement("small");small.textContent="COMBAT";const col=light?C.off:olive?C.olive:C.black;b.style.color=col;small.style.color=olive?C.olive:light?C.olive:C.olive;words.append(b,small);node.appendChild(words);words.style.fontSize=(e.h*.32*sc)+"px"}
+}
+function startDragElement(ev,id){
+ const e=findEl(id);if(!e||e.locked)return;ev.preventDefault();ev.stopPropagation();pushHistory();state.selected=id;state.backgroundSelected=false;
+ drag={type:"move",id,startX:ev.clientX,startY:ev.clientY,x:e.x,y:e.y};ev.currentTarget.setPointerCapture(ev.pointerId);
+ ev.currentTarget.onpointermove=onPointerMove;ev.currentTarget.onpointerup=endPointer;
+}
+function startResize(ev,id,dir){
+ const e=findEl(id);ev.preventDefault();ev.stopPropagation();pushHistory();drag={type:"resize",id,dir,startX:ev.clientX,startY:ev.clientY,x:e.x,y:e.y,w:e.w,h:e.h};ev.currentTarget.setPointerCapture(ev.pointerId);
+ ev.currentTarget.onpointermove=onPointerMove;ev.currentT
