@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Capra Combat — Animated IG Studio</title>
+<link rel="stylesheet" href="../../vendor/capra-fonts.css">
+<style>
+:root{
+  --olive:#68724a; --ochre:#c8ae4d; --ink:#11120f; --paper:#f1eee6;
+  --panel:#151713; --muted:#a9ada1; --line:#31352c; --stageScale:.52;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:#0a0b09;color:#f4f1e9;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,select,textarea{font:inherit}
+body{min-height:100vh;overflow-x:hidden}
+
+.app{display:grid;grid-template-columns:360px 1fr;min-height:100vh}
+.sidebar{background:var(--panel);border-right:1px solid var(--line);padding:18px;overflow:auto;height:100vh;position:sticky;top:0;z-index:20}
+.brandTop{display:flex;gap:12px;align-items:center;margin-bottom:16px}
+.brandTop img{width:56px;height:56px;object-fit:contain;background:#0c0d0b;border:1px solid #292c25;border-radius:12px}
+.brandTop h1{font-size:17px;line-height:1.05;margin:0;text-transform:uppercase;letter-spacing:.04em}
+.brandTop p{margin:5px 0 0;color:var(--muted);font-size:12px}
+
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:10px 0 16px}
+.tab{border:1px solid var(--line);background:#1c1f19;color:#cfd2c8;padding:9px 4px;border-radius:8px;font-size:11px;font-weight:800;cursor:pointer}
+.tab.active{background:var(--olive);color:#fff;border-color:var(--olive)}
+
+.panel{display:none}
+.panel.active{display:block}
+.group{border-top:1px solid var(--line);padding:14px 0}
+.group:first-child{border-top:0;padding-top:0}
+.group h3{font-size:11px;color:#d9dacd;text-transform:uppercase;letter-spacing:.12em;margin:0 0 10px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}
+.row.one{grid-template-columns:1fr}
+label{font-size:11px;color:#aeb2a7;display:block}
+input[type=text],input[type=number],select,textarea{
+  width:100%;margin-top:5px;background:#0f100e;color:#fff;border:1px solid #35392f;border-radius:7px;padding:9px
+}
+textarea{min-height:68px;resize:vertical}
+input[type=color]{width:100%;height:37px;margin-top:5px;border:1px solid #35392f;border-radius:7px;background:#0f100e;padding:3px}
+input[type=range]{width:100%;margin-top:9px}
+.btn{width:100%;border:1px solid #3b4035;background:#20231d;color:#fff;padding:10px 12px;border-radius:8px;font-weight:850;cursor:pointer}
+.btn.primary{background:var(--ochre);color:#15150f;border-color:var(--ochre)}
+.btn.olive{background:var(--olive);border-color:var(--olive)}
+.btn.danger{background:#34201d;border-color:#58332e;color:#ffd8d2}
+.help{font-size:11px;line-height:1.45;color:#8f9488;margin-top:7px}
+.pill{display:inline-block;font-size:10px;padding:4px 7px;border-radius:999px;background:#25291f;color:#cfd2c8;margin:2px}
+
+.workspace{min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:22px 20px 80px;overflow:hidden}
+.topbar{width:min(100%,1020px);display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:14px}
+.topbar .left{display:flex;gap:8px;flex-wrap:wrap}
+.mini{border:1px solid #2d3029;background:#151713;color:#ddd;padding:8px 10px;border-radius:8px;font-size:12px;font-weight:800;cursor:pointer}
+
+.canvasWrap{position:relative;width:min(100%,702px);aspect-ratio:1080/1350;display:flex;align-items:flex-start;justify-content:center}
+.stageScaler{transform-origin:top left;position:absolute;left:50%;top:0}
+.stage{
+  width:1080px;height:1350px;position:relative;overflow:hidden;background:var(--ink);
+  box-shadow:0 30px 100px rgba(0,0,0,.55);transform-origin:top left;user-select:none;
+}
+.stage.showSafe::after{content:"";position:absolute;inset:70px;border:2px dashed rgba(255,255,255,.22);pointer-events:none;z-index:1000}
+.bgColor{position:absolute;inset:0;background:#11120f}
+.bgImage{position:absolute;inset:0;background-size:cover;background-position:center;opacity:.62;filter:saturate(.78) contrast(1.05);transform:scale(1.02)}
+.bgOverlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(7,8,6,.25),rgba(7,8,6,.40) 42%,rgba(7,8,6,.82));}
+.grain{position:absolute;inset:-40%;opacity:.08;background-image:repeating-radial-gradient(circle at 0 0,transparent 0 2px,rgba(255,255,255,.35) 3px 4px);background-size:9px 9px;animation:grain .24s steps(2) infinite;pointer-events:none}
+.gridbg{position:absolute;inset:-10%;opacity:.07;background:linear-gradient(rgba(255,255,255,.3) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.3) 1px,transparent 1px);background-size:72px 72px;transform:rotate(-4deg) scale(1.2);animation:gridmove 13s linear infinite}
+.accentBar{position:absolute;width:660px;height:130px;left:-250px;top:405px;background:var(--olive);transform:rotate(-11deg);animation:bar 8s cubic-bezier(.7,0,.2,1) infinite}
+.accentBar.two{width:610px;height:82px;left:750px;top:870px;background:var(--ochre);animation-delay:.5s}
+.frame{position:absolute;inset:58px;border:2px solid rgba(255,255,255,.14);pointer-events:none}
+
+.el{position:absolute;cursor:move;touch-action:none;transform-origin:center center;z-index:10}
+.el.selected{outline:3px solid rgba(200,174,77,.9);outline-offset:7px}
+.el.selected::after{content:"";position:absolute;width:22px;height:22px;right:-18px;bottom:-18px;border-radius:50%;background:#c8ae4d;border:3px solid #111;box-shadow:0 1px 5px rgba(0,0,0,.4)}
+.textEl{white-space:pre-wrap}
+.logoEl img{width:100%;height:100%;object-fit:contain;display:block;pointer-events:none}
+.eyebrowText{background:var(--paper);color:var(--ink);padding:12px 17px;font-weight:1000;letter-spacing:.11em;text-transform:uppercase;font-size:25px}
+.headline{font-size:112px;line-height:.80;font-weight:1000;letter-spacing:-.065em;text-transform:uppercase;width:880px}
+.headline .gold{color:var(--ochre)}
+.subline{width:700px;font-size:31px;line-height:1.24;font-weight:650;color:#dedbd2}
+.chips{display:flex;gap:13px;flex-wrap:wrap;width:850px}
+.chip{border:2px solid rgba(255,255,255,.32);background:rgba(15,16,14,.60);padding:13px 17px;font-size:20px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+.price{font-size:54px;line-height:.95;font-weight:1000;text-transform:uppercase}
+.price small{display:block;font-size:20px;color:#c0c1b9;letter-spacing:.055em;margin-top:12px}
+.cta{background:var(--ochre);color:#11120f;padding:21px 23px;font-size:25px;font-weight:1000;letter-spacing:.06em;text-transform:uppercase}
+
+.animate-title{animation:titleLoop 8s cubic-bezier(.16,.84,.28,1) infinite}
+.animate-fade{animation:fadeLoop 8s ease infinite}
+.animate-pop{animation:popLoop 8s cubic-bezier(.18,.9,.22,1) infinite}
+.animate-slide{animation:slideLoop 8s ease infinite}
+
+.noAnim *{animation-play-state:paused!important}
+.hideUI .sidebar,.hideUI .topbar{display:none}
+.hideUI .app{display:block}
+.hideUI .workspace{padding:0;display:block}
+.hideUI .canvasWrap{width:100vw;height:100vh;max-width:none;aspect-ratio:auto}
+.hideUI .stageScaler{left:50%;top:0}
+
+@keyframes titleLoop{0%,8%{opacity:0;transform:translateY(80px)}16%,70%{opacity:1;transform:translateY(0)}82%,100%{opacity:0;transform:translateY(-70px)}}
+@keyframes fadeLoop{0%,18%{opacity:0}27%,76%{opacity:1}88%,100%{opacity:0}}
+@keyframes popLoop{0%,32%{opacity:0;transform:scale(.78)}42%,76%{opacity:1;transform:scale(1)}84%,100%{opacity:0;transform:scale(.85)}}
+@keyframes slideLoop{0%,14%{opacity:0;transform:translateX(-80px)}24%,74%{opacity:1;transform:translateX(0)}86%,100%{opacity:0;transform:translateX(80px)}}
+@keyframes bar{0%{transform:translateX(-300px) rotate(-11deg)}20%,70%{transform:translateX(0) rotate(-11deg)}100%{transform:translateX(1500px) rotate(-11deg)}}
+@keyframes grain{0%{transform:translate(0,0)}50%{transform:translate(1.5%,-1.5%)}100%{transform:translate(0,0)}}
+@keyframes gridmove{from{background-position:0 0,0 0}to{background-position:72px 72px,72px 72px}}
+
+@media(max-width:900px){
+  .app{grid-template-columns:1fr}
+  .sidebar{height:auto;position:relative;border-right:0;border-bottom:1px solid var(--line)}
+  .workspace{padding:15px 8px 70px}
+  .canvasWrap{width:100%}
+}
+</style>
+<style id="iphone-compat">
+.native-file-input{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(max-width:900px){
+  html,body{width:100%;max-width:100%;overflow-x:hidden}
+  body{padding-bottom:env(safe-area-inset-bottom)}
+  .sidebar{padding-top:max(18px,env(safe-area-inset-top))}
+  .workspace{padding-bottom:max(70px,env(safe-area-inset-bottom))}
+  button,.btn,.tab,label.btn,input[type="file"]{min-height:44px}
+  label.btn{display:flex;align-items:center;justify-content:center;cursor:pointer}
+  input[type="file"],input[type="text"],input[type="number"],textarea,select{font-size:16px!important}
+  #bgUpload,#imageUpload{display:block!important;position:fixed!important;width:1px!important;height:1px!important;opacity:0!important;clip-path:inset(50%);pointer-events:none}
+}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+
+<aside class="sidebar">
+  <div class="brandTop">
+    <img src="../../assets/capra-logo-light.jpeg" alt="Capra Combat logo">
+    <div><h1>Capra Combat<br>IG Studio</h1><p>Editable animated ad builder</p></div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="content">Sisältö</button>
+    <button class="tab" data-tab="element">Elementti</button>
+    <button class="tab" data-tab="style">Tyyli</button>
+    <button class="tab" data-tab="motion">Liike</button>
+  </div>
+
+  <section class="panel active" id="content">
+    <div class="group">
+      <h3>Taustakuva</h3>
+      <div class="row one"><label class="btn olive" for="bgUpload" role="button">VAIHDA KUVA</label></div>
+      <input class="native-file-input" id="bgUpload" type="file" accept="image/*">
+      <div class="row">
+        <label>Zoom <input id="bgZoom" type="range" min="100" max="170" value="102"></label>
+        <label>Peittävyys <input id="bgOpacity" type="range" min="0" max="100" value="62"></label>
+      </div>
+      <div class="row">
+        <label>X <input id="bgX" type="range" min="0" max="100" value="50"></label>
+        <label>Y <input id="bgY" type="range" min="0" max="100" value="50"></label>
+      </div>
+      <button class="btn" id="removeBg">Poista taustakuva</button>
+      <p class="help">Valitse puhelimesta oma treeni-, kilpailu- tai fiiliskuva. Kuva jää vain tähän HTML-tiedostoon selaimen muistissa.</p>
+    </div>
+
+    <div class="group">
+      <h3>Valmiit tekstit</h3>
+      <label>Yläteksti<input id="fEyebrow" type="text" value="PERUSKURSSIT 2026"></label>
+      <label>Otsikko<textarea id="fHeadline">ALOITA
+KAMPPAILU
+NYT.</textarea></label>
+      <label>Leipäteksti<textarea id="fSub">Et tarvitse aiempaa kokemusta tai valmista kuntoa. Tule sellaisena kuin olet – me opetamme perusteet.</textarea></label>
+      <label>Hinta<input id="fPrice" type="text" value="8 VKO · 120 €"></label>
+      <label>Pieni rivi<input id="fSmall" type="text" value="Kurssit alkavat 31.8.–1.9. · capracombat.fi"></label>
+      <label>CTA<input id="fCta" type="text" value="ILMOITTAUDU"></label>
+    </div>
+
+    <div class="group">
+      <h3>Lisää</h3>
+      <div class="row">
+        <button class="btn olive" id="addText">+ Teksti</button>
+        <button class="btn" id="addChip">+ Lajipilleri</button>
+      </div>
+      <div class="row one"><label class="btn" id="addImage" for="imageUpload" role="button">+ Oma kuvaelementti</label></div>
+      <input class="native-file-input" id="imageUpload" type="file" accept="image/*">
+    </div>
+  </section>
+
+  <section class="panel" id="element">
+    <div class="group">
+      <h3>Valittu elementti</h3>
+      <div id="noSelection" class="help">Napauta tai klikkaa elementtiä mainoksesta.</div>
+      <div id="selectionControls" style="display:none">
+        <label>Teksti<textarea id="elText"></textarea></label>
+        <div class="row">
+          <label>X<input id="elX" type="number"></label>
+          <label>Y<input id="elY" type="number"></label>
+        </div>
+        <div class="row">
+          <label>Leveys<input id="elW" type="number"></label>
+          <label>Koko / skaala<input id="elScale" type="number" step=".05" min=".1" max="4"></label>
+        </div>
+        <div class="row">
+          <label>Kierto<input id="elRot" type="number" step="1"></label>
+          <label>Fonttikoko<input id="elFont" type="number" min="8" max="220"></label>
+        </div>
+        <div class="row">
+          <label>Tekstin väri<input id="elColor" type="color"></label>
+          <label>Taustaväri<input id="elBg" type="color"></label>
+        </div>
+        <div class="row">
+          <button class="btn" id="front">Tuo eteen</button>
+          <button class="btn" id="back">Vie taakse</button>
+        </div>
+        <button class="btn danger" id="deleteEl">Poista elementti</button>
+      </div>
+    </div>
+    <div class="group">
+      <h3>Siirtäminen</h3>
+      <p class="help">Raahaa elementtiä suoraan mainoksessa. Valitun elementin oikean alakulman keltaisesta pisteestä voit skaalata sitä.</p>
+    </div>
+  </section>
+
+  <section class="panel" id="style">
+    <div class="group">
+      <h3>Capra-värit</h3>
+      <div class="row">
+        <label>Oliivi<input id="olive" type="color" value="#68724a"></label>
+        <label>Okra<input id="ochre" type="color" value="#c8ae4d"></label>
+      </div>
+      <div class="row">
+        <label>Tausta<input id="bgColor" type="color" value="#11120f"></label>
+        <label>Vaalea<input id="paper" type="color" value="#f1eee6"></label>
+      </div>
+      <button class="btn" id="resetColors">Palauta Capra-värit</button>
+    </div>
+    <div class="group">
+      <h3>Taustan ilme</h3>
+      <label><input type="checkbox" id="grainToggle" checked> Film grain</label><br><br>
+      <label><input type="checkbox" id="gridToggle" checked> Ruudukko</label><br><br>
+      <label><input type="checkbox" id="barsToggle" checked> Liikkuvat väripalkit</label>
+    </div>
+    <div class="group">
+      <h3>Logo</h3>
+      <p class="help">Editoriin on upotettu kirjastostasi löytynyt oikea Capra Combat -logo. Sitä voi siirtää ja skaalata kuten muitakin elementtejä.</p>
+      <button class="btn" id="resetLogo">Palauta logo</button>
+    </div>
+  </section>
+
+  <section class="panel" id="motion">
+    <div class="group">
+      <h3>Valitun elementin animaatio</h3>
+      <select id="animSelect">
+        <option value="">Ei animaatiota</option>
+        <option value="animate-title">Nouseva otsikko</option>
+        <option value="animate-fade">Fade</option>
+        <option value="animate-pop">Pop</option>
+        <option value="animate-slide">Slide</option>
+      </select>
+      <div class="row">
+        <button class="btn" id="pause">Pause / Play</button>
+        <button class="btn" id="restart">Restart</button>
+      </div>
+    </div>
+    <div class="group">
+      <h3>Esikatselu</h3>
+      <label><input type="checkbox" id="safeToggle"> Näytä safe area</label>
+      <p class="help">Mainos on oikeassa 1080 × 1350 px Instagram 4:5 -koossa.</p>
+    </div>
+  </section>
+
+  <div class="group">
+    <h3>Projektin hallinta</h3>
+    <div class="row">
+      <button class="btn" id="saveProject">Tallenna</button>
+      <button class="btn" id="loadProject">Palauta</button>
+    </div>
+    <button class="btn danger" id="resetAll">Nollaa editori</button>
+    <p class="help">Tallennus käyttää selaimen localStoragea. Ruuduntallennusta varten käytä “Piilota editori”.</p>
+  </div>
+</aside>
+
+<main class="workspace">
+  <div class="topbar">
+    <div class="left">
+      <button class="mini" id="hideUI">Piilota editori</button>
+      <button class="mini" id="showSafeTop">Safe area</button>
+    </div>
+    <div style="font-size:12px;color:#8f9488"><b>1080 × 1350</b> · Instagram 4:5</div>
+  </div>
+
+  <div class="canvasWrap" id="canvasWrap">
+    <div class="stageScaler" id="stageScaler">
+      <div class="stage" id="stage">
+        <div class="bgColor"></div>
+        <div class="bgImage" id="bgImage"></div>
+        <div class="bgOverlay"></div>
+        <div class="gridbg" id="gridbg"></div>
+        <div class="grain" id="grain"></div>
+        <div class="accentBar" id="bar1"></div>
+        <div class="accentBar two" id="bar2"></div>
+        <div class="frame"></div>
+
+        <div class="el logoEl animate-fade" data-id="logo" data-type="image" style="left:70px;top:60px;width:195px;height:185px;z-index:30">
+          <img src="../../assets/capra-logo-light.jpeg" alt="Capra Combat">
+        </div>
+
+        <div class="el textEl eyebrowText animate-slide" data-id="eyebrow" data-type="text" style="left:70px;top:282px;width:auto;z-index:20">PERUSKURSSIT 2026</div>
+
+        <div class="el textEl headline animate-title" data-id="headline" data-type="text" style="left:70px;top:365px;z-index:20">ALOITA<br>KAMPPAILU<br><span class="gold">NYT.</span></div>
+
+        <div class="el textEl subline animate-fade" data-id="sub" data-type="text" style="left:72px;top:744px;z-index:20">Et tarvitse aiempaa kokemusta tai valmista kuntoa. Tule sellaisena kuin olet – me opetamme perusteet.</div>
+
+        <div class="el chips animate-fade" data-id="chips" data-type="html" style="left:70px;top:945px;z-index:20">
+          <div class="chip">BJJ</div><div class="chip">LUKKOPAINI</div><div class="chip">VAPAAOTTELU</div><div class="chip">MUAY THAI / K1</div>
+        </div>
+
+        <div class="el textEl price animate-fade" data-id="price" data-type="html" style="left:70px;top:1132px;z-index:20">8 VKO · 120 €<small>Kurssit alkavat 31.8.–1.9. · capracombat.fi</small></div>
+
+        <div class="el textEl cta animate-pop" data-id="cta" data-type="text" style="left:800px;top:1160px;z-index:22">ILMOITTAUDU</div>
+      </div>
+    </div>
+  </div>
+</main>
+</div>
+
+<script>
+const stage=document.getElementById('stage');
+const MASTER_LOGO_LIGHT='../../assets/capra-logo-light.jpeg';
+function applyOfficialLogo(){const header=document.querySelector('.brandTop img'),stageLogo=stage.querySelector('[data-id="logo"] img');if(header)header.src=MASTER_LOGO_LIGHT;if(stageLogo){stageLogo.src=MASTER_LOGO_LIGHT;stageLogo.alt='Capra Combat'}}
+applyOfficialLogo();
+const scaler=document.getElementById('stageScaler');
+const wrap=document.getElementById('canvasWrap');
+let selected=null, zTop=50, zBottom=5, dragState=null, resizeState=null;
+
+function fitStage(){
+  const maxW=Math.min(window.innerWidth>900?window.innerWidth-420:window.innerWidth-16,702);
+  const scale=Math.min(maxW/1080,(window.innerHeight-90)/1350,0.65);
+  scaler.style.left=Math.max(0,(wrap.clientWidth-1080*scale)/2)+'px';
+  scaler.style.transform=`scale(${scale})`;
+  wrap.style.height=(1350*scale)+'px';
+}
+window.addEventListener('resize',fitStage); fitStage();
+
+function setTab(name){
+ document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));
+ document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===name));
+}
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>setTab(b.dataset.tab));
+
+function cleanTextForEditor(el){
+ if(el.dataset.id==='headline') return el.innerText;
+ if(el.dataset.id==='price') return el.childNodes[0]?.textContent?.trim()||'';
+ return el.innerText;
+}
+
+function selectEl(el){
+ if(selected) selected.classList.remove('selected');
+ selected=el;
+ if(!el){
+  document.getElementById('noSelection').style.display='block';
+  document.getElementById('selectionControls').style.display='none'; return;
+ }
+ el.classList.add('selected');
+ document.getElementById('noSelection').style.display='none';
+ document.getElementById('selectionControls').style.display='block';
+ syncControls();
+}
+
+function syncControls(){
+ if(!selected)return;
+ const cs=getComputedStyle(selected);
+ const rect={x:parseFloat(selected.style.left)||0,y:parseFloat(selected.style.top)||0,w:parseFloat(selected.style.width)||selected.offsetWidth};
+ elText.value=cleanTextForEditor(selected);
+ elText.disabled=selected.dataset.type==='image'||selected.dataset.type==='html'&&selected.dataset.id==='chips';
+ elX.value=Math.round(rect.x); elY.value=Math.round(rect.y); elW.value=Math.round(rect.w);
+ const m=(selected.dataset.transform||'1,0').split(',');
+ elScale.value=parseFloat(m[0]||1); elRot.value=parseFloat(m[1]||0);
+ elFont.value=parseFloat(cs.fontSize)||20;
+ elColor.value=rgbToHex(cs.color);
+ let bg=cs.backgroundColor; elBg.value=rgbToHex(bg==='rgba(0, 0, 0, 0)'?'#000000':bg);
+ animSelect.value=['animate-title','animate-fade','animate-pop','animate-slide'].find(c=>selected.classList.contains(c))||'';
+}
+
+function rgbToHex(v){
+ if(v.startsWith('#')) return v;
+ const m=v.match(/\d+/g); if(!m||m.length<3)return '#000000';
+ return '#'+m.slice(0,3).map(x=>(+x).toString(16).padStart(2,'0')).join('');
+}
+function applyTransform(){
+ if(!selected)return;
+ const s=+elScale.value||1,r=+elRot.value||0;
+ selected.dataset.transform=`${s},${r}`;
+ selected.style.transform=`scale(${s}) rotate(${r}deg)`;
+}
+
+stage.addEventListener('pointerdown',e=>{
+ const el=e.target.closest('.el');
+ if(!el){selectEl(null);return}
+ selectEl(el);
+ const r=el.getBoundingClientRect();
+ const isResize=el.classList.contains('selected') && e.clientX>r.right-32 && e.clientY>r.bottom-32;
+ const sr=stage.getBoundingClientRect(), scale=sr.width/1080;
+ if(isResize){
+   resizeState={el,startX:e.clientX,startY:e.clientY,startScale:+elScale.value||1,scale};
+ }else{
+   dragState={el,startX:e.clientX,startY:e.clientY,left:parseFloat(el.style.left)||0,top:parseFloat(el.style.top)||0,scale};
+ }
+ el.setPointerCapture?.(e.pointerId);
+ e.preventDefault();
+});
+
+stage.addEventListener('pointermove',e=>{
+ if(dragState){
+   const dx=(e.clientX-dragState.startX)/dragState.scale,dy=(e.clientY-dragState.startY)/dragState.scale;
+   dragState.el.style.left=Math.round(dragState.left+dx)+'px';
+   dragState.el.style.top=Math.round(dragState.top+dy)+'px';
+   syncControls();
+ }
+ if(resizeState){
+   const delta=(e.clientX-resizeState.startX)/resizeState.scale;
+   const base=Math.max(50,resizeState.el.offsetWidth);
+   const newScale=Math.max(.2,Math.min(4,resizeState.startScale*(1+delta/base)));
+   elScale.value=newScale.toFixed(2);applyTransform();
+ }
+});
+stage.addEventListener('pointerup',()=>{dragState=null;resizeState=null});
+
+elText.oninput=()=>{
+ if(!selected)return;
+ if(selected.dataset.id==='headline'){
+   const lines=elText.value.split('\n');
+   selected.innerHTML=lines.map((x,i)=>i===lines.length-1?`<span class="gold">${escapeHtml(x)}</span>`:escapeHtml(x)).join('<br>');
+ } else if(selected.dataset.id==='price'){
+   const small=selected.querySelector('small')?.outerHTML||'';
+   selected.innerHTML=escapeHtml(elText.value)+small;
+ } else selected.textContent=elText.value;
+};
+function escapeHtml(s){return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));}
+elX.oninput=()=>selected&&(selected.style.left=elX.value+'px');
+elY.oninput=()=>selected&&(selected.style.top=elY.value+'px');
+elW.oninput=()=>selected&&(selected.style.width=elW.value+'px');
+elScale.oninput=applyTransform; elRot.oninput=applyTransform;
+elFont.oninput=()=>selected&&(selected.style.fontSize=elFont.value+'px');
+elColor.oninput=()=>selected&&(selected.style.color=elColor.value);
+elBg.oninput=()=>selected&&(selected.style.backgroundColor=elBg.value);
+front.onclick=()=>selected&&(selected.style.zIndex=++zTop);
+back.onclick=()=>selected&&(selected.style.zIndex=--zBottom);
+deleteEl.onclick=()=>{if(selected&&selected.dataset.id!=='logo'){selected.remove();selectEl(null)}};
+animSelect.onchange=()=>{if(!selected)return;['animate-title','animate-fade','animate-pop','animate-slide'].forEach(c=>selected.classList.remove(c));if(animSelect.value)selected.classList.add(animSelect.value)};
+
+function bindField(id,target,mode='text'){
+ document.getElementById(id).oninput=e=>{
+  const el=stage.querySelector(`[data-id="${target}"]`); if(!el)return;
+  if(target==='headline'){const lines=e.target.value.split('\n');el.innerHTML=lines.map((x,i)=>i===lines.length-1?`<span class="gold">${escapeHtml(x)}</span>`:escapeHtml(x)).join('<br>')}
+  else if(target==='price'){const sm=el.querySelector('small'); const smtxt=sm?sm.textContent:''; el.innerHTML=escapeHtml(e.target.value)+`<small>${escapeHtml(smtxt)}</small>`}
+  else if(target==='cta'||target==='eyebrow'||target==='sub') el.textContent=e.target.value;
+ };
+}
+bindField('fEyebrow','eyebrow');bindField('fHeadline','headline');bindField('fSub','sub');bindField('fPrice','price');bindField('fCta','cta');
+fSmall.oninput=e=>{const sm=stage.querySelector('[data-id="price"] small');if(sm)sm.textContent=e.target.value};
+
+function readFileAsDataURL(file,cb){const r=new FileReader();r.onload=()=>cb(r.result);r.readAsDataURL(file)}
+bgUpload.onchange=e=>{const f=e.target.files[0];if(f)readFileAsDataURL(f,u=>{bgImage.style.backgroundImage=`url("${u}")`;localStorage.setItem('capraBg',u)});e.target.value=''};
+removeBg.onclick=()=>{bgImage.style.backgroundImage='none';localStorage.removeItem('capraBg')};
+bgZoom.oninput=e=>bgImage.style.transform=`scale(${e.target.value/100})`;
+bgOpacity.oninput=e=>bgImage.style.opacity=e.target.value/100;
+bgX.oninput=e=>bgImage.style.backgroundPosition=`${e.target.value}% ${bgY.value}%`;
+bgY.oninput=e=>bgImage.style.backgroundPosition=`${bgX.value}% ${e.target.value}%`;
+
+olive.oninput=e=>document.documentElement.style.setProperty('--olive',e.target.value);
+ochre.oninput=e=>document.documentElement.style.setProperty('--ochre',e.target.value);
+bgColor.oninput=e=>document.documentElement.style.setProperty('--ink',e.target.value);
+paper.oninput=e=>document.documentElement.style.setProperty('--paper',e.target.value);
+resetColors.onclick=()=>{olive.value='#68724a';ochre.value='#c8ae4d';bgColor.value='#11120f';paper.value='#f1eee6';olive.oninput({target:olive});ochre.oninput({target:ochre});bgColor.oninput({target:bgColor});paper.oninput({target:paper})};
+grainToggle.onchange=e=>grain.style.display=e.target.checked?'block':'none';
+gridToggle.onchange=e=>gridbg.style.display=e.target.checked?'block':'none';
+barsToggle.onchange=e=>{bar1.style.display=e.target.checked?'block':'none';bar2.style.display=e.target.checked?'block':'none'};
+
+addText.onclick=()=>{
+ const el=document.createElement('div');el.className='el textEl animate-fade';el.dataset.id='custom'+Date.now();el.dataset.type='text';
+ el.textContent='UUSI TEKSTI';el.style.cssText='left:150px;top:650px;width:600px;font-size:44px;font-weight:900;z-index:40;color:#f1eee6';
+ stage.appendChild(el);selectEl(el);setTab('element');
+};
+addChip.onclick=()=>{
+ const el=document.createElement('div');el.className='el chip';el.dataset.id='custom'+Date.now();el.dataset.type='text';el.textContent='UUSI LAJI';
+ el.style.cssText='left:150px;top:900px;z-index:40';stage.appendChild(el);selectEl(el);setTab('element');
+};
+imageUpload.onchange=e=>{const f=e.target.files[0];if(!f)return;readFileAsDataURL(f,u=>{
+ const el=document.createElement('div');el.className='el logoEl';el.dataset.id='img'+Date.now();el.dataset.type='image';el.style.cssText='left:300px;top:500px;width:320px;height:320px;z-index:35';
+ const img=document.createElement('img');img.src=u;img.style.objectFit='cover';el.appendChild(img);stage.appendChild(el);selectEl(el);setTab('element');
+});e.target.value=''};
+
+pause.onclick=()=>stage.classList.toggle('noAnim');
+restart.onclick=()=>{stage.classList.remove('noAnim');stage.style.display='none';void stage.offsetHeight;stage.style.display='block'};
+safeToggle.onchange=e=>stage.classList.toggle('showSafe',e.target.checked);
+showSafeTop.onclick=()=>stage.classList.toggle('showSafe');
+
+resetLogo.onclick=()=>{const l=stage.querySelector('[data-id="logo"]');l.style.cssText='left:70px;top:60px;width:195px;height:185px;z-index:30';l.dataset.transform='1,0';l.style.transform='scale(1) rotate(0deg)'};
+
+hideUI.onclick=()=>{
+ document.body.classList.toggle('hideUI');
+ hideUI.textContent=document.body.classList.contains('hideUI')?'Näytä editori':'Piilota editori';
+ setTimeout(fitStage,50);
+};
+document.addEventListener('keydown',e=>{if(e.key.toLowerCase()==='h')hideUI.click()});
+
+function projectData(){
+ return {
+   html:stage.innerHTML,
+   vars:{olive:olive.value,ochre:ochre.value,bg:bgColor.value,paper:paper.value},
+   bg:{zoom:bgZoom.value,opacity:bgOpacity.value,x:bgX.value,y:bgY.value},
+   fields:{eyebrow:fEyebrow.value,headline:fHeadline.value,sub:fSub.value,price:fPrice.value,small:fSmall.value,cta:fCta.value}
+ };
+}
+saveProject.onclick=()=>{localStorage.setItem('capraStudioProject',JSON.stringify(projectData()));alert('Projekti tallennettu tähän selaimeen.')};
+loadProject.onclick=()=>{
+ const s=localStorage.getItem('capraStudioProject');if(!s)return alert('Tallennettua projektia ei löytynyt.');
+ const d=JSON.parse(s);stage.innerHTML=d.html;applyOfficialLogo();olive.value=d.vars.olive;ochre.value=d.vars.ochre;bgColor.value=d.vars.bg;paper.value=d.vars.paper;
+ resetColorsVars();Object.assign(fEyebrow,{value:d.fields.eyebrow});fHeadline.value=d.fields.headline;fSub.value=d.fields.sub;fPrice.value=d.fields.price;fSmall.value=d.fields.small;fCta.value=d.fields.cta;
+ bgZoom.value=d.bg.zoom;bgOpacity.value=d.bg.opacity;bgX.value=d.bg.x;bgY.value=d.bg.y;
+ const bg=localStorage.getItem('capraBg');if(bg)stage.querySelector('#bgImage').style.backgroundImage=`url("${bg}")`;
+ selectEl(null);
+};
+function resetColorsVars(){document.documentElement.style.setProperty('--olive',olive.value);document.documentElement.style.setProperty('--ochre',ochre.value);document.documentElement.style.setProperty('--ink',bgColor.value);document.documentElement.style.setProperty('--paper',paper.value)}
+resetAll.onclick=()=>{if(confirm('Nollataanko editori ja poistetaanko tallennettu projekti?')){localStorage.removeItem('capraStudioProject');localStorage.removeItem('capraBg');location.reload()}};
+
+const storedBg=localStorage.getItem('capraBg');if(storedBg)bgImage.style.backgroundImage=`url("${storedBg}")`;
+selectEl(null);
+</script>
+</body>
+</html>
