@@ -1,0 +1,466 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Capra Combat – Instagram Carousel Generator</title>
+<link rel="stylesheet" href="../../vendor/capra-fonts.css">
+<style>
+:root{
+  --bg:#0b0d0d; --panel:#121515; --panel2:#181c1b; --line:#2a302e;
+  --text:#f3f1eb; --muted:#9ca39e; --olive:#68724a; --ochre:#c8ae4d;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+button,input,select,textarea{font:inherit}
+.app{display:grid;grid-template-columns:minmax(560px,1fr) 410px;min-height:100vh}
+.stage-wrap{padding:22px;display:flex;flex-direction:column;gap:14px;align-items:center;justify-content:flex-start;overflow:auto}
+.toolbar{width:min(100%,830px);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.toolbar .spacer{flex:1}
+button{border:1px solid var(--line);background:#171b1a;color:#f4f2ed;padding:10px 13px;border-radius:10px;cursor:pointer}
+button:hover{background:#222725}
+button.primary{background:var(--olive);border-color:var(--olive);color:white;font-weight:700}
+button.gold{background:var(--ochre);border-color:var(--ochre);color:#151515;font-weight:700}
+button.icon{min-width:42px}
+.slide-tabs{display:flex;gap:7px;flex-wrap:wrap}
+.slide-tabs button{width:42px;height:42px;padding:0;border-radius:50%}
+.slide-tabs button.active{background:var(--olive);border-color:var(--olive)}
+.canvas-shell{width:min(100%,760px);aspect-ratio:4/5;position:relative;background:#000;box-shadow:0 24px 70px rgba(0,0,0,.42);border-radius:4px;overflow:hidden}
+canvas{display:block;width:100%;height:100%;touch-action:none;cursor:grab}
+canvas.dragging{cursor:grabbing}
+.hint{width:min(100%,760px);font-size:12px;color:var(--muted);line-height:1.45}
+.sidebar{border-left:1px solid var(--line);background:#0f1211;padding:18px;overflow:auto;height:100vh;position:sticky;top:0}
+.brand{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.brand h1{font-size:17px;letter-spacing:.08em;margin:0}
+.brand small{color:var(--muted)}
+.group{border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px;background:var(--panel)}
+.group h2{font-size:12px;text-transform:uppercase;letter-spacing:.16em;color:#c5c9c6;margin:0 0 12px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.field{margin-bottom:10px}
+.field:last-child{margin-bottom:0}
+label{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#b7bdb9;margin-bottom:6px}
+label output{color:#e9e7e0;font-variant-numeric:tabular-nums}
+input[type="text"],input[type="number"],select,textarea{width:100%;border:1px solid #303634;background:#0d100f;color:#f3f1eb;border-radius:9px;padding:9px 10px;outline:none}
+textarea{min-height:90px;resize:vertical;line-height:1.35}
+input[type="range"]{width:100%;accent-color:var(--olive)}
+input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #303634;background:#0d100f;border-radius:9px}
+.file{position:relative;overflow:hidden}
+.file input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.toggle{display:flex;align-items:center;gap:8px;font-size:12px;color:#c8cdca}
+.toggle input{accent-color:var(--olive)}
+.mini{font-size:11px;color:var(--muted);line-height:1.45}
+.kbd{display:inline-block;border:1px solid #343a37;background:#111413;border-radius:5px;padding:1px 5px;color:#dfe2df}
+@media(max-width:1050px){
+  .app{grid-template-columns:1fr}
+  .sidebar{position:relative;height:auto;border-left:0;border-top:1px solid var(--line)}
+}
+</style>
+<style id="iphone-compat">
+@media(max-width:1050px){
+  html,body{width:100%;max-width:100%;overflow-x:hidden}
+  body{padding-bottom:env(safe-area-inset-bottom)}
+  .stage-wrap{padding-top:max(22px,env(safe-area-inset-top))}
+  .sidebar{padding-bottom:max(18px,env(safe-area-inset-bottom))}
+  button,label.file{min-height:44px}
+  label.file{display:flex;align-items:center;justify-content:center;padding:10px 13px;border:1px solid var(--line);border-radius:10px;background:#171b1a;color:#f4f2ed;cursor:pointer}
+  input:not([type="range"]):not([type="color"]):not([type="checkbox"]):not([type="radio"]):not([type="file"]),textarea,select{font-size:16px!important}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <main class="stage-wrap">
+    <div class="toolbar">
+      <div class="slide-tabs" id="slideTabs"></div>
+      <div class="spacer"></div>
+      <button id="resetSlide">Palauta dia</button>
+      <button id="downloadCurrent" class="primary">Lataa PNG</button>
+      <button id="downloadAll" class="gold">Lataa kaikki 5</button>
+    </div>
+    <div class="canvas-shell">
+      <canvas id="canvas" width="1080" height="1350"></canvas>
+    </div>
+    <div class="hint">
+      Vedä hiirellä tai sormella <b>otsikkoa</b>, <b>leipätekstiä</b>, <b>korostusviivaa</b> tai <b>Capra-logoa</b>.
+      Kuvan rajausta säädetään oikean reunan liu'uilla. Vienti on aina 1080 × 1350 px.
+      <br>Logo on upotettu generaattoriin alkuperäisestä Capra Combat -logotiedostosta; <b>CAPRA NOTES</b> -tekstiä ei käytetä.
+    </div>
+  </main>
+
+  <aside class="sidebar">
+    <div class="brand">
+      <div><h1>CAPRA CAROUSEL</h1><small>4:5 · 1080 × 1350</small></div>
+      <button id="saveConfig" title="Tallenna asetukset">JSON</button>
+    </div>
+
+    <section class="group">
+      <h2>Kuva</h2>
+      <div class="field">
+        <label class="file" style="width:100%" for="imageUpload" role="button">Vaihda taustakuva<input id="imageUpload" type="file" accept="image/*"></label>
+      </div>
+      <div class="row">
+        <div class="field"><label>Kuva X <output id="imageXOut"></output></label><input id="imageX" type="range" min="0" max="100" step="1"></div>
+        <div class="field"><label>Kuva Y <output id="imageYOut"></output></label><input id="imageY" type="range" min="0" max="100" step="1"></div>
+      </div>
+      <div class="field"><label>Zoom <output id="zoomOut"></output></label><input id="zoom" type="range" min="1" max="2.4" step="0.01"></div>
+      <div class="row">
+        <div class="field"><label>Tummennus <output id="shadeOut"></output></label><input id="shade" type="range" min="0" max="0.8" step="0.01"></div>
+        <div class="field"><label>Gradientti <output id="gradOut"></output></label><input id="grad" type="range" min="0" max="1" step="0.01"></div>
+      </div>
+      <div class="field"><label>Gradientin suunta</label>
+        <select id="gradDir"><option value="left">Tumma vasen</option><option value="right">Tumma oikea</option><option value="top">Tumma ylä</option><option value="bottom">Tumma ala</option><option value="none">Ei gradienttia</option></select>
+      </div>
+    </section>
+
+    <section class="group">
+      <h2>Otsikko</h2>
+      <div class="field"><textarea id="title"></textarea></div>
+      <div class="row">
+        <div class="field"><label>Koko <output id="titleSizeOut"></output></label><input id="titleSize" type="range" min="28" max="120" step="1"></div>
+        <div class="field"><label>Riviväli <output id="titleLHOut"></output></label><input id="titleLH" type="range" min="0.85" max="1.5" step="0.01"></div>
+      </div>
+      <div class="row">
+        <div class="field"><label>Leveys <output id="titleWOut"></output></label><input id="titleW" type="range" min="300" max="940" step="5"></div>
+        <div class="field"><label>Väri</label><input id="titleColor" type="color"></div>
+      </div>
+    </section>
+
+    <section class="group">
+      <h2>Leipäteksti</h2>
+      <div class="field"><textarea id="bodyText"></textarea></div>
+      <div class="row">
+        <div class="field"><label>Koko <output id="bodySizeOut"></output></label><input id="bodySize" type="range" min="24" max="90" step="1"></div>
+        <div class="field"><label>Riviväli <output id="bodyLHOut"></output></label><input id="bodyLH" type="range" min="0.9" max="1.6" step="0.01"></div>
+      </div>
+      <div class="row">
+        <div class="field"><label>Leveys <output id="bodyWOut"></output></label><input id="bodyW" type="range" min="300" max="940" step="5"></div>
+        <div class="field"><label>Väri</label><input id="bodyColor" type="color"></div>
+      </div>
+    </section>
+
+    <section class="group">
+      <h2>Brändielementit</h2>
+      <div class="row">
+        <div class="field"><label>Logo <output id="logoSizeOut"></output></label><input id="logoSize" type="range" min="90" max="430" step="5"></div>
+        <div class="field"><label>Logon läpinäkyvyys <output id="logoOpacityOut"></output></label><input id="logoOpacity" type="range" min="0.2" max="1" step="0.01"></div>
+      </div>
+      <div class="row">
+        <div class="field"><label>Viivan leveys <output id="accentWOut"></output></label><input id="accentW" type="range" min="0" max="500" step="2"></div>
+        <div class="field"><label>Viivan paksuus <output id="accentHOut"></output></label><input id="accentH" type="range" min="1" max="14" step="1"></div>
+      </div>
+      <div class="row">
+        <div class="field"><label>Viivan väri</label><input id="accentColor" type="color"></div>
+        <div class="field"><label>Sivunumero</label><div class="toggle"><input id="showPage" type="checkbox" checked> Näytä 1/5</div></div>
+      </div>
+      <div class="mini">Capran brändivärit: oliivi <b>#68724a</b> · okra <b>#c8ae4d</b>. Logo on oikea alkuperäinen merkki, ei AI:n piirtämä korvike.</div>
+    </section>
+
+    <section class="group">
+      <h2>Tyyli</h2>
+      <div class="field"><label>Fontti</label>
+        <select id="fontFamily">
+          <option value="Georgia">Georgia — editorial</option>
+          <option value="Times New Roman">Times New Roman — klassinen</option>
+          <option value="Arial">Arial — moderni sans</option>
+          <option value="Arial Black">Arial Black — raskas</option>
+        </select>
+      </div>
+      <div class="row">
+        <div class="field"><label>Otsikko</label>
+          <select id="titleWeight"><option value="400">Regular</option><option value="700">Bold</option></select>
+        </div>
+        <div class="field"><label>Leipäteksti</label>
+          <select id="bodyWeight"><option value="400">Regular</option><option value="700">Bold</option></select>
+        </div>
+      </div>
+    </section>
+
+    <section class="group">
+      <h2>Asetukset</h2>
+      <div class="row">
+        <label id="loadConfigBtn" class="file" for="loadConfig" role="button">Lataa JSON<input id="loadConfig" type="file" accept=".json,application/json"></label>
+        <button id="duplicateSlide">Kopioi dia seuraavaan</button>
+      </div>
+    </section>
+  </aside>
+</div>
+
+<script>
+const W=1080,H=1350;
+const initialSlides = [{"title": "4 asiaa,\njotka tekevät\nsinusta paremman\nharjoittelijan.", "body": "", "image": "../assets/presets/bbfe633362990b414a86.jpg", "imageX": 62, "imageY": 48, "zoom": 1.18, "shade": 0.18, "grad": 0.74, "gradDir": "left", "titleX": 92, "titleY": 430, "titleW": 720, "titleSize": 88, "bodyX": 92, "bodyY": 850, "bodyW": 680, "bodySize": 46, "logoX": 540, "logoY": 1220, "logoSize": 230, "accentX": 92, "accentY": 350, "accentW": 86, "accentH": 4}, {"title": "Älä yritä voittaa\njokaista erää.", "body": "Yritä ratkaista\ntämän päivän ongelma.", "image": "../assets/presets/ca61204fd866930102e7.jpg", "imageX": 56, "imageY": 53, "zoom": 1.28, "shade": 0.22, "grad": 0.7, "gradDir": "left", "titleX": 72, "titleY": 165, "titleW": 700, "titleSize": 70, "bodyX": 72, "bodyY": 430, "bodyW": 700, "bodySize": 56, "logoX": 540, "logoY": 1215, "logoSize": 210, "accentX": 72, "accentY": 375, "accentW": 58, "accentH": 4}, {"title": "Hakeudu tilanteisiin,\njoissa olet huono.", "body": "Niitä välttelemällä\net kehity.", "image": "../assets/presets/d327dc5f261ad5eb9ddd.jpg", "imageX": 65, "imageY": 48, "zoom": 1.2, "shade": 0.18, "grad": 0.66, "gradDir": "left", "titleX": 60, "titleY": 210, "titleW": 650, "titleSize": 62, "bodyX": 60, "bodyY": 420, "bodyW": 610, "bodySize": 54, "logoX": 540, "logoY": 1212, "logoSize": 210, "accentX": 60, "accentY": 120, "accentW": 720, "accentH": 2}, {"title": "Hyvä harjoittelu\nei aina tunnu hyvältä.", "body": "Epäonnistuminen\nkertoo usein siitä,\nettä tehtävä haastaa.", "image": "../assets/presets/dd86c374f36f1039644f.jpg", "imageX": 50, "imageY": 48, "zoom": 1.15, "shade": 0.28, "grad": 0.68, "gradDir": "left", "titleX": 70, "titleY": 220, "titleW": 730, "titleSize": 64, "bodyX": 70, "bodyY": 465, "bodyW": 650, "bodySize": 48, "logoX": 175, "logoY": 1195, "logoSize": 210, "accentX": 70, "accentY": 405, "accentW": 56, "accentH": 4}, {"title": "Kehitys syntyy\nlaadukkaista toistoista.", "body": "Ei yhdestä\ntäydellisestä treenistä.", "image": "../assets/presets/ce3abb81437c5a20262d.jpg", "imageX": 53, "imageY": 48, "zoom": 1.16, "shade": 0.2, "grad": 0.66, "gradDir": "left", "titleX": 60, "titleY": 180, "titleW": 770, "titleSize": 66, "bodyX": 60, "bodyY": 440, "bodyW": 700, "bodySize": 57, "logoX": 540, "logoY": 1210, "logoSize": 220, "accentX": 60, "accentY": 655, "accentW": 116, "accentH": 4}];
+let slides = structuredClone(initialSlides);
+let current = 0;
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+const imageCache = new Map();
+const logoImg = new Image();
+logoImg.src = '../../assets/capra-logo-light.jpeg';
+let drag = null;
+let hitboxes = {};
+
+const defaults = {
+  titleLH:1.06, bodyLH:1.18, titleColor:'#f4f1e8', bodyColor:'#f4f1e8',
+  accentColor:'#68724a', logoOpacity:0.92, showPage:true,
+  fontFamily:'Georgia', titleWeight:'400', bodyWeight:'400'
+};
+slides.forEach(s=>Object.assign(s, defaults, s));
+
+function getImg(src){
+  if(imageCache.has(src)) return imageCache.get(src);
+  const im = new Image(); im.src=src; imageCache.set(src,im);
+  im.onload=render; return im;
+}
+slides.forEach(s=>getImg(s.image));
+
+function drawCover(im,s){
+  if(!im || !im.naturalWidth) return;
+  const base=Math.max(W/im.naturalWidth,H/im.naturalHeight);
+  const scale=base*s.zoom;
+  const dw=im.naturalWidth*scale, dh=im.naturalHeight*scale;
+  const dx=(W-dw)*(s.imageX/100), dy=(H-dh)*(s.imageY/100);
+  ctx.drawImage(im,dx,dy,dw,dh);
+}
+function drawOverlays(s){
+  ctx.fillStyle=`rgba(0,0,0,${s.shade})`; ctx.fillRect(0,0,W,H);
+  if(s.gradDir==='none'||s.grad<=0) return;
+  let g;
+  if(s.gradDir==='left') g=ctx.createLinearGradient(0,0,W,0);
+  if(s.gradDir==='right') g=ctx.createLinearGradient(W,0,0,0);
+  if(s.gradDir==='top') g=ctx.createLinearGradient(0,0,0,H);
+  if(s.gradDir==='bottom') g=ctx.createLinearGradient(0,H,0,0);
+  g.addColorStop(0,`rgba(0,0,0,${s.grad})`);
+  g.addColorStop(.62,`rgba(0,0,0,${s.grad*.38})`);
+  g.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+  // subtle vignette
+  const vg=ctx.createRadialGradient(W*.5,H*.47,300,W*.5,H*.47,900);
+  vg.addColorStop(0,'rgba(0,0,0,0)');
+  vg.addColorStop(1,'rgba(0,0,0,.18)');
+  ctx.fillStyle=vg;ctx.fillRect(0,0,W,H);
+}
+function lineWrap(text,maxWidth,font){
+  ctx.font=font;
+  const paras=String(text||'').split('\n');
+  const lines=[];
+  paras.forEach((p,pi)=>{
+    if(p===''){lines.push('');return;}
+    const words=p.split(/\s+/);
+    let line='';
+    for(const word of words){
+      const test=line?line+' '+word:word;
+      if(ctx.measureText(test).width>maxWidth && line){
+        lines.push(line); line=word;
+      }else line=test;
+    }
+    lines.push(line);
+  });
+  return lines;
+}
+function drawTextBlock(text,x,y,maxW,size,lh,color,fontFamily,weight){
+  const font=`${weight} ${size}px "${fontFamily}"`;
+  const lines=lineWrap(text,maxW,font);
+  ctx.font=font; ctx.fillStyle=color;ctx.textBaseline='top';ctx.textAlign='left';
+  let yy=y, widest=0;
+  for(const line of lines){
+    if(line!=='') ctx.fillText(line,x,yy);
+    widest=Math.max(widest,ctx.measureText(line).width);
+    yy += size*lh;
+  }
+  return {x,y,w:Math.min(maxW,Math.max(widest,20)),h:Math.max(size,lines.length*size*lh)};
+}
+function drawLogo(s){
+  if(!logoImg.complete || !logoImg.naturalWidth) return null;
+  const w=s.logoSize;
+  const h=w*(logoImg.naturalHeight/logoImg.naturalWidth);
+  const x=s.logoX-w/2, y=s.logoY-h/2;
+  ctx.save();ctx.globalAlpha=s.logoOpacity;ctx.drawImage(logoImg,x,y,w,h);ctx.restore();
+  return {x,y,w,h};
+}
+function render(){
+  const s=slides[current];
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='#050606';ctx.fillRect(0,0,W,H);
+  drawCover(getImg(s.image),s);
+  drawOverlays(s);
+
+  hitboxes={};
+  if(s.accentW>0){
+    ctx.fillStyle=s.accentColor;
+    ctx.fillRect(s.accentX,s.accentY,s.accentW,s.accentH);
+    hitboxes.accent={x:s.accentX-12,y:s.accentY-12,w:s.accentW+24,h:s.accentH+24};
+  }
+  if(s.title.trim()) hitboxes.title=drawTextBlock(s.title,s.titleX,s.titleY,s.titleW,s.titleSize,s.titleLH,s.titleColor,s.fontFamily,s.titleWeight);
+  if(s.body.trim()) hitboxes.body=drawTextBlock(s.body,s.bodyX,s.bodyY,s.bodyW,s.bodySize,s.bodyLH,s.bodyColor,s.fontFamily,s.bodyWeight);
+
+  if(s.showPage){
+    ctx.font='400 28px Georgia';ctx.fillStyle='rgba(248,246,240,.96)';ctx.textAlign='right';ctx.textBaseline='top';
+    ctx.fillText(`${current+1}/5`,1008,52);
+  }
+  hitboxes.logo=drawLogo(s);
+}
+logoImg.onload=render;
+
+function pointIn(b,x,y){return b&&x>=b.x&&x<=b.x+b.w&&y>=b.y&&y<=b.y+b.h}
+function canvasPoint(e){
+  const r=canvas.getBoundingClientRect();
+  const p=e.touches?e.touches[0]:e;
+  return {x:(p.clientX-r.left)*W/r.width,y:(p.clientY-r.top)*H/r.height};
+}
+canvas.addEventListener('pointerdown',e=>{
+  const p=canvasPoint(e), s=slides[current];
+  for(const key of ['title','body','logo','accent']){
+    if(pointIn(hitboxes[key],p.x,p.y)){
+      drag={key,start:p,orig:{}};
+      if(key==='title') drag.orig={x:s.titleX,y:s.titleY};
+      if(key==='body') drag.orig={x:s.bodyX,y:s.bodyY};
+      if(key==='logo') drag.orig={x:s.logoX,y:s.logoY};
+      if(key==='accent') drag.orig={x:s.accentX,y:s.accentY};
+      canvas.setPointerCapture(e.pointerId);canvas.classList.add('dragging');break;
+    }
+  }
+});
+canvas.addEventListener('pointermove',e=>{
+  if(!drag)return;
+  const p=canvasPoint(e),s=slides[current],dx=p.x-drag.start.x,dy=p.y-drag.start.y;
+  if(drag.key==='title'){s.titleX=drag.orig.x+dx;s.titleY=drag.orig.y+dy}
+  if(drag.key==='body'){s.bodyX=drag.orig.x+dx;s.bodyY=drag.orig.y+dy}
+  if(drag.key==='logo'){s.logoX=drag.orig.x+dx;s.logoY=drag.orig.y+dy}
+  if(drag.key==='accent'){s.accentX=drag.orig.x+dx;s.accentY=drag.orig.y+dy}
+  render();
+});
+function endDrag(){drag=null;canvas.classList.remove('dragging');}
+canvas.addEventListener('pointerup',endDrag);canvas.addEventListener('pointercancel',endDrag);
+
+const controls = {
+ imageX:'range',imageY:'range',zoom:'range',shade:'range',grad:'range',gradDir:'select',
+ title:'text',titleSize:'range',titleLH:'range',titleW:'range',titleColor:'color',
+ bodyText:'body',bodySize:'range',bodyLH:'range',bodyW:'range',bodyColor:'color',
+ logoSize:'range',logoOpacity:'range',accentW:'range',accentH:'range',accentColor:'color',
+ showPage:'check',fontFamily:'select',titleWeight:'select',bodyWeight:'select'
+};
+for(const [id,type] of Object.entries(controls)){
+  const el=document.getElementById(id);
+  const prop=id==='bodyText'?'body':id;
+  const ev=(type==='range'||type==='color')?'input':'change';
+  el.addEventListener(ev,()=>{
+    const s=slides[current];
+    if(type==='range') s[prop]=Number(el.value);
+    else if(type==='check') s[prop]=el.checked;
+    else s[prop]=el.value;
+    updateOutputs();render();
+  });
+  if(type==='text'||type==='body') el.addEventListener('input',()=>{slides[current][prop]=el.value;render();});
+}
+function updateOutputs(){
+ const s=slides[current];
+ const map={
+  imageX:[s.imageX,'%'],imageY:[s.imageY,'%'],zoom:[s.zoom.toFixed(2),'×'],
+  shade:[Math.round(s.shade*100),'%'],grad:[Math.round(s.grad*100),'%'],
+  titleSize:[s.titleSize,' px'],titleLH:[s.titleLH.toFixed(2),'×'],titleW:[s.titleW,' px'],
+  bodySize:[s.bodySize,' px'],bodyLH:[s.bodyLH.toFixed(2),'×'],bodyW:[s.bodyW,' px'],
+  logoSize:[s.logoSize,' px'],logoOpacity:[Math.round(s.logoOpacity*100),'%'],
+  accentW:[s.accentW,' px'],accentH:[s.accentH,' px']
+ };
+ for(const [id,[v,u]] of Object.entries(map)){const o=document.getElementById(id+'Out');if(o)o.textContent=v+u}
+}
+function syncUI(){
+ const s=slides[current];
+ document.getElementById('imageX').value=s.imageX;
+ document.getElementById('imageY').value=s.imageY;
+ document.getElementById('zoom').value=s.zoom;
+ document.getElementById('shade').value=s.shade;
+ document.getElementById('grad').value=s.grad;
+ document.getElementById('gradDir').value=s.gradDir;
+ document.getElementById('title').value=s.title;
+ document.getElementById('titleSize').value=s.titleSize;
+ document.getElementById('titleLH').value=s.titleLH;
+ document.getElementById('titleW').value=s.titleW;
+ document.getElementById('titleColor').value=s.titleColor;
+ document.getElementById('bodyText').value=s.body;
+ document.getElementById('bodySize').value=s.bodySize;
+ document.getElementById('bodyLH').value=s.bodyLH;
+ document.getElementById('bodyW').value=s.bodyW;
+ document.getElementById('bodyColor').value=s.bodyColor;
+ document.getElementById('logoSize').value=s.logoSize;
+ document.getElementById('logoOpacity').value=s.logoOpacity;
+ document.getElementById('accentW').value=s.accentW;
+ document.getElementById('accentH').value=s.accentH;
+ document.getElementById('accentColor').value=s.accentColor;
+ document.getElementById('showPage').checked=s.showPage;
+ document.getElementById('fontFamily').value=s.fontFamily;
+ document.getElementById('titleWeight').value=s.titleWeight;
+ document.getElementById('bodyWeight').value=s.bodyWeight;
+ updateOutputs(); updateTabs(); render();
+}
+function updateTabs(){
+ const root=document.getElementById('slideTabs');root.innerHTML='';
+ slides.forEach((_,i)=>{const b=document.createElement('button');b.textContent=i+1;b.className=i===current?'active':'';b.onclick=()=>{current=i;syncUI()};root.appendChild(b)});
+}
+document.getElementById('imageUpload').addEventListener('change',e=>{
+ const f=e.target.files[0];if(!f)return;
+ const r=new FileReader();r.onload=()=>{slides[current].image=r.result;getImg(r.result);render()};r.readAsDataURL(f);e.target.value='';
+});
+document.getElementById('resetSlide').onclick=()=>{
+ slides[current]=structuredClone(initialSlides[current]);Object.assign(slides[current],defaults,slides[current]);syncUI();
+};
+document.getElementById('duplicateSlide').onclick=()=>{
+ const next=(current+1)%5;const copy=structuredClone(slides[current]);
+ copy.image=slides[next].image; // keep next slide's own photograph unless user changes it
+ slides[next]={...copy,image:slides[next].image};current=next;syncUI();
+};
+
+function downloadBlob(blob,name){
+ const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();
+ setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1500);
+}
+function exportCurrent(name){
+ return new Promise(resolve=>{
+   render();
+   canvas.toBlob(b=>{downloadBlob(b,name);resolve()},'image/png');
+ });
+}
+document.getElementById('downloadCurrent').onclick=()=>exportCurrent(`capra-carousel-${String(current+1).padStart(2,'0')}.png`);
+document.getElementById('downloadAll').onclick=async()=>{
+ const old=current;
+ for(let i=0;i<slides.length;i++){
+   current=i;syncUI();await new Promise(r=>setTimeout(r,160));
+   await exportCurrent(`capra-carousel-${String(i+1).padStart(2,'0')}.png`);
+   await new Promise(r=>setTimeout(r,280));
+ }
+ current=old;syncUI();
+};
+
+document.getElementById('saveConfig').onclick=()=>{
+ const payload={version:1,width:W,height:H,slides};
+ const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+ downloadBlob(blob,'capra-carousel-asetukset.json');
+};
+document.getElementById('loadConfig').addEventListener('change',e=>{
+ const f=e.target.files[0];if(!f)return;
+ const r=new FileReader();r.onload=()=>{
+   try{
+     const data=JSON.parse(r.result);const arr=Array.isArray(data)?data:data.slides;
+     if(!Array.isArray(arr)||arr.length!==5)throw new Error('Asetustiedostossa pitää olla 5 diaa.');
+     slides=arr.map((s,i)=>Object.assign({},defaults,initialSlides[i],s));
+     slides.forEach(s=>getImg(s.image));current=0;syncUI();
+   }catch(err){alert('JSON-asetuksia ei voitu avata: '+err.message)}
+ };r.readAsText(f);e.target.value='';
+});
+
+// Keyboard nudging for selected/last drag target.
+window.addEventListener('keydown',e=>{
+ if(!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key))return;
+ if(!drag)return;
+ e.preventDefault();
+ const step=e.shiftKey?10:2,s=slides[current];
+ let dx=0,dy=0;if(e.key==='ArrowLeft')dx=-step;if(e.key==='ArrowRight')dx=step;if(e.key==='ArrowUp')dy=-step;if(e.key==='ArrowDown')dy=step;
+ if(drag.key==='title'){s.titleX+=dx;s.titleY+=dy}
+ if(drag.key==='body'){s.bodyX+=dx;s.bodyY+=dy}
+ if(drag.key==='logo'){s.logoX+=dx;s.logoY+=dy}
+ if(drag.key==='accent'){s.accentX+=dx;s.accentY+=dy}
+ render();
+});
+syncUI();
+</script>
+</body>
+</html>

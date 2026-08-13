@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Capra Combat Ladies — Post Studio</title>
+  <meta name="theme-color" content="#0b0b0d">
+  <link rel="stylesheet" href="../../vendor/capra-fonts.css">
+  <script src="../../vendor/html2canvas.min.js"></script>
+  <style>
+    :root{
+      --ui-bg:#0a0a0c;
+      --ui-panel:#111116;
+      --ui-panel-2:#17171d;
+      --ui-border:#2a2a34;
+      --ui-text:#f4f4f5;
+      --ui-muted:#9999a8;
+      --ui-accent:#f33b8e;
+      --ui-accent-2:#ff74b4;
+      --canvas-bg:#09090b;
+      --canvas-fg:#ffffff;
+      --canvas-accent:#f33b8e;
+      --canvas-muted:#c9c9cf;
+      --radius:14px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0}
+    body{
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:var(--ui-bg);
+      color:var(--ui-text);
+      overflow:hidden;
+    }
+    button,input,select,textarea{font:inherit}
+    button{cursor:pointer}
+    .app{
+      height:100vh;
+      display:grid;
+      grid-template-columns:340px 1fr 320px;
+      background:var(--ui-bg);
+    }
+    .panel{
+      min-width:0;
+      background:var(--ui-panel);
+      border-color:var(--ui-border);
+      overflow:auto;
+      scrollbar-width:thin;
+      scrollbar-color:#454552 #111116;
+    }
+    .panel.left{border-right:1px solid var(--ui-border)}
+    .panel.right{border-left:1px solid var(--ui-border)}
+    .panel-inner{padding:18px}
+    .brand-row{
+      display:flex;align-items:center;gap:12px;margin-bottom:18px
+    }
+    .brand-thumb{
+      width:44px;height:44px;border-radius:10px;object-fit:cover;border:1px solid #292933;background:#000
+    }
+    .brand-row h1{
+      margin:0;font-size:14px;line-height:1.15;letter-spacing:.08em;text-transform:uppercase
+    }
+    .brand-row small{display:block;color:var(--ui-muted);font-weight:500;margin-top:4px;letter-spacing:0}
+    .section{
+      border-top:1px solid var(--ui-border);
+      padding-top:16px;margin-top:16px
+    }
+    .section:first-of-type{border-top:0;margin-top:0;padding-top:0}
+    .section-title{
+      font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:#b9b9c4;
+      font-weight:800;margin-bottom:10px
+    }
+    .template-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .tpl-btn{
+      text-align:left;background:#18181f;border:1px solid #2b2b35;color:#fff;border-radius:11px;
+      padding:11px;min-height:74px;transition:.15s
+    }
+    .tpl-btn:hover{border-color:#525260;transform:translateY(-1px)}
+    .tpl-btn.active{border-color:var(--ui-accent);box-shadow:0 0 0 1px var(--ui-accent) inset}
+    .tpl-btn b{display:block;font-size:12px;line-height:1.25}
+    .tpl-btn span{display:block;color:var(--ui-muted);font-size:10px;margin-top:5px;line-height:1.3}
+    .field{margin:10px 0}
+    .field label{
+      display:flex;align-items:center;justify-content:space-between;
+      gap:8px;color:#c6c6d0;font-size:11px;font-weight:700;margin-bottom:6px
+    }
+    .field label em{font-style:normal;color:var(--ui-muted);font-weight:500}
+    .field input[type="text"],
+    .field input[type="number"],
+    .field input[type="url"],
+    .field select,
+    .field textarea{
+      width:100%;background:#0e0e13;border:1px solid #30303a;color:#fff;border-radius:9px;padding:10px 11px;
+      outline:none
+    }
+    .field textarea{min-height:74px;resize:vertical}
+    .field input:focus,.field textarea:focus,.field select:focus{border-color:#6e6e80}
+    .field input[type="color"]{
+      width:46px;height:34px;border:1px solid #30303a;background:#0e0e13;border-radius:8px;padding:3px
+    }
+    .field input[type="range"]{width:100%;accent-color:var(--ui-accent)}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+    .btn{
+      border:1px solid #34343f;background:#1a1a21;color:#fff;border-radius:9px;padding:10px 12px;font-weight:700;font-size:12px;
+    }
+    .btn:hover{background:#22222a}
+    .btn.primary{background:var(--ui-accent);border-color:var(--ui-accent);color:white}
+    .btn.primary:hover{filter:brightness(1.06)}
+    .btn.danger{color:#ff9bbf;border-color:#5b2840}
+    .btn.full{width:100%}
+    .btn.small{padding:7px 9px;font-size:11px}
+    .toggle-row{display:flex;gap:7px;flex-wrap:wrap}
+    .chip{
+      border:1px solid #33333e;background:#15151a;color:#c8c8d2;border-radius:999px;padding:7px 10px;font-size:10px;font-weight:800;
+      letter-spacing:.02em
+    }
+    .chip.active{border-color:var(--ui-accent);color:#fff;background:#2b1420}
+    .hint{
+      font-size:10px;color:var(--ui-muted);line-height:1.45;margin-top:8px
+    }
+
+    .workspace{
+      position:relative;overflow:auto;background:
+        radial-gradient(circle at 50% 15%,#1c1c25 0,#111117 32%,#09090d 72%);
+    }
+    .topbar{
+      position:sticky;top:0;z-index:20;height:58px;display:flex;align-items:center;justify-content:space-between;
+      padding:0 18px;background:rgba(10,10,14,.86);backdrop-filter:blur(12px);border-bottom:1px solid #24242c
+    }
+    .topbar .left-tools,.topbar .right-tools{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+    .canvas-area{padding:34px;min-height:calc(100vh - 58px);display:flex;justify-content:center;align-items:flex-start}
+    #canvasShell{
+      position:relative;
+      box-shadow:0 24px 70px rgba(0,0,0,.5);
+      background:#111;
+      border-radius:2px;
+      overflow:visible;
+      flex:0 0 auto;
+    }
+    #postCanvas{
+      position:absolute;left:0;top:0;
+      width:1080px;height:1350px;
+      transform-origin:top left;
+      overflow:hidden;
+      background:var(--canvas-bg);
+      color:var(--canvas-fg);
+    }
+    #postCanvas::after{
+      content:"";
+      position:absolute;inset:0;pointer-events:none;
+      opacity:var(--texture-opacity,.08);
+      background-image:
+       linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px),
+       linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px);
+      background-size:4px 4px,5px 5px;
+      mix-blend-mode:soft-light;
+      z-index:990;
+    }
+    #postCanvas.no-texture::after{display:none}
+    .safe-guides{
+      position:absolute;inset:72px;z-index:995;pointer-events:none;border:2px dashed rgba(255,255,255,.23);display:none
+    }
+    #postCanvas.show-guides .safe-guides{display:block}
+    .grid-guides{
+      position:absolute;inset:0;z-index:994;pointer-events:none;display:none;
+      background-image:
+        linear-gradient(to right,rgba(255,255,255,.10) 1px,transparent 1px),
+        linear-gradient(to bottom,rgba(255,255,255,.10) 1px,transparent 1px);
+      background-size:90px 90px;
+    }
+    #postCanvas.show-grid .grid-guides{display:block}
+    .canvas-el{
+      position:absolute;
+      min-width:28px;min-height:24px;
+      transform-origin:center center;
+      cursor:move;
+      user-select:none;
+      touch-action:none;
+    }
+    .canvas-el.selected{
+      outline:2px solid rgba(243,59,142,.95);
+      outline-offset:4px;
+    }
+    .canvas-el.locked{cursor:default}
+    .canvas-el .text-inner{
+      width:100%;height:100%;
+      outline:none;
+      white-space:pre-wrap;
+      overflow-wrap:break-word;
+    }
+    .canvas-el.editing{
+      cursor:text;
+      user-select:text;
+    }
+    .canvas-el.editing .text-inner{cursor:text}
+    .image-el{
+      overflow:hidden;background:#24242c;
+    }
+    .image-el img{
+      width:100%;height:100%;object-fit:cover;display:block;
+      filter:grayscale(var(--gray,0)) contrast(var(--contrast,1)) brightness(var(--brightness,1)) saturate(var(--saturation,1));
+      transform:scale(var(--imgzoom,1));
+      transform-origin:var(--objx,50%) var(--objy,50%);
+    }
+    .image-el::after{
+      content:"";position:absolute;inset:0;background:var(--overlay,transparent);pointer-events:none
+    }
+    .shape-el{background:var(--fill,#fff)}
+    .logo-el img{width:100%;height:100%;display:block;object-fit:contain}
+    .badge-el{
+      display:flex;align-items:center;justify-content:center;text-align:center
+    }
+
+    .empty-note{
+      color:var(--ui-muted);font-size:12px;line-height:1.5;padding:12px;border:1px dashed #373742;border-radius:10px
+    }
+    .selected-title{
+      display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px
+    }
+    .selected-title strong{font-size:13px}
+    .selected-title code{font-size:10px;color:#aaaaba}
+    .mini-actions{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+    .swatches{display:grid;grid-template-columns:repeat(6,1fr);gap:7px}
+    .swatch{height:30px;border-radius:7px;border:1px solid #444;cursor:pointer}
+    .file-input{display:none}
+    .image-drop{
+      border:1px dashed #464653;border-radius:10px;padding:12px;text-align:center;color:#c8c8d2;font-size:11px;background:#0d0d12
+    }
+
+    .status{
+      font-size:10px;color:#a4a4b0
+    }
+    .kbd{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;border:1px solid #33333e;border-bottom-width:2px;border-radius:5px;padding:1px 5px;color:#cfcfd8;background:#17171d}
+    .mobile-warning{display:none}
+    @media (max-width: 1100px){
+      .app{grid-template-columns:290px 1fr}
+      .panel.right{
+        position:fixed;right:0;top:58px;bottom:0;width:320px;z-index:40;transform:translateX(100%);
+        transition:.2s;box-shadow:-15px 0 50px rgba(0,0,0,.3)
+      }
+      .panel.right.open{transform:translateX(0)}
+      .mobile-warning{display:block}
+    }
+    @media (max-width: 760px){
+      body{overflow:auto}
+      .app{display:block;height:auto;min-height:100vh}
+      .panel.left{height:auto;border-right:0;border-bottom:1px solid var(--ui-border)}
+      .workspace{min-height:740px}
+      .topbar{position:sticky}
+      .canvas-area{padding:18px}
+      .panel.right{top:0}
+    }
+  </style>
+  <style id="iphone-compat">
+    @media(max-width:760px){
+      html,body{width:100%;max-width:100%;overflow-x:hidden}
+      body{padding-bottom:env(safe-area-inset-bottom)}
+      .panel.left{padding-top:max(16px,env(safe-area-inset-top))}
+      .panel.right{padding-top:max(14px,env(safe-area-inset-top));padding-bottom:max(18px,env(safe-area-inset-bottom))}
+      .workspace{padding-bottom:max(30px,env(safe-area-inset-bottom))}
+      button,.btn,.tab,label.btn{min-height:44px}
+      label.btn{display:flex;align-items:center;justify-content:center;cursor:pointer}
+      input:not([type="range"]):not([type="color"]):not([type="checkbox"]):not([type="radio"]):not([type="file"]),textarea,select{font-size:16px!important}
+      .file-input{display:block!important;position:fixed!important;width:1px!important;height:1px!important;opacity:0!important;clip-path:inset(50%);pointer-events:none}
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <aside class="panel left">
+    <div class="panel-inner">
+      <div class="brand-row">
+        <img class="brand-thumb" src="../../assets/capra-logo-light.jpeg" alt="Capra Combat Ladies logo">
+        <div>
+          <h1>Capra Ladies<br>Post Studio</h1>
+          <small>Somegeneraattori</small>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">1 — Valitse template</div>
+        <div class="template-grid" id="templateGrid"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">2 — Julkaisun koko</div>
+        <div class="field">
+          <select id="formatSelect">
+            <option value="portrait">Feed 4:5 — 1080×1350</option>
+            <option value="square">Neliö — 1080×1080</option>
+            <option value="story">Story / Reel — 1080×1920</option>
+          </select>
+        </div>
+        <div class="hint">Templatet on suunniteltu ensisijaisesti 4:5-feedille. Story-kokoa voi käyttää myös Reels-kansissa.</div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">3 — Brändivärit</div>
+        <div class="row">
+          <div class="field"><label>Tausta</label><input type="color" id="globalBg" value="#09090b"></div>
+          <div class="field"><label>Pinkki</label><input type="color" id="globalAccent" value="#f33b8e"></div>
+        </div>
+        <div class="row">
+          <div class="field"><label>Valkoinen</label><input type="color" id="globalFg" value="#ffffff"></div>
+          <div class="field"><label>Harmaa</label><input type="color" id="globalMuted" value="#c9c9cf"></div>
+        </div>
+        <div class="swatches">
+          <button class="swatch" title="Ladies pink" data-color="#f33b8e" style="background:#f33b8e"></button>
+          <button class="swatch" title="Hot pink" data-color="#ff4aa2" style="background:#ff4aa2"></button>
+          <button class="swatch" title="Black" data-color="#09090b" style="background:#09090b"></button>
+          <button class="swatch" title="White" data-color="#ffffff" style="background:#ffffff"></button>
+          <button class="swatch" title="Cold gray" data-color="#c9c9cf" style="background:#c9c9cf"></button>
+          <button class="swatch" title="Dark plum" data-color="#24121c" style="background:#24121c"></button>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">4 — Kuva / elementit</div>
+        <div class="row">
+          <button class="btn" id="addTextBtn">+ Teksti</button>
+          <label class="btn" id="addImageBtn" for="imageFile" role="button">+ Kuva</label>
+        </div>
+        <div class="row" style="margin-top:8px">
+          <button class="btn" id="addRectBtn">+ Laatikko</button>
+          <button class="btn" id="addLogoBtn">+ Logo</button>
+        </div>
+        <input class="file-input" type="file" id="imageFile" accept="image/*">
+        <div class="hint">Lisätyt elementit ovat vapaasti siirrettävissä ja säädettävissä oikean reunan paneelista.</div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">5 — Työkalut</div>
+        <div class="toggle-row">
+          <button class="chip" id="guidesBtn">Safe area</button>
+          <button class="chip" id="gridBtn">Grid</button>
+          <button class="chip active" id="textureBtn">Texture</button>
+        </div>
+        <div class="field">
+          <label>Texture <em id="textureVal">8%</em></label>
+          <input type="range" id="textureOpacity" min="0" max="30" value="8">
+        </div>
+        <div class="row">
+          <button class="btn" id="undoBtn">↶ Undo</button>
+          <button class="btn" id="redoBtn">↷ Redo</button>
+        </div>
+        <button class="btn danger full" id="resetBtn" style="margin-top:8px">Palauta template</button>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Pikaohje</div>
+        <div class="hint">
+          • Klikkaa elementtiä valitaksesi sen.<br>
+          • Vedä elementtiä hiirellä/sormella.<br>
+          • Tuplaklikkaa tekstiä muokataksesi suoraan.<br>
+          • Nuolinäppäimet siirtävät valittua elementtiä.<br>
+          • <span class="kbd">Shift</span> + nuoli = 10 px.<br>
+          • <span class="kbd">Delete</span> poistaa valitun elementin.<br>
+          • Vie PNG lopuksi yläpalkista.
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="workspace">
+    <div class="topbar">
+      <div class="left-tools">
+        <span class="status" id="templateStatus">Template</span>
+        <button class="btn small mobile-warning" id="openInspector">Muokkaa elementtiä</button>
+      </div>
+      <div class="right-tools">
+        <button class="btn small" id="zoomOut">−</button>
+        <span class="status" id="zoomLabel">50%</span>
+        <button class="btn small" id="zoomIn">+</button>
+        <button class="btn primary" id="exportBtn">Vie PNG</button>
+      </div>
+    </div>
+    <div class="canvas-area">
+      <div id="canvasShell">
+        <div id="postCanvas">
+          <div class="grid-guides"></div>
+          <div class="safe-guides"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <aside class="panel right" id="inspectorPanel">
+    <div class="panel-inner">
+      <div class="brand-row" style="margin-bottom:12px">
+        <div>
+          <h1>Elementin asetukset</h1>
+          <small>Valitse elementti canvaksesta</small>
+        </div>
+      </div>
+      <div id="inspectorEmpty" class="empty-note">
+        Valitse teksti, kuva, laatikko tai logo. Sen jälkeen voit muuttaa kokoa, paikkaa, väriä, fonttia, läpinäkyvyyttä ja järjestystä.
+      </div>
+      <div id="inspector" style="display:none">
+        <div class="selected-title">
+          <strong id="selName">Elementti</strong>
+          <code id="selType">text</code>
+        </div>
+
+        <div id="textControls">
+          <div class="field">
+            <label>Teksti</label>
+            <textarea id="textValue"></textarea>
+          </div>
+          <div class="row">
+            <div class="field">
+              <label>Fontti</label>
+              <select id="fontFamily">
+                <option value="'Inter', sans-serif">Inter</option>
+                <option value="'League Spartan', sans-serif">League Spartan</option>
+                <option value="'Anton', sans-serif">Anton</option>
+                <option value="'Permanent Marker', cursive">Marker</option>
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="Georgia, serif">Georgia</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Koko</label>
+              <input id="fontSize" type="number" min="10" max="300" step="1">
+            </div>
+          </div>
+          <div class="row3">
+            <div class="field"><label>Väri</label><input id="textColor" type="color"></div>
+            <div class="field"><label>Vahvuus</label><select id="fontWeight">
+              <option value="400">400</option><option value="500">500</option><option value="600">600</option>
+              <option value="700">700</option><option value="800">800</option><option value="900">900</option>
+            </select></div>
+            <div class="field"><label>Tasaus</label><select id="textAlign">
+              <option value="left">Vasen</option><option value="center">Keski</option><option value="right">Oikea</option>
+            </select></div>
+          </div>
+          <div class="row">
+            <div class="field"><label>Kirjainväli</label><input id="letterSpacing" type="number" min="-10" max="40" step=".5"></div>
+            <div class="field"><label>Riviväli</label><input id="lineHeight" type="number" min=".7" max="2.5" step=".05"></div>
+          </div>
+          <div class="toggle-row">
+            <button class="chip" id="upperBtn">VERSAALI</button>
+            <button class="chip" id="italicBtn">Kursiivi</button>
+          </div>
+        </div>
+
+        <div id="imageControls" style="display:none">
+          <div class="image-drop">
+            <label class="btn small" id="replaceImageBtn" for="imageFile" role="button">Vaihda kuva</label>
+            <div class="hint">Kuva säilyy tämän HTML-tiedoston sisällä vain selaimen istunnon ajan.</div>
+          </div>
+          <div class="field"><label>Zoom <em id="imgZoomVal"></em></label><input id="imgZoom" type="range" min="100" max="220" value="100"></div>
+          <div class="row">
+            <div class="field"><label>Kohdistus X</label><input id="objX" type="range" min="0" max="100" value="50"></div>
+            <div class="field"><label>Kohdistus Y</label><input id="objY" type="range" min="0" max="100" value="50"></div>
+          </div>
+          <div class="field"><label>Mustavalko <em id="grayVal"></em></label><input id="gray" type="range" min="0" max="100" value="0"></div>
+          <div class="field"><label>Kontrasti <em id="contrastVal"></em></label><input id="contrast" type="range" min="50" max="180" value="100"></div>
+          <div class="field"><label>Kirkkaus <em id="brightnessVal"></em></label><input id="brightness" type="range" min="40" max="160" value="100"></div>
+          <div class="field"><label>Saturaatio <em id="saturationVal"></em></label><input id="saturation" type="range" min="0" max="180" value="100"></div>
+          <div class="row">
+            <div class="field"><label>Overlay</label><input id="overlayColor" type="color" value="#000000"></div>
+            <div class="field"><label>Overlay %</label><input id="overlayAlpha" type="number" min="0" max="100" value="0"></div>
+          </div>
+        </div>
+
+        <div id="shapeControls" style="display:none">
+          <div class="row">
+            <div class="field"><label>Täyttö</label><input id="shapeFill" type="color"></div>
+            <div class="field"><label>Pyöristys</label><input id="radius" type="number" min="0" max="500"></div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Sijainti ja koko</div>
+          <div class="row">
+            <div class="field"><label>X</label><input id="posX" type="number" step="1"></div>
+            <div class="field"><label>Y</label><input id="posY" type="number" step="1"></div>
+          </div>
+          <div class="row">
+            <div class="field"><label>Leveys</label><input id="elW" type="number" min="10" max="2000"></div>
+            <div class="field"><label>Korkeus</label><input id="elH" type="number" min="10" max="2500"></div>
+          </div>
+          <div class="row">
+            <div class="field"><label>Kierto °</label><input id="rotation" type="number" min="-180" max="180"></div>
+            <div class="field"><label>Opacity %</label><input id="opacity" type="number" min="0" max="100"></div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Järjestys</div>
+          <div class="mini-actions">
+            <button class="btn small" id="backBtn" title="Taakse">↓</button>
+            <button class="btn small" id="frontBtn" title="Eteen">↑</button>
+            <button class="btn small" id="duplicateBtn" title="Kopioi">⧉</button>
+            <button class="btn small danger" id="deleteBtn" title="Poista">✕</button>
+          </div>
+          <div class="toggle-row" style="margin-top:8px">
+            <button class="chip" id="lockBtn">Lukitse</button>
+            <button class="chip" id="visibleBtn">Näkyvä</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<script>
+(() => {
+  const LOGO = "../../assets/capra-logo-light.jpeg";
+  const OFFICIAL_LOGO = '../../assets/capra-logo-light.jpeg';
+  document.querySelector('.brand-thumb').src = OFFICIAL_LOGO;
+  const canvas = document.getElementById('postCanvas');
+  const shell = document.getElementById('canvasShell');
+  const inspector = document.getElementById('inspector');
+  const inspectorEmpty = document.getElementById('inspectorEmpty');
+  const inspectorPanel = document.getElementById('inspectorPanel');
+  const templateGrid = document.getElementById('templateGrid');
+  const imageFile = document.getElementById('imageFile');
+
+  const formats = {
+    portrait: {w:1080,h:1350},
+    square: {w:1080,h:1080},
+    story: {w:1080,h:1920}
+  };
+
+  const COLORS = {
+    bg:'#09090b',
+    accent:'#f33b8e',
+    fg:'#ffffff',
+    muted:'#c9c9cf',
+    plum:'#24121c'
+  };
+
+  const placeholder = (label='LISÄÄ OMA KUVA') => `data:image/svg+xml;charset=utf-8,${encodeURIComponent(`
+  <svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350">
+    <defs>
+      <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+        <stop offset="0" stop-color="#2a2a31"/>
+        <stop offset="1" stop-color="#111116"/>
+      </linearGradient>
+      <pattern id="p" width="38" height="38" patternUnits="userSpaceOnUse">
+        <path d="M0 38L38 0" stroke="#ffffff" stroke-opacity=".035" stroke-width="2"/>
+      </pattern>
+    </defs>
+    <rect width="1080" height="1350" fill="url(#g)"/>
+    <rect width="1080" height="1350" fill="url(#p)"/>
+    <text x="540" y="675" text-anchor="middle" fill="#f33b8e" font-family="Arial,sans-serif" font-size="54" font-weight="700" letter-spacing="6">${label}</text>
+  </svg>`)}`;
+
+  const T = {
+    training: {
+      name:'Treenifiilis',
+      desc:'Iso kuva + vahva otsikko',
+      elements:[
+        {type:'image',name:'Taustakuva',x:0,y:0,w:1080,h:1350,z:1,src:placeholder('LISÄÄ TREENIKUVA'),gray:25,contrast:112,brightness:82,saturation:80,overlay:'#000000',overlayAlpha:18},
+        {type:'shape',name:'Pinkki palkki',x:64,y:70,w:16,h:1210,z:4,fill:'$accent'},
+        {type:'text',name:'Pieni otsikko',x:110,y:86,w:820,h:44,z:6,text:'CAPRA COMBAT LADIES · KUOPIO',font:"'Inter', sans-serif",size:25,weight:800,color:'$accent',spacing:4,line:1.0},
+        {type:'text',name:'Pääotsikko',x:110,y:780,w:860,h:270,z:6,text:'TÄNÄÄN\nMATOLLA.',font:"'Anton', sans-serif",size:116,weight:400,color:'$fg',spacing:1,line:.92},
+        {type:'text',name:'Alateksti',x:110,y:1085,w:740,h:110,z:6,text:'Tekniikkaa, sparria ja hyvä porukka. Siinä se.',font:"'Inter', sans-serif",size:32,weight:600,color:'$fg',spacing:0,line:1.2},
+        {type:'logo',name:'Ladies logo',x:810,y:1110,w:190,h:190,z:8,src:LOGO}
+      ]
+    },
+    person: {
+      name:'Henkilö / Quote',
+      desc:'Esittely tai sitaatti',
+      elements:[
+        {type:'shape',name:'Tausta',x:0,y:0,w:1080,h:1350,z:0,fill:'$bg'},
+        {type:'image',name:'Henkilökuva',x:460,y:0,w:620,h:1350,z:1,src:placeholder('LISÄÄ HENKILÖKUVA'),gray:10,contrast:110,brightness:86,saturation:88,overlay:'#000000',overlayAlpha:6},
+        {type:'shape',name:'Pinkki blokki',x:0,y:0,w:460,h:1350,z:2,fill:'$accent'},
+        {type:'text',name:'Sarjan nimi',x:58,y:72,w:340,h:80,z:5,text:'CAPRA\nLADIES',font:"'League Spartan', sans-serif",size:36,weight:800,color:'#09090b',spacing:2,line:.95},
+        {type:'text',name:'Sitaatti',x:58,y:330,w:350,h:440,z:5,text:'“TREENIEN JÄLKEEN OLO ON AINA PAREMPI KUIN ENNEN NIITÄ.”',font:"'League Spartan', sans-serif",size:54,weight:800,color:'#09090b',spacing:-1,line:.98},
+        {type:'text',name:'Nimi',x:58,y:1040,w:350,h:70,z:5,text:'ETUNIMI',font:"'Inter', sans-serif",size:34,weight:900,color:'#09090b',spacing:2,line:1},
+        {type:'text',name:'Info',x:58,y:1110,w:340,h:130,z:5,text:'BJJ / NO-GI\n3 VUOTTA CAPRALLA',font:"'Inter', sans-serif",size:24,weight:700,color:'#09090b',spacing:1,line:1.25},
+        {type:'logo',name:'Ladies logo',x:825,y:1100,w:185,h:185,z:7,src:LOGO}
+      ]
+    },
+    beginner: {
+      name:'Aloittajan karuselli',
+      desc:'FAQ / 3 pointtia',
+      elements:[
+        {type:'shape',name:'Tausta',x:0,y:0,w:1080,h:1350,z:0,fill:'#f5f2f1'},
+        {type:'shape',name:'Yläpalkki',x:0,y:0,w:1080,h:150,z:1,fill:'$bg'},
+        {type:'text',name:'Eyebrow',x:62,y:50,w:730,h:50,z:3,text:'CAPRA COMBAT LADIES · ALOITTAMINEN',font:"'Inter', sans-serif",size:24,weight:800,color:'$accent',spacing:3,line:1},
+        {type:'text',name:'Otsikko',x:62,y:205,w:880,h:190,z:3,text:'MIETITYTTÄÄKÖ\nALOITTAMINEN?',font:"'Anton', sans-serif",size:92,weight:400,color:'#09090b',spacing:1,line:.95},
+        {type:'shape',name:'Numero 1',x:70,y:470,w:76,h:76,z:3,fill:'$accent',radius:38},
+        {type:'text',name:'1',x:70,y:486,w:76,h:48,z:4,text:'1',font:"'Inter', sans-serif",size:34,weight:900,color:'#09090b',align:'center',line:1},
+        {type:'text',name:'Pointti 1',x:180,y:466,w:800,h:100,z:3,text:'Et tarvitse aikaisempaa kokemusta.',font:"'League Spartan', sans-serif",size:42,weight:700,color:'#09090b',line:1.1},
+        {type:'shape',name:'Numero 2',x:70,y:635,w:76,h:76,z:3,fill:'$accent',radius:38},
+        {type:'text',name:'2',x:70,y:651,w:76,h:48,z:4,text:'2',font:"'Inter', sans-serif",size:34,weight:900,color:'#09090b',align:'center',line:1},
+        {type:'text',name:'Pointti 2',x:180,y:631,w:800,h:110,z:3,text:'Sinun ei tarvitse olla valmiiksi hyvässä kunnossa.',font:"'League Spartan', sans-serif",size:42,weight:700,color:'#09090b',line:1.1},
+        {type:'shape',name:'Numero 3',x:70,y:820,w:76,h:76,z:3,fill:'$accent',radius:38},
+        {type:'text',name:'3',x:70,y:836,w:76,h:48,z:4,text:'3',font:"'Inter', sans-serif",size:34,weight:900,color:'#09090b',align:'center',line:1},
+        {type:'text',name:'Pointti 3',x:180,y:816,w:800,h:110,z:3,text:'Voit tulla ensimmäisiin treeneihin myös yksin.',font:"'League Spartan', sans-serif",size:42,weight:700,color:'#09090b',line:1.1},
+        {type:'shape',name:'CTA palkki',x:0,y:1130,w:1080,h:220,z:2,fill:'$bg'},
+        {type:'text',name:'CTA',x:62,y:1180,w:700,h:90,z:5,text:'KYSY MEILTÄ TAI TULE KOKEILEMAAN.',font:"'Inter', sans-serif",size:32,weight:800,color:'$fg',spacing:1,line:1.15},
+        {type:'logo',name:'Ladies logo',x:835,y:1146,w:165,h:165,z:7,src:LOGO}
+      ]
+    },
+    result: {
+      name:'Kisatulos',
+      desc:'Mitali / ottelutulos',
+      elements:[
+        {type:'image',name:'Kilpailijakuva',x:0,y:0,w:1080,h:1350,z:1,src:placeholder('LISÄÄ KISAKUVA'),gray:12,contrast:118,brightness:78,saturation:88,overlay:'#000000',overlayAlpha:28},
+        {type:'shape',name:'Yläkulma',x:0,y:0,w:1080,h:145,z:3,fill:'$accent'},
+        {type:'text',name:'Tapahtuma',x:58,y:46,w:840,h:55,z:4,text:'KILPAILUN NIMI · 2026',font:"'Inter', sans-serif",size:26,weight:900,color:'#09090b',spacing:3,line:1},
+        {type:'text',name:'Mitali',x:62,y:625,w:860,h:210,z:5,text:'🥇\nKULTAA.',font:"'Anton', sans-serif",size:118,weight:400,color:'$fg',spacing:1,line:.92},
+        {type:'text',name:'Nimi',x:62,y:880,w:850,h:82,z:5,text:'ETUNIMI SUKUNIMI',font:"'League Spartan', sans-serif",size:58,weight:800,color:'$accent',spacing:0,line:1},
+        {type:'text',name:'Luokka',x:62,y:970,w:850,h:100,z:5,text:'-XX KG · VÄRIVYÖT / NO-GI',font:"'Inter', sans-serif",size:30,weight:800,color:'$fg',spacing:2,line:1.15},
+        {type:'text',name:'Lisärivi',x:62,y:1080,w:760,h:95,z:5,text:'3 ottelua · 3 voittoa',font:"'Inter', sans-serif",size:30,weight:600,color:'$fg',spacing:0,line:1.2},
+        {type:'logo',name:'Ladies logo',x:815,y:1110,w:190,h:190,z:8,src:LOGO}
+      ]
+    },
+    event: {
+      name:'Tapahtuma / Treeni',
+      desc:'Ladies-treeni / peruskurssi',
+      elements:[
+        {type:'shape',name:'Tausta',x:0,y:0,w:1080,h:1350,z:0,fill:'$bg'},
+        {type:'shape',name:'Pinkki alaosa',x:0,y:920,w:1080,h:430,z:2,fill:'$accent'},
+        {type:'text',name:'Eyebrow',x:70,y:75,w:850,h:50,z:4,text:'CAPRA COMBAT LADIES · KUOPIO',font:"'Inter', sans-serif",size:24,weight:900,color:'$accent',spacing:4,line:1},
+        {type:'text',name:'Otsikko',x:70,y:215,w:900,h:310,z:4,text:'LADIES\nOPEN MAT.',font:"'Anton', sans-serif",size:126,weight:400,color:'$fg',spacing:1,line:.9},
+        {type:'text',name:'Kuvaus',x:70,y:580,w:830,h:155,z:4,text:'Kaikille Capran naisille. Tule sparraamaan, drillamaan tai vain moikkaamaan porukkaa.',font:"'Inter', sans-serif",size:34,weight:600,color:'$fg',line:1.25},
+        {type:'text',name:'Päivä',x:70,y:980,w:390,h:80,z:5,text:'SUNNUNTAI',font:"'Inter', sans-serif",size:32,weight:900,color:'#09090b',spacing:2,line:1},
+        {type:'text',name:'Aika',x:70,y:1060,w:470,h:115,z:5,text:'12:00–14:00',font:"'Anton', sans-serif",size:70,weight:400,color:'#09090b',spacing:1,line:.95},
+        {type:'text',name:'Paikka',x:70,y:1195,w:650,h:80,z:5,text:'CAPRA COMBAT · KUOPIO',font:"'Inter', sans-serif",size:26,weight:800,color:'#09090b',spacing:2,line:1},
+        {type:'logo',name:'Ladies logo',x:800,y:1010,w:205,h:205,z:8,src:LOGO}
+      ]
+    },
+    reel: {
+      name:'Reel / POV',
+      desc:'Kevyt hook + video-kansi',
+      elements:[
+        {type:'image',name:'Kansikuva',x:0,y:0,w:1080,h:1350,z:1,src:placeholder('LISÄÄ REEL-KANSIKUVA'),gray:30,contrast:115,brightness:75,saturation:75,overlay:'#000000',overlayAlpha:15},
+        {type:'shape',name:'Pinkki viiva',x:70,y:74,w:210,h:13,z:4,fill:'$accent'},
+        {type:'text',name:'POV',x:70,y:110,w:500,h:70,z:5,text:'POV:',font:"'Inter', sans-serif",size:38,weight:900,color:'$accent',spacing:3,line:1},
+        {type:'text',name:'Hook',x:70,y:750,w:900,h:360,z:5,text:'TREENIKAVERI\nSANOI:\n“KEVYT ERÄ.”',font:"'Anton', sans-serif",size:100,weight:400,color:'$fg',spacing:1,line:.92},
+        {type:'text',name:'Alatagi',x:70,y:1180,w:600,h:60,z:5,text:'CAPRA LADIES · NO-GI',font:"'Inter', sans-serif",size:27,weight:800,color:'$fg',spacing:3,line:1},
+        {type:'logo',name:'Ladies logo',x:830,y:1135,w:170,h:170,z:8,src:LOGO}
+      ]
+    }
+  };
+
+  let formatKey = 'portrait';
+  let currentTemplate = 'training';
+  let selectedId = null;
+  let scale = 0.5;
+  let userZoom = null;
+  let history = [];
+  let future = [];
+  let isRestoring = false;
+  let pendingImageTarget = null;
+
+  function valColor(v){
+    if(v === '$accent') return getComputedStyle(canvas).getPropertyValue('--canvas-accent').trim();
+    if(v === '$fg') return getComputedStyle(canvas).getPropertyValue('--canvas-fg').trim();
+    if(v === '$muted') return getComputedStyle(canvas).getPropertyValue('--canvas-muted').trim();
+    if(v === '$bg') return getComputedStyle(canvas).getPropertyValue('--canvas-bg').trim();
+    return v || '#ffffff';
+  }
+
+  function createId(){ return 'el_' + Math.random().toString(36).slice(2,10); }
+
+  function createElement(data){
+    const el = document.createElement('div');
+    el.className = `canvas-el ${data.type}-el`;
+    el.dataset.id = data.id || createId();
+    el.dataset.type = data.type;
+    el.dataset.name = data.name || data.type;
+    el.dataset.locked = data.locked ? '1' : '0';
+    el.dataset.visible = data.visible === false ? '0' : '1';
+    el.style.left = `${data.x ?? 100}px`;
+    el.style.top = `${data.y ?? 100}px`;
+    el.style.width = `${data.w ?? 300}px`;
+    el.style.height = `${data.h ?? 120}px`;
+    el.style.zIndex = data.z ?? 5;
+    el.style.opacity = (data.opacity ?? 100)/100;
+    el.dataset.rotation = data.rotation ?? 0;
+    el.style.transform = `rotate(${data.rotation ?? 0}deg)`;
+    if(data.visible === false) el.style.display = 'none';
+    if(data.locked) el.classList.add('locked');
+
+    if(data.type === 'text'){
+      const inner = document.createElement('div');
+      inner.className = 'text-inner';
+      inner.contentEditable = 'false';
+      inner.spellcheck = false;
+      inner.innerText = data.text ?? 'TEKSTI';
+      el.appendChild(inner);
+      el.dataset.rawText = data.text ?? 'TEKSTI';
+      el.dataset.upper = data.upper ? '1' : '0';
+      el.dataset.italic = data.italic ? '1' : '0';
+      el.style.fontFamily = data.font || "'Inter', sans-serif";
+      el.style.fontSize = `${data.size ?? 42}px`;
+      el.style.fontWeight = data.weight ?? 700;
+      el.style.color = valColor(data.color || '$fg');
+      el.dataset.colorToken = data.color || '$fg';
+      el.style.letterSpacing = `${data.spacing ?? 0}px`;
+      el.style.lineHeight = data.line ?? 1.05;
+      el.style.textAlign = data.align || 'left';
+      el.style.fontStyle = data.italic ? 'italic' : 'normal';
+      inner.style.textTransform = data.upper ? 'uppercase' : 'none';
+      inner.addEventListener('input', () => {
+        el.dataset.rawText = inner.innerText;
+        if(selectedId === el.dataset.id) document.getElementById('textValue').value = inner.innerText;
+      });
+      inner.addEventListener('blur', () => { el.classList.remove('editing'); inner.contentEditable='false'; pushHistory(); });
+    }
+
+    if(data.type === 'image'){
+      const img = document.createElement('img');
+      img.src = data.src || placeholder();
+      img.alt = '';
+      el.appendChild(img);
+      applyImageData(el, data);
+    }
+
+    if(data.type === 'logo'){
+      el.classList.add('logo-el');
+      const img = document.createElement('img');
+      img.src = OFFICIAL_LOGO;
+      img.alt = 'Capra Combat';
+      el.appendChild(img);
+    }
+
+    if(data.type === 'shape'){
+      el.style.setProperty('--fill', valColor(data.fill || '$accent'));
+      el.dataset.fillToken = data.fill || '$accent';
+      el.style.borderRadius = `${data.radius ?? 0}px`;
+    }
+
+    el.addEventListener('pointerdown', startDrag);
+    el.addEventListener('click', e => {
+      e.stopPropagation();
+      selectElement(el.dataset.id);
+    });
+    el.addEventListener('dblclick', e => {
+      if(el.dataset.type === 'text' && el.dataset.locked !== '1'){
+        e.stopPropagation();
+        selectElement(el.dataset.id);
+        el.classList.add('editing');
+        const inner = el.querySelector('.text-inner');
+        inner.contentEditable = 'true';
+        inner.focus();
+        const range = document.createRange();
+        range.selectNodeContents(inner);
+        const sel = window.getSelection();
+        sel.removeAllRanges(); sel.addRange(range);
+      }
+    });
+    canvas.appendChild(el);
+    return el;
+  }
+
+  function applyImageData(el, data){
+    el.style.setProperty('--gray', `${(data.gray ?? 0)/100}`);
+    el.style.setProperty('--contrast', `${(data.contrast ?? 100)/100}`);
+    el.style.setProperty('--brightness', `${(data.brightness ?? 100)/100}`);
+    el.style.setProperty('--saturation', `${(data.saturation ?? 100)/100}`);
+    el.style.setProperty('--imgzoom', `${(data.zoom ?? 100)/100}`);
+    el.style.setProperty('--objx', `${data.objX ?? 50}%`);
+    el.style.setProperty('--objy', `${data.objY ?? 50}%`);
+    const overlay = hexToRgba(data.overlay || '#000000', (data.overlayAlpha ?? 0)/100);
+    el.style.setProperty('--overlay', overlay);
+    el.dataset.gray = data.gray ?? 0;
+    el.dataset.contrast = data.contrast ?? 100;
+    el.dataset.brightness = data.brightness ?? 100;
+    el.dataset.saturation = data.saturation ?? 100;
+    el.dataset.zoom = data.zoom ?? 100;
+    el.dataset.objX = data.objX ?? 50;
+    el.dataset.objY = data.objY ?? 50;
+    el.dataset.overlay = data.overlay || '#000000';
+    el.dataset.overlayAlpha = data.overlayAlpha ?? 0;
+  }
+
+  function renderTemplateButtons(){
+    templateGrid.innerHTML = '';
+    Object.entries(T).forEach(([key,t]) => {
+      const b = document.createElement('button');
+      b.className = 'tpl-btn' + (key===currentTemplate?' active':'');
+      b.innerHTML = `<b>${t.name}</b><span>${t.desc}</span>`;
+      b.addEventListener('click',() => loadTemplate(key));
+      templateGrid.appendChild(b);
+    });
+  }
+
+  function clearCanvas(){
+    canvas.querySelectorAll('.canvas-el').forEach(el => el.remove());
+  }
+
+  function loadTemplate(key, keepHistory=false){
+    currentTemplate = key;
+    selectedId = null;
+    clearCanvas();
+    const t = T[key];
+    t.elements.forEach(d => createElement(structuredClone(d)));
+    renderTemplateButtons();
+    document.getElementById('templateStatus').textContent = t.name;
+    updateGlobalColors();
+    hideInspector();
+    if(!keepHistory){ history=[]; future=[]; pushHistory(); }
+  }
+
+  function getElements(){
+    return [...canvas.querySelectorAll('.canvas-el')];
+  }
+
+  function selectElement(id){
+    selectedId = id;
+    getElements().forEach(el => el.classList.toggle('selected', el.dataset.id===id));
+    const el = getSelected();
+    if(el) showInspector(el); else hideInspector();
+  }
+  function getSelected(){ return selectedId ? canvas.querySelector(`.canvas-el[data-id="${selectedId}"]`) : null; }
+  function hideInspector(){
+    inspector.style.display='none'; inspectorEmpty.style.display='block';
+  }
+
+  function showInspector(el){
+    inspector.style.display='block'; inspectorEmpty.style.display='none';
+    document.getElementById('selName').textContent = el.dataset.name || 'Elementti';
+    document.getElementById('selType').textContent = el.dataset.type;
+
+    const textControls = document.getElementById('textControls');
+    const imageControls = document.getElementById('imageControls');
+    const shapeControls = document.getElementById('shapeControls');
+    textControls.style.display = el.dataset.type==='text'?'block':'none';
+    imageControls.style.display = el.dataset.type==='image'?'block':'none';
+    shapeControls.style.display = el.dataset.type==='shape'?'block':'none';
+
+    const x = parseFloat(el.style.left)||0, y=parseFloat(el.style.top)||0;
+    const w=parseFloat(el.style.width)||0, h=parseFloat(el.style.height)||0;
+    document.getElementById('posX').value=Math.round(x);
+    document.getElementById('posY').value=Math.round(y);
+    document.getElementById('elW').value=Math.round(w);
+    document.getElementById('elH').value=Math.round(h);
+    document.getElementById('rotation').value=parseFloat(el.dataset.rotation||0);
+    document.getElementById('opacity').value=Math.round((parseFloat(el.style.opacity||1))*100);
+
+    if(el.dataset.type==='text'){
+      const inner=el.querySelector('.text-inner');
+      document.getElementById('textValue').value=inner.innerText;
+      document.getElementById('fontFamily').value=el.style.fontFamily;
+      document.getElementById('fontSize').value=parseFloat(el.style.fontSize);
+      document.getElementById('fontWeight').value=el.style.fontWeight;
+      document.getElementById('textColor').value=rgbToHex(el.style.color);
+      document.getElementById('letterSpacing').value=parseFloat(el.style.letterSpacing)||0;
+      document.getElementById('lineHeight').value=parseFloat(el.style.lineHeight)||1;
+      document.getElementById('textAlign').value=el.style.textAlign||'left';
+      document.getElementById('upperBtn').classList.toggle('active',el.dataset.upper==='1');
+      document.getElementById('italicBtn').classList.toggle('active',el.dataset.italic==='1');
+    }
+    if(el.dataset.type==='image'){
+      const ids=['imgZoom','objX','objY','gray','contrast','brightness','saturation','overlayAlpha'];
+      ids.forEach(id=> document.getElementById(id).value = el.dataset[id] ?? ({imgZoom:100,objX:50,objY:50,gray:0,contrast:100,brightness:100,saturation:100,overlayAlpha:0}[id]));
+      document.getElementById('overlayColor').value=el.dataset.overlay||'#000000';
+      refreshImageLabels();
+    }
+    if(el.dataset.type==='shape'){
+      document.getElementById('shapeFill').value = rgbToHex(getComputedStyle(el).backgroundColor);
+      document.getElementById('radius').value = parseFloat(el.style.borderRadius)||0;
+    }
+    document.getElementById('lockBtn').classList.toggle('active',el.dataset.locked==='1');
+    document.getElementById('visibleBtn').classList.toggle('active',el.dataset.visible!=='0');
+  }
+
+  function startDrag(e){
+    const el = e.currentTarget;
+    if(el.dataset.locked==='1') return;
+    if(el.classList.contains('editing')) return;
+    e.preventDefault(); e.stopPropagation();
+    selectElement(el.dataset.id);
+    const startX=e.clientX, startY=e.clientY;
+    const left=parseFloat(el.style.left)||0, top=parseFloat(el.style.top)||0;
+    const localScale = scale;
+    el.setPointerCapture?.(e.pointerId);
+    const move=ev=>{
+      const dx=(ev.clientX-startX)/localScale;
+      const dy=(ev.clientY-startY)/localScale;
+      el.style.left=`${Math.round(left+dx)}px`;
+      el.style.top=`${Math.round(top+dy)}px`;
+      if(selectedId===el.dataset.id){
+        document.getElementById('posX').value=Math.round(left+dx);
+        document.getElementById('posY').value=Math.round(top+dy);
+      }
+    };
+    const up=ev=>{
+      el.removeEventListener('pointermove',move);
+      el.removeEventListener('pointerup',up);
+      el.removeEventListener('pointercancel',up);
+      pushHistory();
+    };
+    el.addEventListener('pointermove',move);
+    el.addEventListener('pointerup',up);
+    el.addEventListener('pointercancel',up);
+  }
+
+  canvas.addEventListener('pointerdown', e=>{
+    if(e.target===canvas || e.target.classList.contains('safe-guides') || e.target.classList.contains('grid-guides')){
+      selectedId=null; getElements().forEach(x=>x.classList.remove('selected')); hideInspector();
+    }
+  });
+
+  function setCanvasSize(){
+    const f=formats[formatKey];
+    canvas.style.width=f.w+'px';canvas.style.height=f.h+'px';
+    canvas.dataset.w=f.w;canvas.dataset.h=f.h;
+    fitCanvas();
+  }
+
+  function fitCanvas(){
+    const area=document.querySelector('.canvas-area');
+    const f=formats[formatKey];
+    const availableW=Math.max(260, area.clientWidth-50);
+    const availableH=Math.max(360, window.innerHeight-120);
+    const fit=Math.min(availableW/f.w, availableH/f.h, .72);
+    scale=userZoom ?? fit;
+    canvas.style.transform=`scale(${scale})`;
+    shell.style.width=(f.w*scale)+'px';
+    shell.style.height=(f.h*scale)+'px';
+    document.getElementById('zoomLabel').textContent=Math.round(scale*100)+'%';
+  }
+  window.addEventListener('resize',()=>{if(userZoom===null)fitCanvas()});
+
+  function updateGlobalColors(){
+    const bg=document.getElementById('globalBg').value;
+    const accent=document.getElementById('globalAccent').value;
+    const fg=document.getElementById('globalFg').value;
+    const muted=document.getElementById('globalMuted').value;
+    canvas.style.setProperty('--canvas-bg',bg);
+    canvas.style.setProperty('--canvas-accent',accent);
+    canvas.style.setProperty('--canvas-fg',fg);
+    canvas.style.setProperty('--canvas-muted',muted);
+    canvas.style.background=bg;
+    getElements().forEach(el=>{
+      if(el.dataset.type==='text'){
+        const t=el.dataset.colorToken;
+        if(t && t.startsWith('$')) el.style.color=valColor(t);
+      }
+      if(el.dataset.type==='shape'){
+        const t=el.dataset.fillToken;
+        if(t && t.startsWith('$')) el.style.setProperty('--fill',valColor(t));
+      }
+    });
+  }
+  ['globalBg','globalAccent','globalFg','globalMuted'].forEach(id=>{
+    document.getElementById(id).addEventListener('input',updateGlobalColors);
+    document.getElementById(id).addEventListener('change',pushHistory);
+  });
+
+  function wire(id,event,fn){ document.getElementById(id).addEventListener(event,fn); }
+
+  wire('formatSelect','change',e=>{formatKey=e.target.value; setCanvasSize(); pushHistory();});
+  wire('guidesBtn','click',e=>{canvas.classList.toggle('show-guides');e.currentTarget.classList.toggle('active')});
+  wire('gridBtn','click',e=>{canvas.classList.toggle('show-grid');e.currentTarget.classList.toggle('active')});
+  wire('textureBtn','click',e=>{canvas.classList.toggle('no-texture');e.currentTarget.classList.toggle('active')});
+  wire('textureOpacity','input',e=>{
+    canvas.style.setProperty('--texture-opacity',e.target.value/100);
+    document.getElementById('textureVal').textContent=e.target.value+'%';
+  });
+  wire('textureOpacity','change',pushHistory);
+
+  wire('zoomIn','click',()=>{userZoom=Math.min(.95,(scale+.05));fitCanvas()});
+  wire('zoomOut','click',()=>{userZoom=Math.max(.2,(scale-.05));fitCanvas()});
+
+  wire('addTextBtn','click',()=>{
+    const el=createElement({type:'text',name:'Uusi teksti',x:120,y:120,w:600,h:140,z:20,text:'UUSI TEKSTI',font:"'Inter', sans-serif",size:54,weight:800,color:'$fg',line:1});
+    selectElement(el.dataset.id); pushHistory();
+  });
+  wire('addRectBtn','click',()=>{
+    const el=createElement({type:'shape',name:'Uusi laatikko',x:140,y:180,w:360,h:160,z:15,fill:'$accent',radius:0});
+    selectElement(el.dataset.id);pushHistory();
+  });
+  wire('addLogoBtn','click',()=>{
+    const el=createElement({type:'logo',name:'Ladies logo',x:120,y:120,w:230,h:230,z:25,src:LOGO});
+    selectElement(el.dataset.id);pushHistory();
+  });
+  wire('addImageBtn','click',()=>{
+    pendingImageTarget='new';
+  });
+  wire('replaceImageBtn','click',e=>{
+    const el=getSelected(); if(!el || el.dataset.type!=='image') return;
+    pendingImageTarget=el.dataset.id;
+  });
+  imageFile.addEventListener('change',e=>{
+    const file=e.target.files?.[0]; if(!file) return;
+    const r=new FileReader();
+    r.onload=()=>{
+      if(pendingImageTarget==='new'){
+        const el=createElement({type:'image',name:'Uusi kuva',x:80,y:140,w:720,h:900,z:10,src:r.result,gray:0,contrast:100,brightness:100,saturation:100});
+        selectElement(el.dataset.id);
+      } else {
+        const el=canvas.querySelector(`.canvas-el[data-id="${pendingImageTarget}"]`);
+        if(el?.dataset.type==='image') el.querySelector('img').src=r.result;
+      }
+      pushHistory();
+    };
+    r.readAsDataURL(file);
+    e.target.value='';
+  });
+
+  // Inspector common controls
+  function commonInput(id, apply){
+    wire(id,'input',e=>{const el=getSelected();if(!el)return;apply(el,e.target.value);});
+    wire(id,'change',pushHistory);
+  }
+  commonInput('posX',(el,v)=>el.style.left=v+'px');
+  commonInput('posY',(el,v)=>el.style.top=v+'px');
+  commonInput('elW',(el,v)=>el.style.width=Math.max(10,+v)+'px');
+  commonInput('elH',(el,v)=>el.style.height=Math.max(10,+v)+'px');
+  commonInput('rotation',(el,v)=>{el.dataset.rotation=v;el.style.transform=`rotate(${v}deg)`});
+  commonInput('opacity',(el,v)=>el.style.opacity=(+v/100));
+
+  commonInput('textValue',(el,v)=>{if(el.dataset.type==='text'){el.querySelector('.text-inner').innerText=v;el.dataset.rawText=v}});
+  commonInput('fontFamily',(el,v)=>{if(el.dataset.type==='text')el.style.fontFamily=v});
+  commonInput('fontSize',(el,v)=>{if(el.dataset.type==='text')el.style.fontSize=v+'px'});
+  commonInput('fontWeight',(el,v)=>{if(el.dataset.type==='text')el.style.fontWeight=v});
+  commonInput('textColor',(el,v)=>{if(el.dataset.type==='text'){el.style.color=v;el.dataset.colorToken=v}});
+  commonInput('letterSpacing',(el,v)=>{if(el.dataset.type==='text')el.style.letterSpacing=v+'px'});
+  commonInput('lineHeight',(el,v)=>{if(el.dataset.type==='text')el.style.lineHeight=v});
+  commonInput('textAlign',(el,v)=>{if(el.dataset.type==='text')el.style.textAlign=v});
+
+  wire('upperBtn','click',e=>{
+    const el=getSelected();if(!el||el.dataset.type!=='text')return;
+    const on=el.dataset.upper!=='1'; el.dataset.upper=on?'1':'0';
+    el.querySelector('.text-inner').style.textTransform=on?'uppercase':'none';
+    e.currentTarget.classList.toggle('active',on);pushHistory();
+  });
+  wire('italicBtn','click',e=>{
+    const el=getSelected();if(!el||el.dataset.type!=='text')return;
+    const on=el.dataset.italic!=='1';el.dataset.italic=on?'1':'0';el.style.fontStyle=on?'italic':'normal';
+    e.currentTarget.classList.toggle('active',on);pushHistory();
+  });
+
+  // image controls
+  function refreshImageLabels(){
+    const el=getSelected();if(!el||el.dataset.type!=='image')return;
+    document.getElementById('imgZoomVal').textContent=(el.dataset.zoom||100)+'%';
+    document.getElementById('grayVal').textContent=(el.dataset.gray||0)+'%';
+    document.getElementById('contrastVal').textContent=(el.dataset.contrast||100)+'%';
+    document.getElementById('brightnessVal').textContent=(el.dataset.brightness||100)+'%';
+    document.getElementById('saturationVal').textContent=(el.dataset.saturation||100)+'%';
+  }
+  function imgControl(id,key,cssVar,transform=(v)=>v){
+    wire(id,'input',e=>{
+      const el=getSelected();if(!el||el.dataset.type!=='image')return;
+      el.dataset[key]=e.target.value;el.style.setProperty(cssVar,transform(e.target.value));refreshImageLabels();
+    });
+    wire(id,'change',pushHistory);
+  }
+  imgControl('imgZoom','zoom','--imgzoom',v=>(+v/100));
+  imgControl('objX','objX','--objx',v=>v+'%');
+  imgControl('objY','objY','--objy',v=>v+'%');
+  imgControl('gray','gray','--gray',v=>(+v/100));
+  imgControl('contrast','contrast','--contrast',v=>(+v/100));
+  imgControl('brightness','brightness','--brightness',v=>(+v/100));
+  imgControl('saturation','saturation','--saturation',v=>(+v/100));
+
+  function updateOverlay(){
+    const el=getSelected();if(!el||el.dataset.type!=='image')return;
+    const c=document.getElementById('overlayColor').value;
+    const a=+document.getElementById('overlayAlpha').value;
+    el.dataset.overlay=c; el.dataset.overlayAlpha=a;
+    el.style.setProperty('--overlay',hexToRgba(c,a/100));
+  }
+  wire('overlayColor','input',updateOverlay);wire('overlayColor','change',pushHistory);
+  wire('overlayAlpha','input',updateOverlay);wire('overlayAlpha','change',pushHistory);
+
+  commonInput('shapeFill',(el,v)=>{if(el.dataset.type==='shape'){el.style.setProperty('--fill',v);el.dataset.fillToken=v}});
+  commonInput('radius',(el,v)=>{if(el.dataset.type==='shape')el.style.borderRadius=v+'px'});
+
+  wire('backBtn','click',()=>{const el=getSelected();if(!el)return;el.style.zIndex=Math.max(0,(+el.style.zIndex||1)-1);pushHistory()});
+  wire('frontBtn','click',()=>{const el=getSelected();if(!el)return;el.style.zIndex=(+el.style.zIndex||1)+1;pushHistory()});
+  wire('duplicateBtn','click',()=>{
+    const el=getSelected();if(!el)return;
+    const d=serializeElement(el);d.id=createId();d.x+=24;d.y+=24;d.name=(d.name||'Elementti')+' kopio';
+    const copy=createElement(d);selectElement(copy.dataset.id);pushHistory();
+  });
+  wire('deleteBtn','click',()=>{const el=getSelected();if(!el)return;el.remove();selectedId=null;hideInspector();pushHistory()});
+  wire('lockBtn','click',e=>{
+    const el=getSelected();if(!el)return;
+    const on=el.dataset.locked!=='1';el.dataset.locked=on?'1':'0';el.classList.toggle('locked',on);e.currentTarget.classList.toggle('active',on);pushHistory();
+  });
+  wire('visibleBtn','click',e=>{
+    const el=getSelected();if(!el)return;
+    const on=el.dataset.visible==='0';el.dataset.visible=on?'1':'0';el.style.display=on?'':'none';e.currentTarget.classList.toggle('active',on);
+    if(!on){selectedId=null;hideInspector();}pushHistory();
+  });
+
+  document.querySelectorAll('.swatch').forEach(s=>s.addEventListener('click',()=>{
+    const c=s.dataset.color;const el=getSelected();
+    if(el?.dataset.type==='text'){el.style.color=c;el.dataset.colorToken=c;showInspector(el);pushHistory();}
+    else if(el?.dataset.type==='shape'){el.style.setProperty('--fill',c);el.dataset.fillToken=c;showInspector(el);pushHistory();}
+    else {document.getElementById('globalAccent').value=c;updateGlobalColors();pushHistory();}
+  }));
+
+  wire('resetBtn','click',()=>{ if(confirm('Palautetaanko valittu template alkuperäiseen muotoon?')) loadTemplate(currentTemplate); });
+  wire('openInspector','click',()=>inspectorPanel.classList.add('open'));
+
+  document.addEventListener('keydown',e=>{
+    const el=getSelected();
+    if(!el) return;
+    if(el.classList.contains('editing') || ['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)) return;
+    const step=e.shiftKey?10:1;
+    if(e.key==='ArrowLeft'){el.style.left=(parseFloat(el.style.left)-step)+'px';e.preventDefault()}
+    if(e.key==='ArrowRight'){el.style.left=(parseFloat(el.style.left)+step)+'px';e.preventDefault()}
+    if(e.key==='ArrowUp'){el.style.top=(parseFloat(el.style.top)-step)+'px';e.preventDefault()}
+    if(e.key==='ArrowDown'){el.style.top=(parseFloat(el.style.top)+step)+'px';e.preventDefault()}
+    if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key)){showInspector(el)}
+    if(e.key==='Delete'||e.key==='Backspace'){
+      if(document.activeElement===document.body){el.remove();selectedId=null;hideInspector();pushHistory();}
+    }
+    if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='z'){e.preventDefault();e.shiftKey?redo():undo()}
+  });
+
+  function serializeElement(el){
+    const d={
+      id:el.dataset.id,type:el.dataset.type,name:el.dataset.name,
+      x:parseFloat(el.style.left)||0,y:parseFloat(el.style.top)||0,w:parseFloat(el.style.width)||0,h:parseFloat(el.style.height)||0,
+      z:+el.style.zIndex||1,opacity:Math.round((parseFloat(el.style.opacity||1))*100),rotation:+el.dataset.rotation||0,
+      locked:el.dataset.locked==='1',visible:el.dataset.visible!=='0'
+    };
+    if(d.type==='text'){
+      d.text=el.querySelector('.text-inner').innerText;
+      d.font=el.style.fontFamily;d.size=parseFloat(el.style.fontSize);d.weight=el.style.fontWeight;
+      d.color=el.dataset.colorToken||rgbToHex(el.style.color);
+      d.spacing=parseFloat(el.style.letterSpacing)||0;d.line=parseFloat(el.style.lineHeight)||1;
+      d.align=el.style.textAlign||'left';d.upper=el.dataset.upper==='1';d.italic=el.dataset.italic==='1';
+    }
+    if(d.type==='image'){
+      d.src=el.querySelector('img').src;
+      ['gray','contrast','brightness','saturation','zoom','objX','objY','overlay','overlayAlpha'].forEach(k=>d[k]=isNaN(el.dataset[k])?el.dataset[k]:+el.dataset[k]);
+    }
+    if(d.type==='logo') d.src=el.querySelector('img').src;
+    if(d.type==='shape'){d.fill=el.dataset.fillToken||rgbToHex(getComputedStyle(el).backgroundColor);d.radius=parseFloat(el.style.borderRadius)||0;}
+    return d;
+  }
+
+  function serializeState(){
+    return {
+      template:currentTemplate,format:formatKey,
+      colors:{
+        bg:document.getElementById('globalBg').value,
+        accent:document.getElementById('globalAccent').value,
+        fg:document.getElementById('globalFg').value,
+        muted:document.getElementById('globalMuted').value
+      },
+      texture:+document.getElementById('textureOpacity').value,
+      noTexture:canvas.classList.contains('no-texture'),
+      elements:getElements().map(serializeElement)
+    };
+  }
+  function restoreState(state){
+    isRestoring=true;
+    currentTemplate=state.template||currentTemplate;
+    formatKey=state.format||'portrait';
+    document.getElementById('formatSelect').value=formatKey;
+    Object.entries(state.colors||{}).forEach(([k,v])=>{
+      const map={bg:'globalBg',accent:'globalAccent',fg:'globalFg',muted:'globalMuted'}; if(map[k])document.getElementById(map[k]).value=v;
+    });
+    document.getElementById('textureOpacity').value=state.texture??8;
+    document.getElementById('textureVal').textContent=(state.texture??8)+'%';
+    canvas.classList.toggle('no-texture',!!state.noTexture);
+    clearCanvas();(state.elements||[]).forEach(d=>createElement(d));
+    selectedId=null;hideInspector();renderTemplateButtons();updateGlobalColors();setCanvasSize();
+    document.getElementById('templateStatus').textContent=T[currentTemplate]?.name||'Custom';
+    isRestoring=false;
+  }
+  function pushHistory(){
+    if(isRestoring)return;
+    const s=JSON.stringify(serializeState());
+    if(history[history.length-1]!==s){history.push(s);if(history.length>40)history.shift();future=[];}
+  }
+  function undo(){
+    if(history.length<=1)return;
+    const cur=history.pop();future.push(cur);restoreState(JSON.parse(history[history.length-1]));
+  }
+  function redo(){
+    if(!future.length)return;
+    const s=future.pop();history.push(s);restoreState(JSON.parse(s));
+  }
+  wire('undoBtn','click',undo);wire('redoBtn','click',redo);
+
+  wire('exportBtn','click',async()=>{
+    const btn=document.getElementById('exportBtn');
+    const old=btn.textContent;btn.textContent='Viedään…';btn.disabled=true;
+    const prevSel=selectedId;
+    getElements().forEach(x=>x.classList.remove('selected'));
+    canvas.classList.remove('show-guides','show-grid');
+    try{
+      if(!window.html2canvas) throw new Error('html2canvas ei latautunut');
+      const f=formats[formatKey];
+      const shot=await html2canvas(canvas,{
+        backgroundColor:null,
+        scale:1,
+        width:f.w,height:f.h,
+        useCORS:true,
+        logging:false,
+        allowTaint:true
+      });
+      const a=document.createElement('a');
+      const date=new Date().toISOString().slice(0,10);
+      a.download=`capra-ladies-${currentTemplate}-${date}.png`;
+      a.href=shot.toDataURL('image/png',1);
+      a.click();
+    }catch(err){
+      alert('PNG-vienti epäonnistui. Tarkista internet-yhteys ja avaa tiedosto tavallisessa selaimessa.\\n\\n'+err.message);
+    }finally{
+      if(prevSel)selectElement(prevSel);
+      btn.textContent=old;btn.disabled=false;
+    }
+  });
+
+  function hexToRgba(hex,a=1){
+    let h=hex.replace('#','');if(h.length===3)h=h.split('').map(c=>c+c).join('');
+    const n=parseInt(h,16);return `rgba(${(n>>16)&255},${(n>>8)&255},${n&255},${a})`;
+  }
+  function rgbToHex(rgb){
+    if(!rgb)return '#ffffff';
+    if(rgb.startsWith('#'))return rgb.slice(0,7);
+    const m=rgb.match(/\\d+/g);if(!m)return '#ffffff';
+    return '#'+m.slice(0,3).map(n=>(+n).toString(16).padStart(2,'0')).join('');
+  }
+
+  loadTemplate('training');
+  setCanvasSize();
+  requestAnimationFrame(fitCanvas);
+})();
+</script>
+</body>
+</html>
