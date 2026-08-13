@@ -2,718 +2,262 @@
 <html lang="fi">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
   <meta name="theme-color" content="#090a08">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <title>Capra Motion Studio</title>
+  <title>Capra MMA + BJJ Motion Studio</title>
+  <link rel="stylesheet" href="../vendor/capra-fonts.css">
   <style>
-    :root {
-      --olive: #68724a;
-      --ochre: #c8ae4d;
-      --ink: #090a08;
-      --panel: #151713;
-      --line: #30342b;
-      --off-white: #f4f1e8;
+    :root{
+      --olive:#68724a;
+      --ochre:#c8ae4d;
+      --ink:#090a08;
+      --paper:#f2efe7;
+      --panel:#151713;
+      --panel-2:#1c1f19;
+      --line:#34382f;
+      --muted:#a5aa9f;
     }
-
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html,body{margin:0;min-height:100%;max-width:100%;background:#070806;color:#fff;font-family:Inter,-apple-system,BlinkMacSystemFont,"SF Pro Display",Arial,sans-serif;-webkit-text-size-adjust:100%;overscroll-behavior:none}
+    body{height:100dvh;overflow:hidden;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+    button,input,textarea,select{font:inherit}
+    button,.fileButton{
+      min-height:44px;
+      border:1px solid var(--line);
+      border-radius:12px;
+      background:#20231d;
+      color:#fff;
+      padding:9px 12px;
+      font-weight:800;
+      touch-action:manipulation;
     }
-
-    html,
-    body {
-      margin: 0;
-      min-height: 100%;
-      background: #070806;
-      color: #fff;
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, Arial, sans-serif;
-      -webkit-text-size-adjust: 100%;
+    button{cursor:pointer}
+    button:disabled{opacity:.45;cursor:default}
+    button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,.fileButton:focus-visible{outline:3px solid var(--ochre);outline-offset:2px}
+    .primary{border-color:var(--ochre)!important;background:var(--ochre)!important;color:#111!important}
+    .danger{border-color:#6f3f3f!important;color:#f2caca!important}
+    .app{height:100%;display:flex;flex-direction:column;background:#090a08}
+    header{
+      height:56px;
+      flex:none;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:8px;
+      padding:0 9px;
+      border-bottom:1px solid #292c25;
+      background:#0c0e0bf5;
+      z-index:30;
     }
-
-    body {
-      min-height: 100svh;
-      height: 100dvh;
-      overflow: hidden;
-    }
-
-    button,
-    input,
-    textarea,
-    select {
-      font: inherit;
-    }
-
-    button,
-    .uploadLabel {
-      min-height: 44px;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      background: #20231d;
-      color: #fff;
-      padding: 9px 12px;
-      font-weight: 850;
-      touch-action: manipulation;
-    }
-
-    button {
-      cursor: pointer;
-    }
-
-    button:focus-visible,
-    input:focus-visible,
-    textarea:focus-visible,
-    .uploadLabel:focus-visible {
-      outline: 3px solid color-mix(in srgb, var(--ochre) 75%, white);
-      outline-offset: 2px;
-    }
-
-    button:disabled {
-      cursor: default;
-      opacity: .42;
-    }
-
-    .gold {
-      border-color: var(--ochre) !important;
-      background: var(--ochre) !important;
-      color: #111 !important;
-    }
-
-    .app {
-      height: 100dvh;
-      padding-top: env(safe-area-inset-top);
-      display: flex;
-      flex-direction: column;
-    }
-
-    header {
-      height: 58px;
-      flex: none;
-      padding: 0 10px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      border-bottom: 1px solid #292c25;
-      background: #0d0f0cf5;
-      z-index: 40;
-    }
-
-    .homeLink {
-      min-width: 0;
-      min-height: 44px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: inherit;
-      text-decoration: none;
-    }
-
-    .headerLogo {
-      width: 46px;
-      flex: 0 0 46px;
-    }
-
-    .headerLogo img {
-      display: block;
-      width: 100%;
-      height: auto;
-      object-fit: contain;
-    }
-
-    .brandName {
-      overflow: hidden;
-      font-size: 11px;
-      font-weight: 950;
-      letter-spacing: .07em;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .actions {
-      display: flex;
-      gap: 6px;
-    }
-
-    .actions button {
-      padding: 7px 9px;
-      font-size: 11px;
-    }
-
-    .modebar {
-      flex: none;
-      padding: 7px 8px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 7px;
-      border-bottom: 1px solid #292c25;
-      background: #0d0f0c;
-      z-index: 35;
-    }
-
-    .modebar button.active {
-      border-color: var(--olive);
-      background: var(--olive);
-    }
-
-    .sceneBar {
-      display: none;
-      flex: none;
-      padding: 7px 8px;
-      gap: 7px;
-      border-bottom: 1px solid #272a23;
-      background: #0b0c0a;
-      z-index: 34;
-    }
-
-    .sceneBar.show {
-      display: flex;
-    }
-
-    .sceneBar button {
-      min-width: 0;
-      flex: 1;
-      padding-inline: 5px;
-      font-size: 11px;
-      white-space: nowrap;
-    }
-
-    .sceneBar button.active {
-      border-color: var(--ochre);
-      background: var(--ochre);
-      color: #111;
-    }
-
-    .work {
-      position: relative;
-      min-height: 0;
-      flex: 1;
-    }
-
-    .viewport {
-      height: 100%;
-      padding: 10px 8px calc(96px + env(safe-area-inset-bottom));
-      display: flex;
-      justify-content: center;
-      overflow: auto;
-      overscroll-behavior: contain;
-    }
-
-    .shell {
-      position: relative;
-      width: min(100%, 540px);
-      aspect-ratio: 4 / 5;
-      flex: none;
-    }
-
-    .stage {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 1080px;
-      height: 1350px;
-      overflow: hidden;
-      border-radius: 18px;
-      background: #111;
-      box-shadow: 0 18px 50px #0009;
-      transform-origin: 0 0;
-    }
-
-    .scene {
-      position: absolute;
-      inset: 0;
-      overflow: hidden;
-      opacity: 0;
-      pointer-events: none;
-      transform: translate3d(2.2%, 0, 0);
-      transition: opacity .58s ease, transform .78s cubic-bezier(.2, .75, .25, 1);
-      will-change: opacity, transform;
-    }
-
-    .scene.is-active {
-      z-index: 2;
-      opacity: 1;
-      pointer-events: auto;
-      transform: translate3d(0, 0, 0);
-    }
-
-    .scene.is-leaving {
-      z-index: 1;
-      opacity: 0;
-      transform: translate3d(-1.8%, 0, 0);
-    }
-
-    .photo {
-      position: absolute;
-      inset: -34px;
-      background-color: #11140f;
-      background-image: radial-gradient(circle at 72% 25%, #596148 0, #262b20 29%, #0a0b09 72%);
-      background-position: var(--pos-x, 50%) var(--pos-y, 50%);
-      background-repeat: no-repeat;
-      background-size: cover;
-      transform: scale(var(--zoom, 1.03));
-      transform-origin: var(--pos-x, 50%) var(--pos-y, 50%);
-      will-change: transform;
-    }
-
-    .scene.is-active .photo {
-      animation: kenBurns 4.4s ease-in-out both;
-    }
-
-    .shade {
-      position: absolute;
-      inset: 0;
+    .homeLink{min-width:0;min-height:44px;display:flex;align-items:center;gap:9px;color:inherit;text-decoration:none}
+    .headerMark{position:relative;width:35px;height:35px;overflow:hidden;border-radius:8px;background:#000;flex:none}
+    .headerMark img{position:absolute;inset:0;width:35px;height:35px;display:block;object-fit:contain}
+    .brandText{min-width:0}
+    .brandText b{display:block;overflow:hidden;font-size:11px;letter-spacing:.055em;text-overflow:ellipsis;white-space:nowrap}
+    .brandText small{display:block;margin-top:2px;color:#8f9589;font-size:9px;letter-spacing:.08em}
+    .headerActions{display:flex;gap:6px}
+    .headerActions button{padding:7px 9px;font-size:11px}
+    .modebar{flex:none;display:grid;grid-template-columns:1fr 1fr;gap:7px;padding:7px 8px;border-bottom:1px solid #292c25;background:#0d0f0c;z-index:29}
+    .modebar button{font-size:12px}
+    .modebar button.active{border-color:var(--olive);background:var(--olive)}
+    .sceneBar{display:none;flex:none;gap:6px;padding:7px 8px;border-bottom:1px solid #272a23;background:#0a0b09;z-index:28}
+    .sceneBar.show{display:flex}
+    .sceneBar button{min-width:0;flex:1;padding:7px 4px;font-size:10px;white-space:nowrap}
+    .sceneBar button.active{border-color:var(--ochre);background:var(--ochre);color:#111}
+    .work{position:relative;min-height:0;flex:1}
+    .canvasViewport{
+      position:absolute;
+      inset:0;
+      padding:8px 8px calc(80px + env(safe-area-inset-bottom));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
       background:
-        linear-gradient(90deg, rgba(6, 7, 5, .94) 0%, rgba(6, 7, 5, .73) 43%, rgba(6, 7, 5, .18) 78%),
-        linear-gradient(0deg, rgba(6, 7, 5, .9), transparent 42%);
+        radial-gradient(circle at 50% 22%,#1d2119 0,#0b0c0a 47%,#070806 80%);
     }
-
-    .texture {
-      position: absolute;
-      inset: 0;
-      opacity: .065;
-      background-image:
-        linear-gradient(120deg, transparent 0 46%, #fff 47% 47.3%, transparent 48%),
-        linear-gradient(#fff2 1px, transparent 1px);
-      background-size: 100% 100%, 100% 92px;
-      pointer-events: none;
+    .stageShell{
+      position:relative;
+      height:100%;
+      max-height:calc((100vw - 16px) * 1.77778);
+      aspect-ratio:9/16;
+      overflow:hidden;
+      border:1px solid #31352d;
+      border-radius:18px;
+      background:#0b0c0a;
+      box-shadow:0 22px 60px #000b;
+      flex:none;
     }
-
-    .rail {
-      position: absolute;
-      left: 58px;
-      top: 62px;
-      bottom: 62px;
-      width: 5px;
-      background: var(--olive);
+    #stage{display:block;width:100%;height:100%;touch-action:none;user-select:none;-webkit-user-select:none}
+    .stageControls{position:absolute;right:8px;bottom:8px;display:flex;gap:6px;z-index:4}
+    .stageControls button{min-width:44px;width:44px;height:44px;padding:0;border-radius:999px;background:#10120fe8;backdrop-filter:blur(12px)}
+    .dragHint{
+      position:absolute;
+      left:8px;
+      bottom:9px;
+      max-width:calc(100% - 66px);
+      padding:6px 9px;
+      border:1px solid #ffffff25;
+      border-radius:999px;
+      background:#0d0f0ccc;
+      color:#d4d7ce;
+      font-size:9px;
+      opacity:.9;
+      pointer-events:none;
     }
-
-    .rail::after {
-      content: "";
-      display: block;
-      width: 5px;
-      height: 28%;
-      background: var(--ochre);
+    .sheet{
+      position:absolute;
+      left:8px;
+      right:8px;
+      bottom:calc(80px + env(safe-area-inset-bottom));
+      z-index:20;
+      display:none;
+      max-height:min(61dvh,620px);
+      padding:14px;
+      overflow:auto;
+      border:1px solid var(--line);
+      border-radius:22px;
+      background:#151713f7;
+      box-shadow:0 -16px 45px #0009;
+      backdrop-filter:blur(22px);
+      -webkit-overflow-scrolling:touch;
     }
-
-    .sceneLogo {
-      position: absolute;
-      left: 68px;
-      top: 34px;
-      width: 250px;
+    .sheet.open{display:block}
+    .sheetHead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+    .sheet h3{margin:0;font-size:12px;letter-spacing:.13em;text-transform:uppercase}
+    .sheet p{margin:6px 0 12px;color:var(--muted);font-size:12px;line-height:1.45}
+    .closeSheet{min-width:44px;width:44px;padding:0;border:0;background:transparent;font-size:20px}
+    .toolbar{
+      position:absolute;
+      left:7px;
+      right:7px;
+      bottom:calc(7px + env(safe-area-inset-bottom));
+      z-index:22;
+      height:66px;
+      display:grid;
+      grid-template-columns:repeat(5,1fr);
+      gap:1px;
+      padding:5px;
+      border:1px solid var(--line);
+      border-radius:19px;
+      background:#171915f4;
+      box-shadow:0 10px 35px #0007;
+      backdrop-filter:blur(20px);
     }
-
-    .sceneLogo img {
-      display: block;
-      width: 100%;
-      height: auto;
-      object-fit: contain;
+    .tool{min-width:0;border:0;background:transparent;padding:3px 1px;font-size:9px;color:#c6cbc0}
+    .tool b{display:block;margin-bottom:2px;color:#fff;font-size:18px}
+    .tool.active{background:#272b23;color:#fff}
+    label{display:block;margin:9px 0;color:#b5baae;font-size:11px}
+    input,textarea,select{
+      width:100%;
+      min-height:44px;
+      margin-top:5px;
+      padding:10px 11px;
+      border:1px solid #3a3e35;
+      border-radius:11px;
+      background:#0e100d;
+      color:#fff;
+      font-size:16px;
     }
-
-    .kicker {
-      position: absolute;
-      left: 88px;
-      top: 292px;
-      max-width: 790px;
-      color: #d8d8ce;
-      font-size: 22px;
-      font-weight: 900;
-      letter-spacing: .18em;
-      text-transform: uppercase;
+    textarea{min-height:78px;resize:vertical}
+    input[type="range"]{padding:0}
+    input[type="color"]{padding:5px}
+    input[type="checkbox"]{width:22px;min-height:22px;margin:0;accent-color:var(--ochre)}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .rangeRow{display:grid;grid-template-columns:80px 1fr 50px;align-items:center;gap:8px;margin:8px 0;color:#b5baae;font-size:11px}
+    .rangeRow input{margin:0}
+    .rangeRow output{color:#fff;text-align:right;font-size:11px}
+    .toggleRow{min-height:44px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin:7px 0;padding:8px 10px;border:1px solid #34382f;border-radius:11px;background:#10120f;color:#d8dbd2;font-size:12px}
+    .buttonGrid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:9px}
+    .buttonGrid .wide{grid-column:1/-1}
+    .fileButton{width:100%;display:flex;align-items:center;justify-content:center;border-color:var(--ochre);background:var(--ochre);color:#111;cursor:pointer;text-align:center}
+    .fileName{margin:6px 0 12px;overflow:hidden;color:#b4b9ad;font-size:10px;text-overflow:ellipsis;white-space:nowrap}
+    .presetGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:8px 0 13px}
+    .preset{padding:8px 4px;font-size:10px}
+    .elementPills{display:flex;gap:6px;overflow:auto;padding:2px 0 8px;scrollbar-width:none}
+    .elementPills::-webkit-scrollbar{display:none}
+    .elementPills button{flex:none;padding:7px 10px;font-size:10px}
+    .elementPills button.active{border-color:var(--ochre);color:var(--ochre)}
+    .exportCard{margin:9px 0;padding:12px;border:1px solid #383c33;border-radius:14px;background:#10120f}
+    .exportCard b{display:block;margin-bottom:4px;font-size:13px}
+    .exportCard span{color:var(--muted);font-size:10px;line-height:1.4}
+    .progress{
+      position:fixed;
+      left:50%;
+      top:50%;
+      z-index:100;
+      display:none;
+      width:min(82vw,360px);
+      padding:16px;
+      border:1px solid #454a3f;
+      border-radius:18px;
+      background:#11130ff7;
+      box-shadow:0 22px 70px #000c;
+      text-align:center;
+      transform:translate(-50%,-50%);
     }
-
-    .headline {
-      position: absolute;
-      left: 82px;
-      top: 365px;
-      width: 850px;
-      color: var(--off-white);
-      font-size: 112px;
-      font-weight: 1000;
-      letter-spacing: -.065em;
-      line-height: .82;
-      text-transform: uppercase;
-      text-wrap: balance;
+    .progress.show{display:block}
+    .progress b{display:block;margin-bottom:10px}
+    .progressTrack{height:8px;overflow:hidden;border-radius:999px;background:#30342c}
+    .progressFill{height:100%;width:0;background:var(--ochre);transition:width .12s linear}
+    .progress small{display:block;margin-top:8px;color:#aeb3a8}
+    .toast{
+      position:fixed;
+      left:50%;
+      bottom:calc(84px + env(safe-area-inset-bottom));
+      z-index:110;
+      max-width:min(88vw,430px);
+      padding:10px 14px;
+      border:1px solid #3a3e35;
+      border-radius:999px;
+      background:#11130ff2;
+      color:#fff;
+      font-size:12px;
+      font-weight:700;
+      text-align:center;
+      opacity:0;
+      pointer-events:none;
+      transform:translate(-50%,10px);
+      transition:opacity .2s ease,transform .2s ease;
     }
-
-    .headline.long {
-      font-size: 91px;
-      line-height: .86;
+    .toast.show{opacity:1;transform:translate(-50%,0)}
+    .exitPreview{
+      position:fixed;
+      top:calc(9px + env(safe-area-inset-top));
+      right:9px;
+      z-index:95;
+      display:none;
+      border-color:#ffffff45;
+      background:#0d0f0cdb;
     }
-
-    .headline.xlong {
-      font-size: 77px;
-      line-height: .9;
+    .previewMode header,.previewMode .modebar,.previewMode .sceneBar,.previewMode .toolbar,.previewMode .sheet{display:none!important}
+    .previewMode .exitPreview{display:block}
+    .previewMode .canvasViewport{padding:0;background:#000}
+    .previewMode .stageShell{
+      width:min(100vw,calc(100dvh * .5625));
+      height:min(100dvh,calc(100vw * 1.77778));
+      max-height:none;
+      border:0;
+      border-radius:0;
+      box-shadow:none;
     }
-
-    .headline em {
-      color: var(--ochre);
-      font-style: normal;
+    .previewMode .stageControls,.previewMode .dragHint{display:none}
+    @media(max-width:390px){
+      .brandText small{display:none}
+      .headerActions button{padding-inline:7px}
+      .sceneBar button{font-size:9px}
+      .toolbar{left:5px;right:5px}
     }
-
-    .accent {
-      position: absolute;
-      left: 88px;
-      top: 705px;
-      width: 130px;
-      height: 7px;
-      background: var(--ochre);
-      transform-origin: left;
+    @media(min-width:800px){
+      .sheet{left:auto;width:430px;right:18px;bottom:88px}
+      .toolbar{left:50%;right:auto;width:520px;transform:translateX(-50%)}
+      .stageShell{border-radius:24px}
     }
-
-    .bodycopy {
-      position: absolute;
-      left: 88px;
-      top: 755px;
-      width: 680px;
-      color: #e1dfd8;
-      font-size: 31px;
-      font-weight: 620;
-      line-height: 1.22;
-      white-space: pre-line;
-    }
-
-    .bottomline {
-      position: absolute;
-      left: 88px;
-      bottom: 185px;
-      width: 790px;
-      color: #d5d7ce;
-      font-size: 20px;
-      font-weight: 900;
-      letter-spacing: .11em;
-      text-transform: uppercase;
-      white-space: pre-line;
-    }
-
-    .cta {
-      position: absolute;
-      left: 88px;
-      bottom: 84px;
-      max-width: 620px;
-      padding: 20px 27px;
-      background: var(--ochre);
-      color: #111;
-      font-size: 25px;
-      font-weight: 1000;
-      letter-spacing: .05em;
-      text-transform: uppercase;
-    }
-
-    .info {
-      position: absolute;
-      right: 76px;
-      bottom: 92px;
-      max-width: 270px;
-      color: #c7c9c0;
-      font-size: 18px;
-      font-weight: 750;
-      line-height: 1.45;
-      text-align: right;
-      white-space: pre-line;
-    }
-
-    .sceneNum {
-      position: absolute;
-      right: 72px;
-      top: 72px;
-      color: #d4d5cc;
-      font-size: 18px;
-      font-weight: 900;
-      letter-spacing: .16em;
-    }
-
-    .scene.is-active .sceneLogo,
-    .scene.is-active .kicker {
-      animation: fadeIn .8s .08s both;
-    }
-
-    .scene.is-active .headline {
-      animation: headlineIn .82s .16s cubic-bezier(.16, .84, .28, 1) both;
-    }
-
-    .scene.is-active .accent {
-      animation: accentWipe .66s .46s both;
-    }
-
-    .scene.is-active .bodycopy,
-    .scene.is-active .bottomline,
-    .scene.is-active .info {
-      animation: lateIn .7s .58s both;
-    }
-
-    .scene.is-active .cta {
-      animation: lateIn .7s .78s both;
-    }
-
-    .sheet {
-      position: absolute;
-      left: 8px;
-      right: 8px;
-      bottom: calc(88px + env(safe-area-inset-bottom));
-      z-index: 25;
-      display: none;
-      max-height: min(56dvh, 540px);
-      padding: 14px;
-      overflow: auto;
-      border: 1px solid var(--line);
-      border-radius: 22px;
-      background: #151713fb;
-      backdrop-filter: blur(20px);
-      -webkit-overflow-scrolling: touch;
-    }
-
-    .sheet.open {
-      display: block;
-    }
-
-    .sheet h3 {
-      margin: 4px 0 12px;
-      font-size: 12px;
-      letter-spacing: .13em;
-      text-transform: uppercase;
-    }
-
-    .sheet p {
-      margin: 6px 0 12px;
-      color: #9ea298;
-      font-size: 12px;
-      line-height: 1.45;
-    }
-
-    .toolbar {
-      position: absolute;
-      left: 8px;
-      right: 8px;
-      bottom: calc(8px + env(safe-area-inset-bottom));
-      z-index: 26;
-      height: 72px;
-      padding: 6px;
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      background: #171915f7;
-      backdrop-filter: blur(20px);
-    }
-
-    .tool {
-      border: 0;
-      background: transparent;
-      padding: 4px;
-      font-size: 11px;
-    }
-
-    .tool b {
-      display: block;
-      margin-bottom: 3px;
-      font-size: 19px;
-    }
-
-    .row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
-
-    label {
-      display: block;
-      margin: 8px 0;
-      color: #adb1a6;
-      font-size: 11px;
-    }
-
-    input,
-    textarea,
-    select {
-      width: 100%;
-      min-height: 44px;
-      margin-top: 5px;
-      padding: 11px;
-      border: 1px solid #393d34;
-      border-radius: 11px;
-      background: #0f100e;
-      color: #fff;
-      font-size: 16px;
-    }
-
-    input[type="range"] {
-      padding: 0;
-    }
-
-    input[type="color"] {
-      padding: 5px;
-    }
-
-    textarea {
-      min-height: 72px;
-      resize: vertical;
-    }
-
-    .rangeLabel {
-      display: grid;
-      grid-template-columns: 78px 1fr 48px;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .rangeLabel input {
-      margin: 0;
-    }
-
-    .rangeLabel output {
-      color: #fff;
-      font-size: 12px;
-      text-align: right;
-    }
-
-    .uploadLabel {
-      width: 100%;
-      margin: 8px 0 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-color: var(--ochre);
-      background: var(--ochre);
-      color: #111;
-      cursor: pointer;
-      text-align: center;
-    }
-
-    .fileName {
-      margin: 5px 0 12px;
-      overflow: hidden;
-      color: #c7c9c0;
-      font-size: 11px;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .buttonGrid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 7px;
-    }
-
-    .buttonGrid .gold {
-      grid-column: 1 / -1;
-    }
-
-    .toast {
-      position: fixed;
-      left: 50%;
-      bottom: calc(94px + env(safe-area-inset-bottom));
-      z-index: 80;
-      max-width: min(88vw, 420px);
-      padding: 10px 14px;
-      border: 1px solid #3a3e35;
-      border-radius: 999px;
-      background: #11130ff2;
-      color: #fff;
-      font-size: 12px;
-      font-weight: 750;
-      text-align: center;
-      opacity: 0;
-      pointer-events: none;
-      transform: translate(-50%, 10px);
-      transition: opacity .2s ease, transform .2s ease;
-    }
-
-    .toast.show {
-      opacity: 1;
-      transform: translate(-50%, 0);
-    }
-
-    .exitPreview {
-      position: fixed;
-      top: calc(10px + env(safe-area-inset-top));
-      right: 10px;
-      z-index: 90;
-      display: none;
-      border-color: #ffffff50;
-      background: #0d0f0cdb;
-    }
-
-    .previewMode header,
-    .previewMode .modebar,
-    .previewMode .sceneBar,
-    .previewMode .toolbar,
-    .previewMode .sheet {
-      display: none !important;
-    }
-
-    .previewMode .exitPreview {
-      display: block;
-    }
-
-    .previewMode .viewport {
-      padding: 0;
-      align-items: center;
-      background: #000;
-    }
-
-    .previewMode .shell {
-      width: min(100vw, calc(100dvh * .8));
-      max-width: none;
-    }
-
-    .previewMode .stage {
-      border-radius: 0;
-      box-shadow: none;
-    }
-
-    @keyframes kenBurns {
-      from { transform: scale(var(--zoom, 1.03)) translate3d(0, 0, 0); }
-      to { transform: scale(calc(var(--zoom, 1.03) + .065)) translate3d(-10px, -6px, 0); }
-    }
-
-    @keyframes headlineIn {
-      from { opacity: 0; transform: translate3d(0, 72px, 0); }
-      to { opacity: 1; transform: translate3d(0, 0, 0); }
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    @keyframes accentWipe {
-      from { transform: scaleX(0); }
-      to { transform: scaleX(1); }
-    }
-
-    @keyframes lateIn {
-      from { opacity: 0; transform: translate3d(0, 22px, 0); }
-      to { opacity: 1; transform: translate3d(0, 0, 0); }
-    }
-
-    @media (max-width: 430px) {
-      .brandName {
-        display: none;
-      }
-
-      .actions button {
-        padding-inline: 8px;
-      }
-
-      .sceneBar button {
-        font-size: 10px;
-      }
-
-      .sheet {
-        max-height: 58dvh;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
-        scroll-behavior: auto !important;
-        animation-duration: .01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: .01ms !important;
-      }
+    @media(prefers-reduced-motion:reduce){
+      *{scroll-behavior:auto!important;transition-duration:.01ms!important}
     }
   </style>
 </head>
@@ -721,615 +265,843 @@
   <div class="app" id="app">
     <header>
       <a class="homeLink" href="../" aria-label="Takaisin Capra Toolsiin">
-        <span class="headerLogo">
-          <img src="../assets/capra-logo-light.jpeg" alt="Capra Combat">
-        </span>
-        <span class="brandName">CAPRA MOTION STUDIO</span>
+        <span class="headerMark"><img src="../assets/capra-logo.png?v=5" alt=""></span>
+        <span class="brandText"><b>MMA + BJJ MOTION STUDIO</b><small>CAPRA COMBAT · KUOPIO</small></span>
       </a>
-      <div class="actions">
+      <div class="headerActions">
         <button id="saveBtn" type="button">Tallenna</button>
-        <button class="gold" id="previewBtn" type="button">Preview</button>
+        <button class="primary" id="previewBtn" type="button">Esikatsele</button>
       </div>
     </header>
-
-    <div class="modebar" aria-label="Mainoksen vaiheiden määrä">
-      <button id="oneModeBtn" class="active" type="button" aria-pressed="true">1 VAIHE</button>
+    <nav class="modebar" aria-label="Mainoksen versio">
+      <button id="oneModeBtn" class="active" type="button" aria-pressed="true">1 VAIHE · 6 S</button>
       <button id="threeModeBtn" type="button" aria-pressed="false">3 VAIHETTA</button>
-    </div>
-
-    <div class="sceneBar" id="sceneBar" aria-label="Muokattava vaihe">
-      <button data-scene="0" class="active" type="button">1 · HOOK</button>
-      <button data-scene="1" type="button">2 · HYÖTY</button>
+    </nav>
+    <nav class="sceneBar" id="sceneBar" aria-label="Muokattava vaihe">
+      <button class="active" data-scene="0" type="button">1 · HOOK</button>
+      <button data-scene="1" type="button">2 · KYNNYS</button>
       <button data-scene="2" type="button">3 · CTA</button>
-    </div>
-
-    <div class="work">
-      <div class="viewport">
-        <div class="shell" id="shell">
-          <div class="stage" id="stage" aria-label="Mainoksen esikatselu"></div>
+    </nav>
+    <main class="work">
+      <div class="canvasViewport">
+        <div class="stageShell" id="stageShell">
+          <canvas id="stage" width="1080" height="1920" aria-label="Animoidun mainoksen esikatselu"></canvas>
+          <div class="dragHint" id="dragHint">Napauta elementtiä ja siirrä sormella</div>
+          <div class="stageControls"><button id="playBtn" type="button" aria-label="Toista animaatio">▶</button></div>
         </div>
       </div>
-
-      <div class="sheet" id="sheet"></div>
-
-      <div class="toolbar" aria-label="Muokkaustyökalut">
-        <button class="tool" id="contentBtn" type="button"><b>✎</b>Tekstit</button>
-        <button class="tool" id="imagesBtn" type="button"><b>▧</b>Kuvat</button>
-        <button class="tool" id="styleBtn" type="button"><b>◐</b>Tyyli</button>
-        <button class="tool" id="playBtn" type="button"><b>▶</b><span>Play</span></button>
-      </div>
-    </div>
+      <section class="sheet" id="sheet" aria-live="polite"></section>
+      <nav class="toolbar" aria-label="Muokkaustyökalut">
+        <button class="tool" data-panel="text" type="button"><b>✎</b>Tekstit</button>
+        <button class="tool" data-panel="image" type="button"><b>▧</b>Kuva</button>
+        <button class="tool" data-panel="elements" type="button"><b>⌖</b>Elementit</button>
+        <button class="tool" data-panel="style" type="button"><b>◐</b>Tyyli</button>
+        <button class="tool" data-panel="export" type="button"><b>⇧</b>Tallenna</button>
+      </nav>
+    </main>
   </div>
-
   <button class="exitPreview" id="exitPreviewBtn" type="button">Muokkaa</button>
+  <div class="progress" id="progress">
+    <b id="progressTitle">Luodaan videota…</b>
+    <div class="progressTrack"><div class="progressFill" id="progressFill"></div></div>
+    <small id="progressText">0 %</small>
+  </div>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <input id="imageInput" type="file" accept="image/*,.heic,.heif" hidden>
-
+  <input id="photoInput" type="file" accept="image/*,.heic,.heif" hidden>
+  <input id="projectInput" type="file" accept=".json,.capra,application/json" hidden>
   <script>
-    const STORAGE_KEY = 'capraMotionV6';
-    const LEGACY_STORAGE_KEY = 'capraMotionV4';
-    const SCENE_DURATION = 4300;
-    const $ = id => document.getElementById(id);
-    const app = $('app');
-    const stage = $('stage');
-    const shell = $('shell');
-    const sheet = $('sheet');
-    const sceneBar = $('sceneBar');
-    const imageInput = $('imageInput');
-    const toast = $('toast');
+  (function(){
+    "use strict";
+    var W=1080,H=1920;
+    var DB_NAME="capraMotionStudio",DB_STORE="projects",DB_KEY="mma-bjj",FALLBACK_KEY="capraMmaBjjMotionV1";
+    var canvas=document.getElementById("stage");
+    var ctx=canvas.getContext("2d",{alpha:false});
+    var sheet=document.getElementById("sheet");
+    var app=document.getElementById("app");
+    var sceneBar=document.getElementById("sceneBar");
+    var photoInput=document.getElementById("photoInput");
+    var projectInput=document.getElementById("projectInput");
+    var toast=document.getElementById("toast");
+    var progress=document.getElementById("progress");
+    var progressFill=document.getElementById("progressFill");
+    var progressText=document.getElementById("progressText");
+    var photoCache=new Map(),hitAreas=[];
+    var selectedKey="headline",activePanel="",animationFrame=0,playing=false,playStarted=0,toastTimer=0,saveTimer=0;
+    var logoCanvas=null,grainCanvas=null,drag=null,exporting=false;
+    var elementLabels={logo:"Logo",kicker:"Yläteksti",headline:"Pääotsikko",body:"Leipäteksti",sports:"Lajit",meta:"Kurssitiedot",cta:"CTA + osoite",custom:"Oma teksti"};
 
-    const makeScene = (values = {}) => ({
-      kicker: '',
-      headline: '',
-      body: '',
-      bottom: '',
-      cta: '',
-      info: '',
-      image: '',
-      imageName: '',
-      zoom: 1.03,
-      x: 50,
-      y: 50,
-      ...values
-    });
-
-    const defaults = {
-      version: 6,
-      mode: 'one',
-      current: 0,
-      olive: '#68724a',
-      ochre: '#c8ae4d',
-      one: makeScene({
-        kicker: 'PERUSKURSSIT · KUOPIO',
-        headline: 'ALOITA\nKAMPPAILU.',
-        body: 'Et tarvitse aiempaa kokemusta tai valmista kuntoa. Tule sellaisena kuin olet.',
-        bottom: 'BJJ · LUKKOPAINI · VAPAAOTTELU · MUAY THAI / K1',
-        cta: 'VARAA PAIKKASI →',
-        info: '8 VKO · 120 €\ncapracombat.fi'
+    function transforms(){
+      return {
+        logo:{x:0,y:0,scale:1,show:true},
+        kicker:{x:0,y:0,scale:1,show:true},
+        headline:{x:0,y:0,scale:1,show:true},
+        body:{x:0,y:0,scale:1,show:true},
+        sports:{x:0,y:0,scale:1,show:true},
+        meta:{x:0,y:0,scale:1,show:true},
+        cta:{x:0,y:0,scale:1,show:true},
+        custom:{x:0,y:0,scale:1,show:false}
+      };
+    }
+    function makeScene(values){
+      var scene={
+        kicker:"PERUSKURSSIT · KUOPIO",headline:"",body:"",
+        sportA:"VAPAAOTTELU",sportB:"BJJ · LUKKOPAINI",
+        meta:"ALKAA 31.8. · 8 VKO · 120 €",cta:"VARAA PAIKKASI →",url:"capracombat.fi/peruskurssit",custom:"",
+        image:"",imageName:"",
+        crop:{zoom:1.05,x:50,y:50},
+        filter:{brightness:.78,contrast:1.08,saturation:.72,overlay:.72},
+        elements:transforms()
+      };
+      if(values)Object.keys(values).forEach(function(key){scene[key]=values[key]});
+      return scene;
+    }
+    var defaults={
+      version:1,mode:"one",current:0,
+      colors:{olive:"#68724a",ochre:"#c8ae4d",ink:"#090a08",paper:"#f2efe7"},
+      animation:"dynamic",accentLast:true,grain:true,oneDuration:6,sceneDuration:3.6,
+      one:makeScene({
+        kicker:"VAPAAOTTELU · BJJ / LUKKOPAINI",
+        headline:"PERUSKURSSIT\nALKAVAT 31.8.",
+        body:"Kaksi tapaa aloittaa. Sama matala kynnys. Et tarvitse aiempaa kokemusta – kaikki lähtee perusteista.",
+        meta:"8 VKO · 120 € · KUOPIO"
       }),
-      scenes: [
+      scenes:[
         makeScene({
-          kicker: '1 · ENSIMMÄINEN ASKEL',
-          headline: 'OLETKO JOSKUS HALUNNUT\nKOKEILLA KAMPPAILUA?',
-          body: 'Peruskurssi on tehty juuri sitä ensimmäistä askelta varten.',
-          bottom: 'CAPRA COMBAT · KUOPIO',
-          cta: 'KATSO KURSSIT →',
-          info: 'Kaikki lähtee perusteista'
+          kicker:"VAPAAOTTELU · BJJ / LUKKOPAINI",
+          headline:"HALUATKO\nKOKEILLA\nKAMPPAILUA?",
+          body:"Nyt on oikea hetki ottaa ensimmäinen askel.",
+          meta:"PERUSKURSSIT · CAPRA COMBAT"
         }),
         makeScene({
-          kicker: '2 · MATALA KYNNYS',
-          headline: 'SINUN EI\nTARVITSE OSATA.',
-          body: 'Lähdemme liikkeelle perusteista. Lähtötasosi saa olla mikä tahansa.',
-          bottom: 'TURVALLINEN · SELKEÄ · VAATIVA',
-          cta: 'TULE MUKAAN →',
-          info: 'Ei aiempaa kokemusta'
+          kicker:"MATALA KYNNYS · SELKEÄ ALKU",
+          headline:"SINUN EI\nTARVITSE\nOSATA.",
+          body:"Lähdemme perusteista. Et tarvitse aiempaa kokemusta tai valmista kuntoa.",
+          meta:"TULE SELLAISENA KUIN OLET"
         }),
         makeScene({
-          kicker: '3 · OTA ENSIMMÄINEN ASKEL',
-          headline: 'PERUSKURSSIT\nALKAVAT.',
-          body: 'Valitse lajisi ja varaa paikka. Tule kokeilemaan, voisiko tästä tulla sinun lajisi.',
-          bottom: 'BJJ · LUKKOPAINI · VAPAAOTTELU · MUAY THAI / K1',
-          cta: 'VARAA PAIKKASI →',
-          info: '8 VKO · 120 €\ncapracombat.fi'
+          kicker:"OTA ENSIMMÄINEN ASKEL",
+          headline:"PERUSKURSSIT\nALKAVAT 31.8.",
+          body:"Valitse vapaaottelu tai BJJ/lukkopaini ja varaa paikkasi.",
+          meta:"8 VKO · 120 € · KUOPIO"
         })
       ]
     };
-
-    let state = clone(defaults);
-    let activePanel = '';
-    let imageTarget = { mode: 'one', index: 0 };
-    let playTimer = 0;
-    let isPlaying = false;
-    let toastTimer = 0;
-
-    function clone(value) {
-      return JSON.parse(JSON.stringify(value));
+    defaults.scenes[0].elements.cta.show=false;
+    defaults.scenes[1].elements.cta.show=false;
+    var state=clone(defaults);
+    function clone(value){return JSON.parse(JSON.stringify(value))}
+    function clamp(value,min,max){return Math.max(min,Math.min(max,value))}
+    function ease(value){value=clamp(value,0,1);return 1-Math.pow(1-value,3)}
+    function hexToRgb(hex){
+      var value=String(hex||"#000000").replace("#","");
+      if(value.length===3)value=value.split("").map(function(c){return c+c}).join("");
+      return {r:parseInt(value.slice(0,2),16)||0,g:parseInt(value.slice(2,4),16)||0,b:parseInt(value.slice(4,6),16)||0};
     }
-
-    function escapeHtml(value = '') {
-      return String(value).replace(/[&<>"']/g, character => ({
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#039;'
-      })[character]);
-    }
-
-    function lines(value = '') {
-      return escapeHtml(value).replace(/\n/g, '<br>');
-    }
-
-    function headlineHtml(value = '') {
-      const parts = String(value).split('\n');
-      return parts.map((part, index) => (
-        index === parts.length - 1 ? `<em>${escapeHtml(part)}</em>` : escapeHtml(part)
-      )).join('<br>');
-    }
-
-    function currentScene() {
-      return state.mode === 'one' ? state.one : state.scenes[state.current];
-    }
-
-    function sceneFromTarget(target) {
-      return target.mode === 'one' ? state.one : state.scenes[target.index];
-    }
-
-    function sceneMarkup(scene, index, showNumber) {
-      const length = scene.headline.replace(/\s/g, '').length;
-      const lengthClass = length > 50 ? 'xlong' : length > 35 ? 'long' : '';
-      return `
-        <section class="scene" data-scene="${index}">
-          <div class="photo"></div>
-          <div class="shade"></div>
-          <div class="texture"></div>
-          <div class="rail"></div>
-          <div class="sceneLogo">
-            <img src="../assets/capra-logo-light.jpeg" alt="Capra Combat" draggable="false">
-          </div>
-          <div class="kicker">${escapeHtml(scene.kicker)}</div>
-          <div class="headline ${lengthClass}">${headlineHtml(scene.headline)}</div>
-          <div class="accent"></div>
-          <div class="bodycopy">${escapeHtml(scene.body)}</div>
-          <div class="bottomline">${escapeHtml(scene.bottom)}</div>
-          <div class="cta">${escapeHtml(scene.cta)}</div>
-          <div class="info">${escapeHtml(scene.info)}</div>
-          ${showNumber ? `<div class="sceneNum">0${index + 1}/03</div>` : ''}
-        </section>`;
-    }
-
-    function applyPhoto(sceneElement, scene) {
-      const photo = sceneElement.querySelector('.photo');
-      photo.style.setProperty('--zoom', String(scene.zoom));
-      photo.style.setProperty('--pos-x', `${scene.x}%`);
-      photo.style.setProperty('--pos-y', `${scene.y}%`);
-      photo.style.backgroundImage = scene.image
-        ? `url("${scene.image}")`
-        : 'radial-gradient(circle at 72% 25%, #596148 0, #262b20 29%, #0a0b09 72%)';
-    }
-
-    function renderStage({ animate = true } = {}) {
-      const scenes = state.mode === 'one' ? [state.one] : state.scenes;
-      stage.innerHTML = scenes.map((scene, index) => sceneMarkup(scene, index, state.mode === 'three')).join('');
-      stage.querySelectorAll('.scene').forEach((element, index) => applyPhoto(element, scenes[index]));
-      activateScene(state.mode === 'one' ? 0 : state.current, { restart: animate });
-      fit();
-    }
-
-    function activateScene(index, { restart = true } = {}) {
-      const elements = [...stage.querySelectorAll('.scene')];
-      const previouslyActive = elements.find(element => element.classList.contains('is-active'));
-      const next = elements[index];
-      if (!next) return;
-
-      elements.forEach(element => element.classList.remove('is-leaving'));
-      if (previouslyActive && previouslyActive !== next) {
-        previouslyActive.classList.remove('is-active');
-        previouslyActive.classList.add('is-leaving');
-        window.setTimeout(() => previouslyActive.classList.remove('is-leaving'), 850);
-      }
-
-      elements.forEach((element, elementIndex) => {
-        if (elementIndex !== index && element !== previouslyActive) element.classList.remove('is-active');
-      });
-
-      next.classList.add('is-active');
-      if (restart) restartSceneAnimations(next);
-      syncSceneButtons();
-    }
-
-    function restartSceneAnimations(sceneElement) {
-      sceneElement.querySelectorAll('.photo,.sceneLogo,.kicker,.headline,.accent,.bodycopy,.bottomline,.cta,.info')
-        .forEach(element => {
-          element.style.animation = 'none';
-          void element.offsetWidth;
-          element.style.animation = '';
-        });
-    }
-
-    function fit() {
-      const scale = shell.clientWidth / 1080;
-      stage.style.transform = `scale(${scale})`;
-      shell.style.height = `${1350 * scale}px`;
-    }
-
-    function syncModeControls() {
-      const isThree = state.mode === 'three';
-      $('oneModeBtn').classList.toggle('active', !isThree);
-      $('threeModeBtn').classList.toggle('active', isThree);
-      $('oneModeBtn').setAttribute('aria-pressed', String(!isThree));
-      $('threeModeBtn').setAttribute('aria-pressed', String(isThree));
-      sceneBar.classList.toggle('show', isThree);
-      syncSceneButtons();
-    }
-
-    function syncSceneButtons() {
-      sceneBar.querySelectorAll('button').forEach(button => {
-        const active = Number(button.dataset.scene) === state.current;
-        button.classList.toggle('active', active);
-        button.setAttribute('aria-pressed', String(active));
+    function rgba(hex,alpha){var c=hexToRgb(hex);return "rgba("+c.r+","+c.g+","+c.b+","+alpha+")"}
+    function esc(value){
+      return String(value==null?"":value).replace(/[&<>"']/g,function(character){
+        return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[character];
       });
     }
-
-    function setMode(mode) {
-      stopPlayback();
-      state.mode = mode;
-      state.current = 0;
-      activePanel = '';
-      sheet.classList.remove('open');
-      syncModeControls();
-      renderStage();
+    function currentScene(){return state.mode==="one"?state.one:state.scenes[state.current]}
+    function setCssColors(){
+      document.documentElement.style.setProperty("--olive",state.colors.olive);
+      document.documentElement.style.setProperty("--ochre",state.colors.ochre);
+      document.documentElement.style.setProperty("--ink",state.colors.ink);
+      document.documentElement.style.setProperty("--paper",state.colors.paper);
     }
-
-    function selectScene(index) {
-      stopPlayback();
-      state.current = index;
-      imageTarget = { mode: 'three', index };
-      activateScene(index);
-      if (activePanel) openPanel(activePanel);
-    }
-
-    function openSheet(html) {
-      sheet.innerHTML = html;
-      sheet.classList.add('open');
-    }
-
-    function openPanel(panel) {
-      activePanel = panel;
-      if (panel === 'content') openContentPanel();
-      if (panel === 'image') openImagePanel();
-      if (panel === 'style') openStylePanel();
-    }
-
-    function openContentPanel() {
-      const scene = currentScene();
-      openSheet(`
-        <h3>${state.mode === 'three' ? `VAIHE ${state.current + 1} / 3` : '1 VAIHE'} · TEKSTIT</h3>
-        <label>Yläteksti
-          <input data-field="kicker" value="${escapeHtml(scene.kicker)}">
-        </label>
-        <label>Pääotsikko
-          <textarea data-field="headline">${escapeHtml(scene.headline)}</textarea>
-        </label>
-        <label>Leipäteksti
-          <textarea data-field="body">${escapeHtml(scene.body)}</textarea>
-        </label>
-        <label>Alarivi
-          <textarea data-field="bottom">${escapeHtml(scene.bottom)}</textarea>
-        </label>
-        <div class="row">
-          <label>CTA
-            <input data-field="cta" value="${escapeHtml(scene.cta)}">
-          </label>
-          <label>Infoteksti
-            <textarea data-field="info">${escapeHtml(scene.info)}</textarea>
-          </label>
-        </div>`);
-
-      sheet.querySelectorAll('[data-field]').forEach(field => {
-        field.addEventListener('input', event => {
-          currentScene()[event.target.dataset.field] = event.target.value;
-          renderStage({ animate: false });
-        });
-      });
-    }
-
-    function openImagePanel() {
-      imageTarget = { mode: state.mode, index: state.current };
-      const scene = currentScene();
-      openSheet(`
-        <h3>${state.mode === 'three' ? `VAIHE ${state.current + 1} / 3` : 'MAINOS'} · KUVA</h3>
-        <p>${state.mode === 'three'
-          ? 'Valitse tälle vaiheelle oma kuva tai kopioi sama kuva kaikkiin kolmeen vaiheeseen.'
-          : 'Valitse mainoksen taustakuva iPhonen Kuvat-apista.'}</p>
-        <label class="uploadLabel" for="imageInput" id="chooseImageLabel" tabindex="0">VAIHDA KUVA</label>
-        <div class="fileName">${scene.imageName ? `Nykyinen: ${escapeHtml(scene.imageName)}` : 'Ei omaa kuvaa valittuna'}</div>
-        <label class="rangeLabel"><span>Zoom</span>
-          <input id="imageZoom" type="range" min="1" max="1.8" step=".01" value="${scene.zoom}">
-          <output id="imageZoomOut">${Math.round(scene.zoom * 100)}%</output>
-        </label>
-        <label class="rangeLabel"><span>Vaaka</span>
-          <input id="imageX" type="range" min="0" max="100" step="1" value="${scene.x}">
-          <output id="imageXOut">${Math.round(scene.x)}%</output>
-        </label>
-        <label class="rangeLabel"><span>Pysty</span>
-          <input id="imageY" type="range" min="0" max="100" step="1" value="${scene.y}">
-          <output id="imageYOut">${Math.round(scene.y)}%</output>
-        </label>
-        <div class="buttonGrid">
-          <button id="resetCropBtn" type="button">Palauta rajaus</button>
-          <button id="removeImageBtn" type="button">Poista kuva</button>
-          <button id="copyImageBtn" class="gold" type="button" ${state.mode === 'one' ? 'disabled' : ''}>Sama kuva kaikkiin</button>
-        </div>`);
-
-      const updateCrop = () => {
-        const target = currentScene();
-        target.zoom = Number($('imageZoom').value);
-        target.x = Number($('imageX').value);
-        target.y = Number($('imageY').value);
-        $('imageZoomOut').value = `${Math.round(target.zoom * 100)}%`;
-        $('imageXOut').value = `${Math.round(target.x)}%`;
-        $('imageYOut').value = `${Math.round(target.y)}%`;
-        const sceneElement = stage.querySelector(`.scene[data-scene="${state.mode === 'one' ? 0 : state.current}"]`);
-        if (sceneElement) applyPhoto(sceneElement, target);
-      };
-
-      ['imageZoom', 'imageX', 'imageY'].forEach(id => $(id).addEventListener('input', updateCrop));
-      $('resetCropBtn').onclick = () => {
-        Object.assign(currentScene(), { zoom: 1.03, x: 50, y: 50 });
-        openImagePanel();
-        renderStage({ animate: false });
-      };
-      $('removeImageBtn').onclick = () => {
-        Object.assign(currentScene(), { image: '', imageName: '', zoom: 1.03, x: 50, y: 50 });
-        renderStage({ animate: false });
-        openImagePanel();
-      };
-      $('copyImageBtn').onclick = () => {
-        const source = currentScene();
-        state.scenes.forEach(sceneTarget => {
-          Object.assign(sceneTarget, {
-            image: source.image,
-            imageName: source.imageName,
-            zoom: source.zoom,
-            x: source.x,
-            y: source.y
-          });
-        });
-        renderStage({ animate: false });
-        showToast('Sama kuva kopioitu kaikkiin vaiheisiin');
-      };
-      $('chooseImageLabel').addEventListener('keydown', event => {
-        if (event.key === 'Enter' || event.key === ' ') {
-          event.preventDefault();
-          imageInput.click();
+    function font(weight,size,family){return String(weight)+" "+String(size)+'px "'+(family||"Inter")+'",Arial,sans-serif'}
+    function wrapLines(context,text,maxWidth){
+      var result=[];
+      String(text||"").split("\n").forEach(function(paragraph){
+        var words=paragraph.trim().split(/\s+/).filter(Boolean);
+        if(!words.length){result.push("");return}
+        var line=words[0];
+        for(var i=1;i<words.length;i++){
+          var test=line+" "+words[i];
+          if(context.measureText(test).width<=maxWidth)line=test;
+          else{result.push(line);line=words[i]}
         }
+        result.push(line);
       });
-    }
-
-    function openStylePanel() {
-      openSheet(`
-        <h3>CAPRA-TYYLI</h3>
-        <div class="row">
-          <label>Oliivi
-            <input id="oliveInput" type="color" value="${state.olive}">
-          </label>
-          <label>Okra
-            <input id="ochreInput" type="color" value="${state.ochre}">
-          </label>
-        </div>
-        <p>Virallinen Capra Combat -master-logo näkyy jokaisessa vaiheessa alkuperäisessä 1:1-kuvasuhteessa.</p>`);
-
-      $('oliveInput').oninput = event => {
-        state.olive = event.target.value;
-        document.documentElement.style.setProperty('--olive', state.olive);
-      };
-      $('ochreInput').oninput = event => {
-        state.ochre = event.target.value;
-        document.documentElement.style.setProperty('--ochre', state.ochre);
-      };
-    }
-
-    function play() {
-      sheet.classList.remove('open');
-      stopPlayback();
-      isPlaying = true;
-      syncPlayButton();
-
-      if (state.mode === 'one') {
-        state.current = 0;
-        activateScene(0);
-        return;
-      }
-
-      state.current = 0;
-      activateScene(0);
-      scheduleNextScene();
-    }
-
-    function scheduleNextScene() {
-      clearTimeout(playTimer);
-      playTimer = window.setTimeout(() => {
-        if (!isPlaying || state.mode !== 'three') return;
-        state.current = (state.current + 1) % 3;
-        imageTarget = { mode: 'three', index: state.current };
-        activateScene(state.current);
-        scheduleNextScene();
-      }, SCENE_DURATION);
-    }
-
-    function stopPlayback(updateButton = true) {
-      clearTimeout(playTimer);
-      playTimer = 0;
-      isPlaying = false;
-      if (updateButton) syncPlayButton();
-    }
-
-    function syncPlayButton() {
-      $('playBtn').querySelector('b').textContent = isPlaying ? '↻' : '▶';
-      $('playBtn').querySelector('span').textContent = isPlaying ? 'Restart' : 'Play';
-    }
-
-    function togglePreview(force) {
-      const shouldOpen = typeof force === 'boolean' ? force : !app.classList.contains('previewMode');
-      app.classList.toggle('previewMode', shouldOpen);
-      document.body.classList.toggle('previewMode', shouldOpen);
-      sheet.classList.remove('open');
-      window.setTimeout(fit, 30);
-      if (shouldOpen) play();
-      else stopPlayback();
-    }
-
-    function saveProject() {
-      try {
-        const payload = JSON.stringify(state);
-        localStorage.setItem(STORAGE_KEY, payload);
-        showToast('Projekti tallennettu tähän laitteeseen');
-      } catch (error) {
-        showToast('Tallennus ei mahtunut selaimeen. Käytä pienempiä kuvia.');
-      }
-    }
-
-    function restoreProject() {
-      try {
-        const saved = localStorage.getItem(STORAGE_KEY);
-        if (saved) {
-          state = normalizeState(JSON.parse(saved));
-          showToast('Tallennettu projekti palautettu');
-          return;
-        }
-
-        const legacy = localStorage.getItem(LEGACY_STORAGE_KEY);
-        if (legacy) state = migrateLegacy(JSON.parse(legacy));
-      } catch (error) {
-        state = clone(defaults);
-      }
-    }
-
-    function normalizeScene(scene, fallback) {
-      const supplied = Object.fromEntries(
-        Object.entries(scene || {}).filter(([, value]) => value !== undefined && value !== null)
-      );
-      return makeScene({ ...fallback, ...supplied });
-    }
-
-    function normalizeState(value) {
-      const result = clone(defaults);
-      result.mode = value.mode === 'three' ? 'three' : 'one';
-      result.current = Math.max(0, Math.min(2, Number(value.current) || 0));
-      result.olive = /^#[0-9a-f]{6}$/i.test(value.olive) ? value.olive : result.olive;
-      result.ochre = /^#[0-9a-f]{6}$/i.test(value.ochre) ? value.ochre : result.ochre;
-      result.one = normalizeScene(value.one, result.one);
-      result.scenes = result.scenes.map((fallback, index) => normalizeScene(value.scenes?.[index], fallback));
       return result;
     }
-
-    function migrateLegacy(value) {
-      const result = clone(defaults);
-      const mapScene = (legacy, fallback) => normalizeScene({
-        kicker: legacy?.k,
-        headline: legacy?.h,
-        body: legacy?.b,
-        bottom: legacy?.s,
-        cta: legacy?.c,
-        info: legacy?.m,
-        image: legacy?.img,
-        imageName: legacy?.file
-      }, fallback);
-      result.mode = value.mode === 'three' ? 'three' : 'one';
-      result.one = mapScene(value.scenes?.[0], result.one);
-      result.scenes = result.scenes.map((fallback, index) => mapScene(value.scenes?.[index + 1], fallback));
+    function fitBlock(context,text,maxWidth,maxHeight,maxSize,minSize,lineFactor,family,weight,maxLines){
+      var size=maxSize,lines=[];
+      while(size>=minSize){
+        context.font=font(weight,size,family);
+        lines=wrapLines(context,text,maxWidth);
+        var fitsWidth=lines.every(function(line){return context.measureText(line).width<=maxWidth});
+        if(fitsWidth&&lines.length<=maxLines&&lines.length*size*lineFactor<=maxHeight)break;
+        size-=3;
+      }
+      if(lines.length>maxLines){
+        lines=lines.slice(0,maxLines);
+        var last=lines[maxLines-1];
+        while(last.length&&context.measureText(last+"…").width>maxWidth)last=last.slice(0,-1);
+        lines[maxLines-1]=last+"…";
+      }
+      return {size:size,lines:lines,lineHeight:size*lineFactor,height:lines.length*size*lineFactor};
+    }
+    function createGrain(){
+      var c=document.createElement("canvas");c.width=180;c.height=180;
+      var cctx=c.getContext("2d"),data=cctx.createImageData(c.width,c.height),seed=314159;
+      function random(){seed=(seed*1664525+1013904223)%4294967296;return seed/4294967296}
+      for(var i=0;i<data.data.length;i+=4){
+        var value=random()>.52?255:0;
+        data.data[i]=value;data.data[i+1]=value;data.data[i+2]=value;data.data[i+3]=Math.floor(random()*38);
+      }
+      cctx.putImageData(data,0,0);grainCanvas=c;
+    }
+    function loadImageSource(source){
+      return new Promise(function(resolve,reject){
+        var img=new Image();
+        img.onload=function(){resolve(img)};
+        img.onerror=function(){reject(new Error("Kuvaa ei voitu avata"))};
+        img.src=source;
+      });
+    }
+    async function prepareLogo(){
+      try{
+        logoCanvas=await loadImageSource("../assets/capra-logo.png?v=5");
+        renderStatic();
+      }catch(error){logoCanvas=null}
+    }
+    function cachedPhoto(scene){
+      if(!scene.image)return null;
+      if(photoCache.has(scene.image)){
+        var cached=photoCache.get(scene.image);
+        return cached.complete&&cached.naturalWidth?cached:null;
+      }
+      var image=new Image();
+      image.onload=function(){renderStatic()};
+      image.src=scene.image;photoCache.set(scene.image,image);
+      return image.complete&&image.naturalWidth?image:null;
+    }
+    function drawCover(context,image,scene,local){
+      var zoom=Number(scene.crop.zoom)||1;
+      var scale=Math.max(W/image.naturalWidth,H/image.naturalHeight)*zoom*(1+.035*local);
+      var dw=image.naturalWidth*scale,dh=image.naturalHeight*scale;
+      var maxX=Math.max(0,dw-W),maxY=Math.max(0,dh-H);
+      var dx=-maxX*(Number(scene.crop.x)/100)-12*local;
+      var dy=-maxY*(Number(scene.crop.y)/100)-8*local;
+      context.save();
+      context.filter="brightness("+scene.filter.brightness+") contrast("+scene.filter.contrast+") saturate("+scene.filter.saturation+")";
+      context.drawImage(image,dx,dy,dw,dh);context.restore();
+    }
+    function drawBackground(scene,local,alpha){
+      ctx.save();ctx.globalAlpha=alpha;
+      ctx.fillStyle=state.colors.ink;ctx.fillRect(0,0,W,H);
+      var image=cachedPhoto(scene);
+      if(image)drawCover(ctx,image,scene,local);
+      else{
+        var radial=ctx.createRadialGradient(820,350,20,620,650,1180);
+        radial.addColorStop(0,rgba(state.colors.olive,.96));
+        radial.addColorStop(.43,rgba(state.colors.olive,.48));
+        radial.addColorStop(1,state.colors.ink);
+        ctx.fillStyle=radial;ctx.fillRect(0,0,W,H);
+        ctx.save();ctx.translate(760,610);ctx.rotate(-.28);
+        ctx.strokeStyle=rgba(state.colors.paper,.065);ctx.lineWidth=3;
+        for(var i=0;i<8;i++)ctx.strokeRect(-470+i*36,-600+i*36,940-i*72,1200-i*72);
+        ctx.restore();
+        ctx.fillStyle=rgba(state.colors.ochre,.12);
+        ctx.beginPath();ctx.moveTo(780,0);ctx.lineTo(1080,0);ctx.lineTo(1080,930);ctx.lineTo(1010,930);ctx.closePath();ctx.fill();
+      }
+      var overlay=clamp(Number(scene.filter.overlay),0,1);
+      var side=ctx.createLinearGradient(0,0,W,0);
+      side.addColorStop(0,rgba(state.colors.ink,Math.min(1,overlay+.2)));
+      side.addColorStop(.52,rgba(state.colors.ink,overlay));
+      side.addColorStop(1,rgba(state.colors.ink,Math.max(.1,overlay-.46)));
+      ctx.fillStyle=side;ctx.fillRect(0,0,W,H);
+      var bottom=ctx.createLinearGradient(0,900,0,H);
+      bottom.addColorStop(0,rgba(state.colors.ink,0));
+      bottom.addColorStop(.72,rgba(state.colors.ink,.64));
+      bottom.addColorStop(1,rgba(state.colors.ink,.96));
+      ctx.fillStyle=bottom;ctx.fillRect(0,700,W,H-700);
+      ctx.fillStyle=state.colors.olive;ctx.fillRect(54,58,7,H-116);
+      ctx.fillStyle=state.colors.ochre;ctx.fillRect(54,58,7,430);
+      ctx.fillStyle=rgba(state.colors.paper,.18);ctx.fillRect(1016,58,1,H-116);
+      ctx.restore();
+    }
+    function elementProgress(key,local){
+      if(state.animation==="minimal")return clamp(local/.12,0,1);
+      var delays={logo:0,kicker:.03,headline:.10,body:.26,sports:.36,meta:.47,cta:.58,custom:.40};
+      var length=state.animation==="soft"?.32:.22;
+      return ease((local-(delays[key]||0))/length);
+    }
+    function paintElement(scene,key,baseX,baseY,local,alpha,buildHits,draw){
+      var t=scene.elements[key];if(!t||!t.show)return;
+      var p=elementProgress(key,local);
+      var motion=state.animation==="soft"?28:state.animation==="minimal"?0:58;
+      var x=baseX+Number(t.x||0)+(1-p)*motion,y=baseY+Number(t.y||0),scale=Number(t.scale||1);
+      ctx.save();ctx.globalAlpha=alpha*p;ctx.translate(x,y);ctx.scale(scale,scale);
+      var dimensions=draw(p)||{w:100,h:50};ctx.restore();
+      if(buildHits&&alpha>.7&&p>.45)hitAreas.push({key:key,x:x,y:y,w:dimensions.w*scale,h:dimensions.h*scale});
+    }
+    function drawLogo(){
+      if(logoCanvas){
+        var ratio=logoCanvas.height/logoCanvas.width,width=188,height=width*ratio;
+        ctx.drawImage(logoCanvas,0,0,width,height);return {w:width,h:height};
+      }
+      ctx.fillStyle=state.colors.paper;ctx.font=font(900,34,"League Spartan");ctx.fillText("CAPRA COMBAT",0,0);
+      ctx.fillStyle=state.colors.ochre;ctx.fillRect(0,44,190,5);return {w:230,h:54};
+    }
+    function drawKicker(scene){
+      ctx.fillStyle=state.colors.paper;ctx.font=font(800,27,"Inter");ctx.textBaseline="top";
+      var text=String(scene.kicker||"").toUpperCase();ctx.fillText(text,0,0);
+      return {w:Math.min(850,ctx.measureText(text).width),h:36};
+    }
+    function headlineLayout(scene){return fitBlock(ctx,String(scene.headline||"").toUpperCase(),880,560,160,72,.84,"League Spartan",900,5)}
+    function drawHeadline(scene){
+      var layout=headlineLayout(scene);ctx.font=font(900,layout.size,"League Spartan");ctx.textBaseline="top";
+      for(var i=0;i<layout.lines.length;i++){
+        ctx.fillStyle=state.accentLast&&i===layout.lines.length-1?state.colors.ochre:state.colors.paper;
+        ctx.fillText(layout.lines[i],0,i*layout.lineHeight);
+      }
+      return {w:880,h:layout.height};
+    }
+    function drawBody(scene){
+      var layout=fitBlock(ctx,scene.body,760,220,39,25,1.22,"Inter",600,5);
+      ctx.font=font(600,layout.size,"Inter");ctx.fillStyle=rgba(state.colors.paper,.94);ctx.textBaseline="top";
+      layout.lines.forEach(function(line,index){ctx.fillText(line,0,index*layout.lineHeight)});
+      ctx.fillStyle=state.colors.ochre;ctx.fillRect(0,-24,132,7);return {w:780,h:layout.height};
+    }
+    function pill(text,y,fill,stroke,color){
+      var width=760,height=72;
+      ctx.fillStyle=fill;ctx.strokeStyle=stroke;ctx.lineWidth=2;ctx.beginPath();
+      if(ctx.roundRect)ctx.roundRect(0,y,width,height,8);else ctx.rect(0,y,width,height);
+      ctx.fill();ctx.stroke();ctx.fillStyle=color;ctx.font=font(800,29,"Inter");ctx.textBaseline="middle";
+      ctx.fillText(String(text||"").toUpperCase(),24,y+height/2+1);
+    }
+    function drawSports(scene){
+      pill(scene.sportA,0,state.colors.olive,state.colors.olive,state.colors.paper);
+      pill(scene.sportB,84,rgba(state.colors.ink,.42),state.colors.ochre,state.colors.paper);
+      return {w:760,h:156};
+    }
+    function drawMeta(scene){
+      ctx.fillStyle=state.colors.paper;ctx.font=font(800,35,"Inter");ctx.textBaseline="top";
+      var layout=fitBlock(ctx,String(scene.meta||"").toUpperCase(),820,95,35,24,1.15,"Inter",800,2);
+      layout.lines.forEach(function(line,index){ctx.fillText(line,0,index*layout.lineHeight)});
+      return {w:830,h:Math.max(48,layout.height)};
+    }
+    function drawCta(scene){
+      ctx.font=font(900,31,"Inter");
+      var label=String(scene.cta||"").toUpperCase(),width=clamp(ctx.measureText(label).width+58,330,790),height=88;
+      ctx.fillStyle=state.colors.ochre;ctx.beginPath();
+      if(ctx.roundRect)ctx.roundRect(0,0,width,height,7);else ctx.rect(0,0,width,height);
+      ctx.fill();ctx.fillStyle=state.colors.ink;ctx.textBaseline="middle";ctx.fillText(label,28,height/2+1);
+      ctx.fillStyle=rgba(state.colors.paper,.82);ctx.font=font(700,23,"Inter");ctx.textBaseline="top";ctx.fillText(scene.url||"",0,height+24);
+      return {w:Math.max(width,ctx.measureText(scene.url||"").width),h:height+56};
+    }
+    function drawCustom(scene){
+      ctx.fillStyle=state.colors.ochre;ctx.font=font(800,31,"Inter");ctx.textBaseline="top";
+      var layout=fitBlock(ctx,String(scene.custom||"OMA TEKSTI").toUpperCase(),760,120,31,22,1.15,"Inter",800,3);
+      layout.lines.forEach(function(line,index){ctx.fillText(line,0,index*layout.lineHeight)});
+      return {w:770,h:layout.height};
+    }
+    function drawFixedDetails(index,alpha){
+      ctx.save();ctx.globalAlpha=alpha;ctx.translate(1025,1570);ctx.rotate(-Math.PI/2);
+      ctx.fillStyle=rgba(state.colors.paper,.65);ctx.font=font(700,18,"Inter");ctx.textBaseline="top";
+      ctx.fillText("PAIKKA KAIKILLE. POLKU HUIPULLE.",0,0);ctx.restore();
+      if(state.mode==="three"){
+        ctx.save();ctx.globalAlpha=alpha;ctx.fillStyle=rgba(state.colors.paper,.72);ctx.font=font(800,21,"Inter");
+        ctx.textBaseline="top";ctx.textAlign="right";ctx.fillText("0"+String(index+1)+" / 03",990,82);ctx.restore();
+      }
+    }
+    function drawSelection(){
+      if(!selectedKey||(activePanel!=="elements"&&!drag))return;
+      var area=hitAreas.filter(function(item){return item.key===selectedKey}).pop();if(!area)return;
+      ctx.save();ctx.strokeStyle=state.colors.ochre;ctx.lineWidth=4;ctx.setLineDash([14,10]);
+      ctx.strokeRect(area.x-10,area.y-10,area.w+20,area.h+20);ctx.setLineDash([]);
+      ctx.fillStyle=state.colors.ochre;ctx.beginPath();ctx.arc(area.x+area.w+8,area.y-8,10,0,Math.PI*2);ctx.fill();ctx.restore();
+    }
+    function drawScene(scene,local,alpha,index,editable){
+      drawBackground(scene,local,alpha);if(editable)hitAreas=[];
+      paintElement(scene,"logo",86,74,local,alpha,editable,function(){return drawLogo()});
+      paintElement(scene,"kicker",91,365,local,alpha,editable,function(){return drawKicker(scene)});
+      paintElement(scene,"headline",84,440,local,alpha,editable,function(){return drawHeadline(scene)});
+      paintElement(scene,"body",91,1018,local,alpha,editable,function(){return drawBody(scene)});
+      paintElement(scene,"sports",91,1242,local,alpha,editable,function(){return drawSports(scene)});
+      paintElement(scene,"meta",91,1450,local,alpha,editable,function(){return drawMeta(scene)});
+      paintElement(scene,"custom",91,1540,local,alpha,editable,function(){return drawCustom(scene)});
+      paintElement(scene,"cta",91,1662,local,alpha,editable,function(){return drawCta(scene)});
+      drawFixedDetails(index,alpha);
+      if(state.grain&&grainCanvas){
+        ctx.save();ctx.globalAlpha=.12;ctx.globalCompositeOperation="soft-light";
+        ctx.fillStyle=ctx.createPattern(grainCanvas,"repeat");ctx.fillRect(0,0,W,H);ctx.restore();
+      }
+      if(editable)drawSelection();
+    }
+    function drawTimeline(milliseconds,options){
+      options=options||{};var loop=options.loop!==false,editable=!!options.editable;ctx.clearRect(0,0,W,H);
+      if(state.mode==="one"){
+        var duration=state.oneDuration*1000,t=loop?(milliseconds%duration):Math.min(milliseconds,duration-1),local=t/duration,alpha=1;
+        if(loop&&local>.94)alpha=1-ease((local-.94)/.06);
+        drawScene(state.one,local,alpha,0,editable);return;
+      }
+      var sceneMs=state.sceneDuration*1000,total=sceneMs*3,time=loop?(milliseconds%total):Math.min(milliseconds,total-1);
+      var index=Math.min(2,Math.floor(time/sceneMs)),sceneLocal=(time-index*sceneMs)/sceneMs,transitionStart=.82,hasNext=index<2||loop;
+      if(sceneLocal>transitionStart&&hasNext){
+        var q=ease((sceneLocal-transitionStart)/(1-transitionStart));
+        drawScene(state.scenes[index],sceneLocal,1-q,index,false);
+        var next=(index+1)%3;drawScene(state.scenes[next],q*.22,q,next,false);
+      }else drawScene(state.scenes[index],sceneLocal,1,index,editable);
+    }
+    function renderStatic(){
+      if(exporting)return;
+      stopPlayback(false);ctx.clearRect(0,0,W,H);
+      drawScene(currentScene(),.76,1,state.mode==="one"?0:state.current,true);syncPlayButton();
+    }
+    function playTimeline(){
+      stopPlayback(false);playing=true;playStarted=performance.now();syncPlayButton();
+      function frame(now){if(!playing)return;drawTimeline(now-playStarted,{loop:true,editable:false});animationFrame=requestAnimationFrame(frame)}
+      animationFrame=requestAnimationFrame(frame);
+    }
+    function stopPlayback(render){
+      playing=false;if(animationFrame)cancelAnimationFrame(animationFrame);animationFrame=0;syncPlayButton();if(render)renderStatic();
+    }
+    function syncPlayButton(){
+      document.getElementById("playBtn").textContent=playing?"■":"▶";
+      document.getElementById("playBtn").setAttribute("aria-label",playing?"Pysäytä animaatio":"Toista animaatio");
+    }
+    function setMode(mode){
+      state.mode=mode==="three"?"three":"one";state.current=0;activePanel="";sheet.classList.remove("open");
+      syncModeUi();renderStatic();scheduleSave();
+    }
+    function syncModeUi(){
+      var three=state.mode==="three",oneBtn=document.getElementById("oneModeBtn"),threeBtn=document.getElementById("threeModeBtn");
+      oneBtn.classList.toggle("active",!three);threeBtn.classList.toggle("active",three);
+      oneBtn.setAttribute("aria-pressed",String(!three));threeBtn.setAttribute("aria-pressed",String(three));
+      sceneBar.classList.toggle("show",three);
+      sceneBar.querySelectorAll("button").forEach(function(button){
+        var active=Number(button.dataset.scene)===state.current;
+        button.classList.toggle("active",active);button.setAttribute("aria-pressed",String(active));
+      });
+    }
+    function selectScene(index){
+      state.current=clamp(Number(index)||0,0,2);syncModeUi();renderStatic();if(activePanel)openPanel(activePanel);
+    }
+    function sheetHeader(title){
+      return '<div class="sheetHead"><h3>'+esc(title)+'</h3><button class="closeSheet" id="closeSheetBtn" type="button" aria-label="Sulje">×</button></div>';
+    }
+    function showSheet(title,html){
+      sheet.innerHTML=sheetHeader(title)+html;sheet.classList.add("open");document.getElementById("closeSheetBtn").onclick=closeSheet;
+    }
+    function closeSheet(){
+      sheet.classList.remove("open");activePanel="";
+      document.querySelectorAll(".tool").forEach(function(button){button.classList.remove("active")});
+    }
+    function markActiveTool(panel){
+      document.querySelectorAll(".tool").forEach(function(button){button.classList.toggle("active",button.dataset.panel===panel)});
+    }
+    function openPanel(panel){
+      activePanel=panel;markActiveTool(panel);
+      if(panel==="text")openTextPanel();
+      if(panel==="image")openImagePanel();
+      if(panel==="elements")openElementsPanel();
+      if(panel==="style")openStylePanel();
+      if(panel==="export")openExportPanel();
+    }
+    function openTextPanel(){
+      var scene=currentScene(),title=state.mode==="three"?"VAIHE "+String(state.current+1)+" / 3 · TEKSTIT":"1 VAIHE · TEKSTIT";
+      var html=
+        '<label>Yläteksti<input data-field="kicker" value="'+esc(scene.kicker)+'"></label>'+
+        '<label>Pääotsikko<textarea data-field="headline">'+esc(scene.headline)+'</textarea></label>'+
+        '<label>Leipäteksti<textarea data-field="body">'+esc(scene.body)+'</textarea></label>'+
+        '<div class="row"><label>Laji 1<input data-field="sportA" value="'+esc(scene.sportA)+'"></label><label>Laji 2<input data-field="sportB" value="'+esc(scene.sportB)+'"></label></div>'+
+        '<label>Kurssitiedot<input data-field="meta" value="'+esc(scene.meta)+'"></label>'+
+        '<div class="row"><label>CTA<input data-field="cta" value="'+esc(scene.cta)+'"></label><label>Osoite<input data-field="url" value="'+esc(scene.url)+'"></label></div>'+
+        '<label>Oma lisäteksti<input data-field="custom" value="'+esc(scene.custom)+'" placeholder="Kirjoita ja ota näkyviin Elementit-välilehdeltä"></label>';
+      showSheet(title,html);
+      sheet.querySelectorAll("[data-field]").forEach(function(field){
+        field.addEventListener("input",function(event){
+          currentScene()[event.target.dataset.field]=event.target.value;renderStatic();scheduleSave();
+        });
+      });
+    }
+    function rangeMarkup(id,label,min,max,step,value,suffix){
+      return '<label class="rangeRow"><span>'+esc(label)+'</span><input id="'+id+'" type="range" min="'+min+'" max="'+max+'" step="'+step+'" value="'+value+'"><output id="'+id+'Out">'+esc(String(value)+suffix)+'</output></label>';
+    }
+    function openImagePanel(){
+      var scene=currentScene(),title=state.mode==="three"?"VAIHE "+String(state.current+1)+" / 3 · KUVA":"1 VAIHE · KUVA";
+      var html=
+        '<p>Valitse kuva iPhonen Kuvat-apista. Kuva pienennetään automaattisesti, jotta projekti säilyy kevyenä.</p>'+
+        '<label class="fileButton" for="photoInput" tabindex="0">VALITSE OMA KUVA</label>'+
+        '<div class="fileName">'+(scene.imageName?"Nykyinen: "+esc(scene.imageName):"Ei omaa kuvaa – käytössä Capra-grafiikka")+'</div>'+
+        rangeMarkup("photoZoom","Zoom",1,2,.01,scene.crop.zoom,"×")+
+        rangeMarkup("photoX","Vaaka",0,100,1,scene.crop.x,"%")+
+        rangeMarkup("photoY","Pysty",0,100,1,scene.crop.y,"%")+
+        rangeMarkup("photoBrightness","Valo",.4,1.35,.01,scene.filter.brightness,"")+
+        rangeMarkup("photoContrast","Kontrasti",.6,1.65,.01,scene.filter.contrast,"")+
+        rangeMarkup("photoSaturation","Väri",0,1.5,.01,scene.filter.saturation,"")+
+        rangeMarkup("photoOverlay","Tummuus",.3,.94,.01,scene.filter.overlay,"")+
+        '<div class="buttonGrid"><button id="resetCropBtn" type="button">Palauta säädöt</button><button id="removePhotoBtn" type="button">Poista kuva</button>'+
+        '<button class="primary wide" id="copyPhotoBtn" type="button" '+(state.mode==="one"?"disabled":"")+'>KOPIOI KUVA KAIKKIIN VAIHEISIIN</button></div>';
+      showSheet(title,html);
+      var bindings=[
+        ["photoZoom","crop","zoom","×"],["photoX","crop","x","%"],["photoY","crop","y","%"],
+        ["photoBrightness","filter","brightness",""],["photoContrast","filter","contrast",""],
+        ["photoSaturation","filter","saturation",""],["photoOverlay","filter","overlay",""]
+      ];
+      bindings.forEach(function(binding){
+        var input=document.getElementById(binding[0]);
+        input.addEventListener("input",function(){
+          currentScene()[binding[1]][binding[2]]=Number(input.value);
+          document.getElementById(binding[0]+"Out").value=input.value+binding[3];renderStatic();scheduleSave();
+        });
+      });
+      document.getElementById("resetCropBtn").onclick=function(){
+        currentScene().crop={zoom:1.05,x:50,y:50};
+        currentScene().filter={brightness:.78,contrast:1.08,saturation:.72,overlay:.72};
+        openImagePanel();renderStatic();scheduleSave();
+      };
+      document.getElementById("removePhotoBtn").onclick=function(){
+        var target=currentScene();target.image="";target.imageName="";photoCache.clear();
+        openImagePanel();renderStatic();scheduleSave();
+      };
+      document.getElementById("copyPhotoBtn").onclick=function(){
+        var source=currentScene();
+        state.scenes.forEach(function(target){
+          target.image=source.image;target.imageName=source.imageName;target.crop=clone(source.crop);target.filter=clone(source.filter);
+        });
+        showToast("Kuva ja rajaus kopioitu kaikkiin vaiheisiin");renderStatic();scheduleSave();
+      };
+    }
+    function elementPillsMarkup(){
+      return '<div class="elementPills">'+Object.keys(elementLabels).map(function(key){
+        return '<button type="button" data-element="'+key+'" class="'+(selectedKey===key?"active":"")+'">'+esc(elementLabels[key])+'</button>';
+      }).join("")+'</div>';
+    }
+    function openElementsPanel(){
+      var scene=currentScene();if(!scene.elements[selectedKey])selectedKey="headline";
+      var item=scene.elements[selectedKey];
+      var html=
+        '<p>Napauta elementtiä esikatselussa ja vedä sormella. Tässä voit hienosäätää sijaintia, kokoa ja näkyvyyttä.</p>'+
+        elementPillsMarkup()+
+        '<div class="toggleRow"><span>Näytä '+esc(elementLabels[selectedKey])+'</span><input id="elementShow" type="checkbox" '+(item.show?"checked":"")+'></div>'+
+        rangeMarkup("elementX","Vaaka",-420,420,2,item.x,"")+
+        rangeMarkup("elementY","Pysty",-650,650,2,item.y,"")+
+        rangeMarkup("elementScale","Koko",.55,1.8,.01,item.scale,"×")+
+        '<div class="buttonGrid"><button id="resetElementBtn" type="button">Palauta elementti</button><button id="resetAllElementsBtn" type="button">Palauta kaikki</button>'+
+        '<button class="primary wide" id="enableCustomBtn" type="button">LISÄÄ OMA TEKSTIELEMENTTI</button></div>';
+      showSheet("ELEMENTIT · "+elementLabels[selectedKey],html);
+      sheet.querySelectorAll("[data-element]").forEach(function(button){
+        button.onclick=function(){selectedKey=button.dataset.element;renderStatic();openElementsPanel()};
+      });
+      document.getElementById("elementShow").onchange=function(event){
+        currentScene().elements[selectedKey].show=event.target.checked;renderStatic();scheduleSave();
+      };
+      [["elementX","x",""],["elementY","y",""],["elementScale","scale","×"]].forEach(function(binding){
+        var input=document.getElementById(binding[0]);
+        input.oninput=function(){
+          currentScene().elements[selectedKey][binding[1]]=Number(input.value);
+          document.getElementById(binding[0]+"Out").value=input.value+binding[2];renderStatic();scheduleSave();
+        };
+      });
+      document.getElementById("resetElementBtn").onclick=function(){
+        currentScene().elements[selectedKey]=clone(transforms()[selectedKey]);renderStatic();openElementsPanel();scheduleSave();
+      };
+      document.getElementById("resetAllElementsBtn").onclick=function(){
+        currentScene().elements=transforms();renderStatic();openElementsPanel();scheduleSave();
+      };
+      document.getElementById("enableCustomBtn").onclick=function(){
+        var target=currentScene();target.elements.custom.show=true;if(!target.custom)target.custom="OMA TEKSTI";
+        selectedKey="custom";renderStatic();openElementsPanel();scheduleSave();
+      };
+    }
+    var palettes={
+      brand:{olive:"#68724a",ochre:"#c8ae4d",ink:"#090a08",paper:"#f2efe7"},
+      deep:{olive:"#515b3a",ochre:"#d2b458",ink:"#050605",paper:"#f5f1e6"},
+      light:{olive:"#68724a",ochre:"#b49232",ink:"#262820",paper:"#fffaf0"}
+    };
+    function applyPalette(name){
+      if(!palettes[name])return;state.colors=clone(palettes[name]);setCssColors();renderStatic();openStylePanel();scheduleSave();
+    }
+    function openStylePanel(){
+      var html=
+        '<p>Viralliset Capra-värit ovat oletuksena. Esiasetus palauttaa värit yhdellä painalluksella.</p>'+
+        '<div class="presetGrid"><button class="preset primary" data-palette="brand" type="button">BRÄNDI</button><button class="preset" data-palette="deep" type="button">SYVÄ</button><button class="preset" data-palette="light" type="button">VAALEA</button></div>'+
+        '<div class="row"><label>Oliivi<input id="oliveColor" type="color" value="'+state.colors.olive+'"></label><label>Okra<input id="ochreColor" type="color" value="'+state.colors.ochre+'"></label>'+
+        '<label>Tausta<input id="inkColor" type="color" value="'+state.colors.ink+'"></label><label>Teksti<input id="paperColor" type="color" value="'+state.colors.paper+'"></label></div>'+
+        '<label>Animaation tyyli<select id="animationStyle"><option value="dynamic" '+(state.animation==="dynamic"?"selected":"")+'>Dynaaminen</option>'+
+        '<option value="soft" '+(state.animation==="soft"?"selected":"")+'>Pehmeä editorial</option><option value="minimal" '+(state.animation==="minimal"?"selected":"")+'>Minimal</option></select></label>'+
+        '<div class="toggleRow"><span>Korosta otsikon viimeinen rivi</span><input id="accentLast" type="checkbox" '+(state.accentLast?"checked":"")+'></div>'+
+        '<div class="toggleRow"><span>Filmirae</span><input id="grainToggle" type="checkbox" '+(state.grain?"checked":"")+'></div>'+
+        rangeMarkup("oneDuration","1-vaiheen kesto",4,10,.5,state.oneDuration," s")+
+        rangeMarkup("sceneDuration","Vaiheen kesto",2.5,6,.1,state.sceneDuration," s");
+      showSheet("CAPRA-TYYLI",html);
+      document.querySelectorAll("[data-palette]").forEach(function(button){button.onclick=function(){applyPalette(button.dataset.palette)}});
+      [["oliveColor","olive"],["ochreColor","ochre"],["inkColor","ink"],["paperColor","paper"]].forEach(function(binding){
+        document.getElementById(binding[0]).oninput=function(event){
+          state.colors[binding[1]]=event.target.value;setCssColors();renderStatic();scheduleSave();
+        };
+      });
+      document.getElementById("animationStyle").onchange=function(event){state.animation=event.target.value;renderStatic();scheduleSave()};
+      document.getElementById("accentLast").onchange=function(event){state.accentLast=event.target.checked;renderStatic();scheduleSave()};
+      document.getElementById("grainToggle").onchange=function(event){state.grain=event.target.checked;renderStatic();scheduleSave()};
+      [["oneDuration","oneDuration"," s"],["sceneDuration","sceneDuration"," s"]].forEach(function(binding){
+        var input=document.getElementById(binding[0]);
+        input.oninput=function(){
+          state[binding[1]]=Number(input.value);document.getElementById(binding[0]+"Out").value=input.value+binding[2];scheduleSave();
+        };
+      });
+    }
+    function openExportPanel(){
+      var duration=state.mode==="one"?state.oneDuration:state.sceneDuration*3;
+      var html=
+        '<div class="exportCard"><b>'+(state.mode==="one"?"1-vaiheinen mainos":"3-vaiheinen mainos")+'</b><span>1080 × 1920 · 9:16 · noin '+duration.toFixed(1).replace(".",",")+' sekuntia · ilman ääntä</span></div>'+
+        '<div class="buttonGrid"><button class="primary wide" id="videoExportBtn" type="button">TALLENNA ANIMOITU VIDEO</button>'+
+        '<button id="pngExportBtn" type="button">PNG tästä vaiheesta</button><button id="projectExportBtn" type="button">Projektitiedosto</button>'+
+        '<label class="fileButton wide" for="projectInput" tabindex="0">AVAA PROJEKTI</label><button class="danger wide" id="resetProjectBtn" type="button">Palauta alkuperäinen pohja</button></div>'+
+        '<p>iPhonella video tai kuva avautuu Jaa-valikkoon. Valitse “Tallenna video”, “Tallenna kuva” tai avaa tiedosto suoraan CapCutissa. Jos selain ei tue videovientiä, käytä Esikatsele-tilaa ja iPhonen näytön tallennusta.</p>';
+      showSheet("TALLENNA JA JAA",html);
+      document.getElementById("videoExportBtn").onclick=exportVideo;
+      document.getElementById("pngExportBtn").onclick=exportPng;
+      document.getElementById("projectExportBtn").onclick=exportProject;
+      document.getElementById("resetProjectBtn").onclick=function(){
+        if(window.confirm("Palautetaanko kaikki tämän työkalun tekstit, kuvat ja säädöt?")){
+          state=clone(defaults);photoCache.clear();selectedKey="headline";setCssColors();syncModeUi();renderStatic();closeSheet();saveProject(true);
+        }
+      };
+    }
+    function readFile(file){
+      return new Promise(function(resolve,reject){
+        var reader=new FileReader();reader.onload=function(){resolve(reader.result)};
+        reader.onerror=function(){reject(reader.error||new Error("Tiedostoa ei voitu lukea"))};reader.readAsDataURL(file);
+      });
+    }
+    async function optimizePhoto(source){
+      var image=await loadImageSource(source),maxDimension=1900;
+      var scale=Math.min(1,maxDimension/Math.max(image.naturalWidth,image.naturalHeight));
+      var c=document.createElement("canvas");
+      c.width=Math.max(1,Math.round(image.naturalWidth*scale));c.height=Math.max(1,Math.round(image.naturalHeight*scale));
+      var cctx=c.getContext("2d",{alpha:false});cctx.fillStyle="#000";cctx.fillRect(0,0,c.width,c.height);cctx.drawImage(image,0,0,c.width,c.height);
+      return c.toDataURL("image/jpeg",.84);
+    }
+    async function handlePhoto(event){
+      var file=event.target.files&&event.target.files[0];event.target.value="";if(!file)return;
+      showToast("Kuvaa käsitellään…");
+      try{
+        var source=await readFile(file),optimized=await optimizePhoto(source),target=currentScene();
+        target.image=optimized;target.imageName=file.name||"iPhone-kuva";target.crop={zoom:1.05,x:50,y:50};
+        photoCache.clear();renderStatic();if(activePanel==="image")openImagePanel();scheduleSave();showToast("Kuva lisätty");
+      }catch(error){showToast("Kuvaa ei voitu avata. Kokeile JPEG- tai PNG-kuvaa.")}
+    }
+    function openDb(){
+      return new Promise(function(resolve,reject){
+        if(!("indexedDB" in window)){reject(new Error("IndexedDB ei ole käytössä"));return}
+        var request=indexedDB.open(DB_NAME,1);
+        request.onupgradeneeded=function(){if(!request.result.objectStoreNames.contains(DB_STORE))request.result.createObjectStore(DB_STORE)};
+        request.onsuccess=function(){resolve(request.result)};request.onerror=function(){reject(request.error)};
+      });
+    }
+    async function saveProject(announce){
+      clearTimeout(saveTimer);
+      try{
+        var payload=clone(state),db=await openDb();
+        await new Promise(function(resolve,reject){
+          var transaction=db.transaction(DB_STORE,"readwrite");transaction.objectStore(DB_STORE).put(payload,DB_KEY);
+          transaction.oncomplete=resolve;transaction.onerror=function(){reject(transaction.error)};
+        });
+        db.close();if(announce)showToast("Projekti tallennettu tähän iPhoneen");
+      }catch(error){
+        try{localStorage.setItem(FALLBACK_KEY,JSON.stringify(state));if(announce)showToast("Projekti tallennettu")}
+        catch(fallbackError){if(announce)showToast("Tallennus ei mahtunut selaimeen. Vie projektitiedosto.")}
+      }
+    }
+    function scheduleSave(){clearTimeout(saveTimer);saveTimer=window.setTimeout(function(){saveProject(false)},850)}
+    async function restoreProject(){
+      try{
+        var db=await openDb();
+        var saved=await new Promise(function(resolve,reject){
+          var transaction=db.transaction(DB_STORE,"readonly"),request=transaction.objectStore(DB_STORE).get(DB_KEY);
+          request.onsuccess=function(){resolve(request.result)};request.onerror=function(){reject(request.error)};
+        });
+        db.close();if(saved){state=normalizeState(saved);return}
+      }catch(error){}
+      try{var fallback=localStorage.getItem(FALLBACK_KEY);if(fallback)state=normalizeState(JSON.parse(fallback))}catch(error){}
+    }
+    function normalizeTransform(value,fallback){
+      return {
+        x:Number.isFinite(Number(value&&value.x))?Number(value.x):fallback.x,
+        y:Number.isFinite(Number(value&&value.y))?Number(value.y):fallback.y,
+        scale:clamp(Number(value&&value.scale)||fallback.scale,.3,2.5),
+        show:value&&typeof value.show==="boolean"?value.show:fallback.show
+      };
+    }
+    function normalizeScene(value,fallback){
+      var result=makeScene();
+      ["kicker","headline","body","sportA","sportB","meta","cta","url","custom","image","imageName"].forEach(function(key){
+        result[key]=value&&value[key]!=null?String(value[key]):fallback[key];
+      });
+      result.crop={
+        zoom:clamp(Number(value&&value.crop&&value.crop.zoom)||fallback.crop.zoom,1,2.5),
+        x:clamp(Number(value&&value.crop&&value.crop.x)||fallback.crop.x,0,100),
+        y:clamp(Number(value&&value.crop&&value.crop.y)||fallback.crop.y,0,100)
+      };
+      result.filter={
+        brightness:clamp(Number(value&&value.filter&&value.filter.brightness)||fallback.filter.brightness,.2,2),
+        contrast:clamp(Number(value&&value.filter&&value.filter.contrast)||fallback.filter.contrast,.2,2),
+        saturation:clamp(Number(value&&value.filter&&value.filter.saturation)||fallback.filter.saturation,0,2),
+        overlay:clamp(Number(value&&value.filter&&value.filter.overlay)||fallback.filter.overlay,0,1)
+      };
+      var base=transforms();
+      Object.keys(base).forEach(function(key){result.elements[key]=normalizeTransform(value&&value.elements&&value.elements[key],fallback.elements[key]||base[key])});
       return result;
     }
-
-    function readFileAsDataURL(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = () => reject(reader.error || new Error('Kuvan lukeminen epäonnistui'));
-        reader.readAsDataURL(file);
-      });
+    function validColor(value,fallback){return /^#[0-9a-f]{6}$/i.test(String(value||""))?String(value):fallback}
+    function normalizeState(value){
+      var result=clone(defaults);
+      result.mode=value&&value.mode==="three"?"three":"one";result.current=clamp(Number(value&&value.current)||0,0,2);
+      result.animation=["dynamic","soft","minimal"].indexOf(value&&value.animation)>=0?value.animation:result.animation;
+      result.accentLast=value&&typeof value.accentLast==="boolean"?value.accentLast:result.accentLast;
+      result.grain=value&&typeof value.grain==="boolean"?value.grain:result.grain;
+      result.oneDuration=clamp(Number(value&&value.oneDuration)||result.oneDuration,4,10);
+      result.sceneDuration=clamp(Number(value&&value.sceneDuration)||result.sceneDuration,2.5,6);
+      Object.keys(result.colors).forEach(function(key){result.colors[key]=validColor(value&&value.colors&&value.colors[key],result.colors[key])});
+      result.one=normalizeScene(value&&value.one,result.one);
+      result.scenes=result.scenes.map(function(fallback,index){return normalizeScene(value&&value.scenes&&value.scenes[index],fallback)});
+      return result;
     }
-
-    function loadImage(source) {
-      return new Promise((resolve, reject) => {
-        const image = new Image();
-        image.onload = () => resolve(image);
-        image.onerror = () => reject(new Error('Kuvan avaaminen epäonnistui'));
-        image.src = source;
-      });
+    function blobFromCanvas(target,type,quality){
+      return new Promise(function(resolve,reject){target.toBlob(function(blob){blob?resolve(blob):reject(new Error("Tiedostoa ei voitu luoda"))},type,quality)});
     }
-
-    async function optimizeImage(source) {
-      try {
-        const image = await loadImage(source);
-        const maxDimension = 1900;
-        const scale = Math.min(1, maxDimension / Math.max(image.naturalWidth, image.naturalHeight));
-        const canvas = document.createElement('canvas');
-        canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
-        canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
-        canvas.getContext('2d', { alpha: false }).drawImage(image, 0, 0, canvas.width, canvas.height);
-        return canvas.toDataURL('image/jpeg', .88);
-      } catch (error) {
-        return source;
+    function safeName(kind,extension){
+      var mode=state.mode==="one"?"1-vaihe":"3-vaihetta";return "capra-mma-bjj-"+mode+"-"+kind+"."+extension;
+    }
+    async function deliverBlob(blob,name,title){
+      var file;try{file=new File([blob],name,{type:blob.type})}catch(error){file=null}
+      if(file&&navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
+        try{await navigator.share({title:title,files:[file]});return}
+        catch(error){if(error&&error.name==="AbortError")return}
       }
+      var url=URL.createObjectURL(blob),link=document.createElement("a");
+      link.href=url;link.download=name;link.rel="noopener";document.body.appendChild(link);link.click();link.remove();
+      window.setTimeout(function(){URL.revokeObjectURL(url)},30000);showToast("Tiedosto ladattu");
     }
-
-    async function handleImageSelection(event) {
-      const file = event.target.files?.[0];
-      event.target.value = '';
-      if (!file) return;
-
-      const targetReference = { ...imageTarget };
-      const targetScene = sceneFromTarget(targetReference);
-      showToast('Kuvaa käsitellään…');
-
-      try {
-        const source = await readFileAsDataURL(file);
-        targetScene.image = await optimizeImage(source);
-        targetScene.imageName = file.name || 'iPhone-kuva';
-        targetScene.zoom = 1.03;
-        targetScene.x = 50;
-        targetScene.y = 50;
-        renderStage({ animate: false });
-        if (activePanel === 'image') openImagePanel();
-        showToast('Kuva vaihdettu');
-      } catch (error) {
-        showToast('Kuvaa ei voitu lukea. Kokeile JPEG- tai PNG-kuvaa.');
+    async function exportPng(){
+      closeSheet();stopPlayback(false);ctx.clearRect(0,0,W,H);
+      drawScene(currentScene(),.76,1,state.mode==="one"?0:state.current,false);
+      try{var blob=await blobFromCanvas(canvas,"image/png",1);await deliverBlob(blob,safeName("kuva","png"),"Capra Combat -mainos")}
+      catch(error){showToast("PNG-tallennus epäonnistui")}finally{renderStatic()}
+    }
+    function chooseVideoType(){
+      if(!window.MediaRecorder)return "";
+      var types=["video/mp4;codecs=avc1.42E01E","video/mp4","video/webm;codecs=vp9","video/webm;codecs=vp8","video/webm"];
+      for(var i=0;i<types.length;i++)if(!MediaRecorder.isTypeSupported||MediaRecorder.isTypeSupported(types[i]))return types[i];
+      return "";
+    }
+    function showProgress(percent,message){
+      progress.classList.add("show");var value=clamp(percent,0,100);
+      progressFill.style.width=value+"%";progressText.textContent=Math.round(value)+" %"+(message?" · "+message:"");
+    }
+    function hideProgress(){progress.classList.remove("show");progressFill.style.width="0%"}
+    async function exportVideo(){
+      if(exporting)return;closeSheet();stopPlayback(false);
+      var mime=chooseVideoType();
+      if(!canvas.captureStream||!window.MediaRecorder||!mime){
+        showToast("Safari ei tue videovientiä. Käytä Esikatsele-tilaa ja näytön tallennusta.");togglePreview(true);return;
       }
+      exporting=true;
+      var duration=(state.mode==="one"?state.oneDuration:state.sceneDuration*3)*1000,chunks=[],stream,recorder;
+      try{
+        stream=canvas.captureStream(30);recorder=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:9000000});
+        recorder.ondataavailable=function(event){if(event.data&&event.data.size)chunks.push(event.data)};
+        var stopped=new Promise(function(resolve,reject){
+          recorder.onstop=resolve;recorder.onerror=function(event){reject(event.error||new Error("Videon tallennus epäonnistui"))};
+        });
+        recorder.start(500);var started=performance.now();showProgress(0,"Pidä sivu avoinna");
+        await new Promise(function(resolve){
+          function recordFrame(now){
+            var elapsed=Math.min(duration,now-started);drawTimeline(elapsed,{loop:false,editable:false});
+            showProgress(elapsed/duration*100,"Pidä sivu avoinna");
+            if(elapsed>=duration){resolve();return}requestAnimationFrame(recordFrame);
+          }
+          requestAnimationFrame(recordFrame);
+        });
+        await new Promise(function(resolve){window.setTimeout(resolve,180)});
+        recorder.stop();await stopped;stream.getTracks().forEach(function(track){track.stop()});
+        var actualType=recorder.mimeType||mime,extension=actualType.indexOf("mp4")>=0?"mp4":"webm",blob=new Blob(chunks,{type:actualType});
+        hideProgress();await deliverBlob(blob,safeName("video",extension),"Capra Combat -animaatiomainos");
+      }catch(error){
+        if(stream)stream.getTracks().forEach(function(track){track.stop()});hideProgress();
+        showToast("Videovienti ei onnistunut. Käytä Esikatsele-tilaa ja näytön tallennusta.");
+      }finally{exporting=false;renderStatic()}
     }
-
-    function showToast(message) {
-      clearTimeout(toastTimer);
-      toast.textContent = message;
-      toast.classList.add('show');
-      toastTimer = window.setTimeout(() => toast.classList.remove('show'), 2200);
+    async function exportProject(){
+      var data=JSON.stringify(state,null,2),blob=new Blob([data],{type:"application/json"});
+      await deliverBlob(blob,safeName("projekti","capra.json"),"Capra Motion Studio -projekti");
     }
-
-    $('oneModeBtn').onclick = () => setMode('one');
-    $('threeModeBtn').onclick = () => setMode('three');
-    sceneBar.querySelectorAll('button').forEach(button => {
-      button.onclick = () => selectScene(Number(button.dataset.scene));
+    async function handleProjectImport(event){
+      var file=event.target.files&&event.target.files[0];event.target.value="";if(!file)return;
+      try{
+        var text=await file.text();state=normalizeState(JSON.parse(text));photoCache.clear();selectedKey="headline";
+        setCssColors();syncModeUi();closeSheet();renderStatic();await saveProject(false);showToast("Projekti avattu");
+      }catch(error){showToast("Projektitiedostoa ei voitu avata")}
+    }
+    function showToast(message){
+      clearTimeout(toastTimer);toast.textContent=message;toast.classList.add("show");
+      toastTimer=window.setTimeout(function(){toast.classList.remove("show")},2600);
+    }
+    function togglePreview(force){
+      var open=typeof force==="boolean"?force:!document.body.classList.contains("previewMode");
+      document.body.classList.toggle("previewMode",open);app.classList.toggle("previewMode",open);closeSheet();
+      if(open)playTimeline();else renderStatic();
+    }
+    function pointFromEvent(event){
+      var rect=canvas.getBoundingClientRect();return {x:(event.clientX-rect.left)*W/rect.width,y:(event.clientY-rect.top)*H/rect.height};
+    }
+    function findHit(point){
+      for(var i=hitAreas.length-1;i>=0;i--){
+        var area=hitAreas[i];
+        if(point.x>=area.x&&point.x<=area.x+area.w&&point.y>=area.y&&point.y<=area.y+area.h)return area;
+      }
+      return null;
+    }
+    canvas.addEventListener("pointerdown",function(event){
+      if(exporting)return;stopPlayback(false);renderStatic();
+      var point=pointFromEvent(event),hit=findHit(point);if(!hit)return;
+      selectedKey=hit.key;
+      var item=currentScene().elements[selectedKey];
+      drag={pointer:event.pointerId,startX:point.x,startY:point.y,originX:item.x,originY:item.y,moved:false};
+      canvas.setPointerCapture(event.pointerId);renderStatic();if(activePanel==="elements")openElementsPanel();event.preventDefault();
     });
-    $('contentBtn').onclick = () => openPanel('content');
-    $('imagesBtn').onclick = () => openPanel('image');
-    $('styleBtn').onclick = () => openPanel('style');
-    $('playBtn').onclick = play;
-    $('previewBtn').onclick = () => togglePreview(true);
-    $('exitPreviewBtn').onclick = () => togglePreview(false);
-    $('saveBtn').onclick = saveProject;
-    imageInput.addEventListener('change', handleImageSelection);
-    window.addEventListener('resize', fit);
-    window.addEventListener('orientationchange', () => window.setTimeout(fit, 120));
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden && isPlaying) stopPlayback();
+    canvas.addEventListener("pointermove",function(event){
+      if(!drag||drag.pointer!==event.pointerId)return;
+      var point=pointFromEvent(event),item=currentScene().elements[selectedKey];
+      item.x=clamp(drag.originX+point.x-drag.startX,-600,600);
+      item.y=clamp(drag.originY+point.y-drag.startY,-900,900);drag.moved=true;renderStatic();event.preventDefault();
     });
-
-    restoreProject();
-    document.documentElement.style.setProperty('--olive', state.olive);
-    document.documentElement.style.setProperty('--ochre', state.ochre);
-    syncModeControls();
-    renderStage();
+    function finishDrag(event){
+      if(!drag||drag.pointer!==event.pointerId)return;
+      try{canvas.releasePointerCapture(event.pointerId)}catch(error){}
+      if(drag.moved)scheduleSave();drag=null;if(activePanel==="elements")openElementsPanel();
+    }
+    canvas.addEventListener("pointerup",finishDrag);canvas.addEventListener("pointercancel",finishDrag);
+    document.getElementById("oneModeBtn").onclick=function(){setMode("one")};
+    document.getElementById("threeModeBtn").onclick=function(){setMode("three")};
+    sceneBar.querySelectorAll("button").forEach(function(button){button.onclick=function(){selectScene(button.dataset.scene)}});
+    document.querySelectorAll(".tool").forEach(function(button){
+      button.onclick=function(){
+        if(activePanel===button.dataset.panel&&sheet.classList.contains("open"))closeSheet();else openPanel(button.dataset.panel);
+      };
+    });
+    document.getElementById("playBtn").onclick=function(){playing?renderStatic():playTimeline()};
+    document.getElementById("previewBtn").onclick=function(){togglePreview(true)};
+    document.getElementById("exitPreviewBtn").onclick=function(){togglePreview(false)};
+    document.getElementById("saveBtn").onclick=function(){saveProject(true)};
+    photoInput.addEventListener("change",handlePhoto);projectInput.addEventListener("change",handleProjectImport);
+    document.addEventListener("visibilitychange",function(){if(document.hidden&&playing)renderStatic()});
+    window.addEventListener("pagehide",function(){saveProject(false)});
+    async function init(){
+      createGrain();await restoreProject();setCssColors();syncModeUi();
+      if(document.fonts&&document.fonts.ready)await document.fonts.ready;
+      renderStatic();prepareLogo();
+      var query=new URLSearchParams(location.search);
+      if(query.get("mode")==="three")setMode("three");if(query.get("mode")==="one")setMode("one");
+    }
+    init();
+  })();
   </script>
 </body>
 </html>
