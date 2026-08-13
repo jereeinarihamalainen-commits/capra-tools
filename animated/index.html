@@ -464,7 +464,7 @@
     async function prepareLogo(){
       try{
         logoCanvas=await loadImageSource("../assets/capra-logo.png?v=5");
-        renderStatic();
+        if(!playing&&!exporting)renderStatic();
       }catch(error){logoCanvas=null}
     }
     function cachedPhoto(scene){
@@ -474,7 +474,7 @@
         return cached.complete&&cached.naturalWidth?cached:null;
       }
       var image=new Image();
-      image.onload=function(){renderStatic()};
+      image.onload=function(){if(!playing&&!exporting)renderStatic()};
       image.src=scene.image;photoCache.set(scene.image,image);
       return image.complete&&image.naturalWidth?image:null;
     }
@@ -640,12 +640,19 @@
         drawScene(state.one,local,alpha,0,editable);return;
       }
       var sceneMs=state.sceneDuration*1000,total=sceneMs*3,time=loop?(milliseconds%total):Math.min(milliseconds,total-1);
-      var index=Math.min(2,Math.floor(time/sceneMs)),sceneLocal=(time-index*sceneMs)/sceneMs,transitionStart=.82,hasNext=index<2||loop;
-      if(sceneLocal>transitionStart&&hasNext){
+      var index=Math.min(2,Math.floor(time/sceneMs));
+      var sceneLocal=(time-index*sceneMs)/sceneMs;
+      var transitionStart=state.animation==="minimal"?.92:.86;
+      var hasNext=index<2||loop;
+      if(hasNext&&sceneLocal>transitionStart){
         var q=ease((sceneLocal-transitionStart)/(1-transitionStart));
         drawScene(state.scenes[index],sceneLocal,1-q,index,false);
-        var next=(index+1)%3;drawScene(state.scenes[next],q*.22,q,next,false);
-      }else drawScene(state.scenes[index],sceneLocal,1,index,editable);
+        var next=(index+1)%3;
+        drawBackground(state.scenes[next],0,q);
+        drawFixedDetails(next,q);
+      }else{
+        drawScene(state.scenes[index],sceneLocal,1,index,editable);
+      }
     }
     function renderStatic(){
       if(exporting)return;
@@ -653,7 +660,9 @@
       drawScene(currentScene(),.76,1,state.mode==="one"?0:state.current,true);syncPlayButton();
     }
     function playTimeline(){
-      stopPlayback(false);playing=true;playStarted=performance.now();syncPlayButton();
+      stopPlayback(false);playing=true;
+      (state.mode==="one"?[state.one]:state.scenes).forEach(function(scene){cachedPhoto(scene)});
+      playStarted=performance.now();syncPlayButton();
       function frame(now){if(!playing)return;drawTimeline(now-playStarted,{loop:true,editable:false});animationFrame=requestAnimationFrame(frame)}
       animationFrame=requestAnimationFrame(frame);
     }
