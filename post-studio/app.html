@@ -1,1 +1,710 @@
-<!doctype html><html lang="fi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"><title>Capra Post Studio</title><script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script><style>:root{--o:#68724a;--g:#c8ae4d;--bg:#11120f;--fg:#f1eee6}*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;background:#090a08;color:#fff;font-family:-apple-system,BlinkMacSystemFont,Inter,Arial,sans-serif}body{height:100dvh;overflow:hidden}button,input,textarea{font:inherit}.app{height:100dvh;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top)}header{height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 10px;background:#121410;border-bottom:1px solid #30342b}header a{color:#fff;text-decoration:none;font-size:12px;font-weight:900}header strong{font-size:12px}.actions{display:flex;gap:6px}.btn{border:1px solid #363b31;background:#20231d;color:#fff;border-radius:10px;padding:8px 9px;font-size:11px;font-weight:850}.btn.gold{background:var(--g);border-color:var(--g);color:#111}.work{flex:1;min-height:0;position:relative}.viewport{height:100%;overflow:auto;padding:10px 8px 98px;display:flex;justify-content:center}.shell{width:min(100%,430px);aspect-ratio:4/5;position:relative}.canvas{position:absolute;width:1080px;height:1350px;left:0;top:0;transform-origin:0 0;overflow:hidden;background:var(--bg);border-radius:18px;box-shadow:0 16px 48px #0009}.photo{position:absolute;inset:0;background-size:cover;background-position:center;opacity:.68}.shade{position:absolute;inset:0;background:linear-gradient(180deg,#0002,#0005 46%,#000e)}.frame{position:absolute;inset:58px;border:2px solid #fff2}.brand{position:absolute;left:70px;top:65px;font-size:22px;font-weight:1000;letter-spacing:.12em}.type{position:absolute;right:70px;top:68px;color:var(--g);font-size:20px;font-weight:900;letter-spacing:.1em}.ey{position:absolute;left:70px;top:285px;color:var(--g);font-size:24px;font-weight:1000;letter-spacing:.12em}.title{position:absolute;left:70px;top:355px;width:890px;font-size:100px;line-height:.85;letter-spacing:-.055em;font-weight:1000;text-transform:uppercase}.title span{color:var(--g)}.copy{position:absolute;left:73px;top:795px;width:720px;font-size:30px;line-height:1.23;font-weight:650}.footer{position:absolute;left:70px;bottom:72px;font-size:20px;font-weight:900;letter-spacing:.08em}.accent{position:absolute;right:-100px;bottom:150px;width:500px;height:80px;background:var(--o);transform:rotate(-12deg);opacity:.8}.toolbar{position:absolute;left:8px;right:8px;bottom:calc(8px + env(safe-area-inset-bottom));height:70px;background:#171915f8;border:1px solid #30342b;border-radius:19px;display:grid;grid-template-columns:repeat(5,1fr);padding:5px;z-index:40}.toolbar button{border:0;background:transparent;color:#ddd;font-size:10px;font-weight:800}.sheet{display:none;position:absolute;left:8px;right:8px;bottom:calc(86px + env(safe-area-inset-bottom));max-height:49dvh;overflow:auto;background:#171915fb;border:1px solid #34382f;border-radius:20px;padding:14px;z-index:39}.sheet.open{display:block}.sheet h3{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:#bbb;margin:2px 0 10px}.sheet label{display:block;font-size:10px;color:#aaa;margin:8px 0}.sheet input,.sheet textarea{width:100%;margin-top:5px;background:#0f100e;color:#fff;border:1px solid #383c33;border-radius:10px;padding:10px}.sheet textarea{min-height:68px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}.tpl{border:1px solid #3a3e35;background:#1b1e18;color:#fff;border-radius:11px;padding:11px;text-align:left;font-size:11px;font-weight:850}.preview header,.preview .toolbar,.preview .sheet{display:none}.preview .viewport{padding:0;align-items:center;background:#000}.preview .shell{width:100vw}.preview .canvas{border-radius:0}.safe:after{content:"";position:absolute;inset:70px;border:3px dashed #fff4;pointer-events:none}</style></head><body><div class="app" id="app"><header><a href="../">← Tools</a><strong>CAPRA POST STUDIO</strong><div class="actions"><button class="btn" onclick="save()">Save</button><button class="btn gold" id="pv" onclick="preview()">Preview</button></div></header><div class="work"><div class="viewport"><div class="shell" id="shell"><div class="canvas" id="canvas"><div class="photo" id="photo"></div><div class="shade"></div><div class="accent"></div><div class="frame"></div><div class="brand">CAPRA COMBAT</div><div class="type" id="type">TREENI</div><div class="ey" id="ey">TORSTAI · LUKKOPAINI</div><div class="title" id="title">TREENAA.<br><span>KEHITY.</span></div><div class="copy" id="copy">Yhtenäinen valmennus. Selkeä kehityspolku. Turvallinen ja vaativa ympäristö.</div><div class="footer" id="foot">CAPRACOMBAT.FI · KUOPIO</div></div></div></div><div class="sheet" id="sheet"></div><div class="toolbar"><button onclick="templates()">▦<br>Template</button><button onclick="edit()">✎<br>Teksti</button><button onclick="imageS()">▧<br>Kuva</button><button onclick="styleS()">◐<br>Tyyli</button><button onclick="exportPng()">⇩<br>PNG</button></div></div></div><input id="file" type="file" accept="image/*" hidden><script>const app=document.getElementById('app'),shell=document.getElementById('shell'),canvas=document.getElementById('canvas'),sheet=document.getElementById('sheet'),photo=document.getElementById('photo');const T=[{n:'Treeni',type:'TREENI',ey:'TORSTAI · LUKKOPAINI',t:'TREENAA.\n<span>KEHITY.</span>',c:'Yhtenäinen valmennus. Selkeä kehityspolku. Turvallinen ja vaativa ympäristö.',f:'CAPRACOMBAT.FI · KUOPIO'},{n:'Kilpailutulos',type:'KILPAILUT',ey:'NIPPON SPORT CUP',t:'KULTAA.\n<span>CAPRALLE.</span>',c:'Vahva suoritus kilpailumatolla. Työ jatkuu treeneissä.',f:'CAPRA COMBAT · TEAM'},{n:'Valmentaja',type:'VALMENTAJA',ey:'TUTUSTU VALMENTAJAAN',t:'TIETO.\n<span>VAATIMUS.</span>',c:'Valmennus, joka auttaa ymmärtämään mitä teet, miksi teet ja miten kehityt.',f:'CAPRACOMBAT.FI'},{n:'Tapahtuma',type:'TAPAHTUMA',ey:'SAVE THE DATE',t:'OPEN MAT.\n<span>KAIKILLE.</span>',c:'Tule treenaamaan, ottamaan kierroksia ja tapaamaan porukkaa.',f:'KUOPIO · CAPRA COMBAT'},{n:'Quote',type:'CAPRA',ey:'PAIKKA KAIKILLE',t:'POLKU\n<span>HUIPULLE.</span>',c:'Harrastajalle paikka kehittyä. Kilpailijalle ympäristö tavoitella enemmän.',f:'CAPRA COMBAT'}];function fit(){const s=shell.clientWidth/1080;canvas.style.transform=`scale(${s})`;shell.style.height=1350*s+'px'}addEventListener('resize',fit);fit();function openS(h){sheet.innerHTML=h;sheet.classList.add('open')}function templates(){openS('<h3>Valitse template</h3><div class="grid">'+T.map((x,i)=>`<button class="tpl" onclick="useTpl(${i})">${x.n}</button>`).join('')+'</div>')}function useTpl(i){const x=T[i];type.textContent=x.type;ey.textContent=x.ey;title.innerHTML=x.t;copy.textContent=x.c;foot.textContent=x.f;sheet.classList.remove('open')}function edit(){openS(`<h3>Tekstit</h3><label>Tyyppi<input id="a" value="${type.textContent}"></label><label>Yläteksti<input id="b" value="${ey.textContent}"></label><label>Otsikko<textarea id="c">${title.innerText}</textarea></label><label>Leipäteksti<textarea id="d">${copy.textContent}</textarea></label><label>Alarivi<input id="e" value="${foot.textContent}"></label>`);a.oninput=x=>type.textContent=x.target.value;b.oninput=x=>ey.textContent=x.target.value;c.oninput=x=>{const q=x.target.value.split('\n');title.innerHTML=q.map((z,j,a)=>j===a.length-1?`<span>${z}</span>`:z).join('<br>')};d.oninput=x=>copy.textContent=x.target.value;e.oninput=x=>foot.textContent=x.target.value}function imageS(){openS('<h3>Kuva</h3><button class="btn gold" onclick="file.click()">Valitse kuva iPhonesta</button><label>Peittävyys<input id="o" type="range" min="0" max="100" value="68"></label><label>Pystysijainti<input id="y" type="range" min="0" max="100" value="50"></label>');o.oninput=e=>photo.style.opacity=e.target.value/100;y.oninput=e=>photo.style.backgroundPosition=`50% ${e.target.value}%`}file.onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{photo.style.backgroundImage=`url("${r.result}")`;localStorage.setItem('postPhoto',r.result)};r.readAsDataURL(f)};function styleS(){openS('<h3>Tyyli</h3><label>Oliivi<input id="o1" type="color" value="#68724a"></label><label>Okra<input id="g1" type="color" value="#c8ae4d"></label><label>Tausta<input id="b1" type="color" value="#11120f"></label><button class="btn" onclick="canvas.classList.toggle(\'safe\')">Safe area</button>');o1.oninput=e=>document.documentElement.style.setProperty('--o',e.target.value);g1.oninput=e=>document.documentElement.style.setProperty('--g',e.target.value);b1.oninput=e=>document.documentElement.style.setProperty('--bg',e.target.value)}async function exportPng(){sheet.classList.remove('open');try{const c=await html2canvas(canvas,{scale:1,width:1080,height:1350,useCORS:true});const a=document.createElement('a');a.download='capra-post.png';a.href=c.toDataURL('image/png');a.click()}catch(e){alert('PNG-vienti epäonnistui')}}function preview(){app.classList.toggle('preview');sheet.classList.remove('open');pv.textContent=app.classList.contains('preview')?'Muokkaa':'Preview';setTimeout(fit,40)}function save(){localStorage.setItem('postText',JSON.stringify({type:type.textContent,ey:ey.textContent,t:title.innerHTML,c:copy.textContent,f:foot.textContent}));alert('Tallennettu')}const ph=localStorage.getItem('postPhoto');if(ph)photo.style.backgroundImage=`url("${ph}")`;const s=localStorage.getItem('postText');if(s){try{const x=JSON.parse(s);type.textContent=x.type;ey.textContent=x.ey;title.innerHTML=x.t;copy.textContent=x.c;foot.textContent=x.f}catch(e){}}</script></body></html>
+<!doctype html>
+<html lang="fi">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+    />
+    <title>Capra Post Studio</title>
+    <script src="../vendor/html2canvas.min.js"></script>
+    <script src="../vendor/capra-image.js"></script>
+    <style>
+      :root {
+        --o: #68724a;
+        --g: #c8ae4d;
+        --bg: #11120f;
+        --fg: #f1eee6;
+      }
+      * {
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+      }
+      html,
+      body {
+        margin: 0;
+        background: #090a08;
+        color: #fff;
+        font-family:
+          -apple-system, BlinkMacSystemFont, Inter, Arial, sans-serif;
+      }
+      body {
+        min-height: 100vh;
+        min-height: 100svh;
+        overflow: hidden;
+      }
+      button,
+      input,
+      textarea {
+        font: inherit;
+      }
+      .app {
+        height: 100vh;
+        height: 100svh;
+        display: flex;
+        flex-direction: column;
+        padding-top: env(safe-area-inset-top);
+      }
+      header {
+        min-height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 10px;
+        gap: 8px;
+        background: #121410;
+        border-bottom: 1px solid #30342b;
+      }
+      header a {
+        color: #fff;
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 900;
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+        flex: 0 0 auto;
+      }
+      header strong {
+        font-size: 12px;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .actions {
+        display: flex;
+        gap: 6px;
+      }
+      .btn {
+        border: 1px solid #363b31;
+        background: #20231d;
+        color: #fff;
+        border-radius: 10px;
+        min-height: 44px;
+        padding: 8px 11px;
+        font-size: 11px;
+        font-weight: 850;
+      }
+      .btn.gold {
+        background: var(--g);
+        border-color: var(--g);
+        color: #111;
+      }
+      .work {
+        flex: 1;
+        min-height: 0;
+        position: relative;
+      }
+      .viewport {
+        height: 100%;
+        overflow: auto;
+        padding: 10px 8px 98px;
+        display: flex;
+        justify-content: center;
+      }
+      .shell {
+        width: min(100%, 430px);
+        aspect-ratio: 4/5;
+        position: relative;
+      }
+      .canvas {
+        position: absolute;
+        width: 1080px;
+        height: 1350px;
+        left: 0;
+        top: 0;
+        transform-origin: 0 0;
+        overflow: hidden;
+        background: var(--bg);
+        border-radius: 18px;
+        box-shadow: 0 16px 48px #0009;
+      }
+      .photo {
+        position: absolute;
+        inset: 0;
+        background-size: cover;
+        background-position: center;
+        opacity: 0.68;
+      }
+      .shade {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, #0002, #0005 46%, #000e);
+      }
+      .frame {
+        position: absolute;
+        inset: 58px;
+        border: 2px solid #fff2;
+      }
+      .brandLogo {
+        position: absolute;
+        left: 52px;
+        top: 34px;
+        width: 220px;
+      }
+      .brandLogo img {
+        display: block;
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+      }
+      .type {
+        position: absolute;
+        right: 70px;
+        top: 68px;
+        color: var(--g);
+        font-size: 20px;
+        font-weight: 900;
+        letter-spacing: 0.1em;
+      }
+      .ey {
+        position: absolute;
+        left: 70px;
+        top: 285px;
+        color: var(--g);
+        font-size: 24px;
+        font-weight: 1000;
+        letter-spacing: 0.12em;
+      }
+      .title {
+        position: absolute;
+        left: 70px;
+        top: 355px;
+        width: 890px;
+        font-size: 100px;
+        line-height: 0.85;
+        letter-spacing: -0.055em;
+        font-weight: 1000;
+        text-transform: uppercase;
+      }
+      .title span {
+        color: var(--g);
+      }
+      .copy {
+        position: absolute;
+        left: 73px;
+        top: 795px;
+        width: 720px;
+        font-size: 30px;
+        line-height: 1.23;
+        font-weight: 650;
+      }
+      .footer {
+        position: absolute;
+        left: 70px;
+        bottom: 72px;
+        font-size: 20px;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+      }
+      .accent {
+        position: absolute;
+        right: -100px;
+        bottom: 150px;
+        width: 500px;
+        height: 80px;
+        background: var(--o);
+        transform: rotate(-12deg);
+        opacity: 0.8;
+      }
+      .toolbar {
+        position: absolute;
+        left: 8px;
+        right: 8px;
+        bottom: calc(8px + env(safe-area-inset-bottom));
+        height: 70px;
+        background: #171915f8;
+        border: 1px solid #30342b;
+        border-radius: 19px;
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        padding: 5px;
+        z-index: 40;
+      }
+      .toolbar button {
+        border: 0;
+        background: transparent;
+        color: #ddd;
+        font-size: 10px;
+        font-weight: 800;
+        min-height: 44px;
+        border-radius: 12px;
+      }
+      .sheet {
+        display: none;
+        position: absolute;
+        left: 8px;
+        right: 8px;
+        bottom: calc(86px + env(safe-area-inset-bottom));
+        max-height: 49dvh;
+        overflow: auto;
+        background: #171915fb;
+        border: 1px solid #34382f;
+        border-radius: 20px;
+        padding: 14px;
+        z-index: 39;
+      }
+      .sheet.open {
+        display: block;
+      }
+      .sheet h3 {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: #bbb;
+        margin: 2px 0 10px;
+      }
+      .sheet label {
+        display: block;
+        font-size: 10px;
+        color: #aaa;
+        margin: 8px 0;
+      }
+      .sheet input,
+      .sheet textarea {
+        width: 100%;
+        margin-top: 5px;
+        background: #0f100e;
+        color: #fff;
+        border: 1px solid #383c33;
+        border-radius: 10px;
+        padding: 10px;
+        min-height: 44px;
+        font-size: 16px;
+      }
+      .sheet textarea {
+        min-height: 68px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 7px;
+      }
+      .tpl {
+        border: 1px solid #3a3e35;
+        background: #1b1e18;
+        color: #fff;
+        border-radius: 11px;
+        min-height: 44px;
+        padding: 11px;
+        text-align: left;
+        font-size: 11px;
+        font-weight: 850;
+      }
+      .preview header,
+      .preview .toolbar,
+      .preview .sheet {
+        display: none;
+      }
+      .preview .viewport {
+        padding: 0;
+        align-items: center;
+        background: #000;
+      }
+      .preview .shell {
+        width: min(100vw, 80svh);
+      }
+      .preview .canvas {
+        border-radius: 0;
+      }
+      .safe:after {
+        content: "";
+        position: absolute;
+        inset: 70px;
+        border: 3px dashed #fff4;
+        pointer-events: none;
+      }
+      .uploadButton {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        min-height: 48px;
+        margin: 4px 0 12px;
+        border-radius: 12px;
+        background: var(--g);
+        color: #111;
+        font-size: 13px;
+        font-weight: 950;
+        cursor: pointer;
+      }
+      .fileInput {
+        position: fixed;
+        width: 1px;
+        height: 1px;
+        opacity: 0;
+        pointer-events: none;
+      }
+      .previewExit {
+        display: none;
+        position: fixed;
+        top: calc(8px + env(safe-area-inset-top));
+        left: 8px;
+        z-index: 100;
+        min-height: 44px;
+        padding: 0 14px;
+        border: 1px solid #ffffff4d;
+        border-radius: 12px;
+        background: #111d;
+        color: #fff;
+        font-size: 12px;
+        font-weight: 900;
+      }
+      .app.preview .previewExit {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app" id="app">
+      <header>
+        <a href="../">← Tools</a><strong>CAPRA POST STUDIO</strong>
+        <div class="actions">
+          <button class="btn" onclick="save()">Save</button
+          ><button class="btn gold" id="pv" onclick="preview()">Preview</button>
+        </div>
+      </header>
+      <div class="work">
+        <div class="viewport">
+          <div class="shell" id="shell">
+            <div class="canvas" id="canvas">
+              <div class="photo" id="photo"></div>
+              <div class="shade"></div>
+              <div class="accent"></div>
+              <div class="frame"></div>
+              <div class="brandLogo">
+                <img src="../assets/capra-logo-light.jpeg" alt="Capra Combat" />
+              </div>
+              <div class="type" id="type">TREENI</div>
+              <div class="ey" id="ey">TORSTAI · LUKKOPAINI</div>
+              <div class="title" id="title">
+                TREENAA.<br /><span>KEHITY.</span>
+              </div>
+              <div class="copy" id="copy">
+                Yhtenäinen valmennus. Selkeä kehityspolku. Turvallinen ja
+                vaativa ympäristö.
+              </div>
+              <div class="footer" id="foot">CAPRACOMBAT.FI · KUOPIO</div>
+            </div>
+          </div>
+        </div>
+        <div class="sheet" id="sheet"></div>
+        <div class="toolbar">
+          <button onclick="templates()">▦<br />Template</button
+          ><button onclick="edit()">✎<br />Teksti</button
+          ><button onclick="imageS()">▧<br />Kuva</button
+          ><button onclick="styleS()">◐<br />Tyyli</button
+          ><button onclick="exportPng()">⇩<br />PNG</button>
+        </div>
+      </div>
+      <button class="previewExit" type="button" onclick="preview(false)">
+        ← MUOKKAA
+      </button>
+    </div>
+    <input
+      class="fileInput"
+      id="file"
+      type="file"
+      accept="image/*,.heic,.heif"
+    />
+    <script>
+      const app = document.getElementById("app"),
+        shell = document.getElementById("shell"),
+        canvas = document.getElementById("canvas"),
+        sheet = document.getElementById("sheet"),
+        photo = document.getElementById("photo"),
+        fileInput = document.getElementById("file"),
+        typeEl = document.getElementById("type"),
+        eyebrowEl = document.getElementById("ey"),
+        titleEl = document.getElementById("title"),
+        copyEl = document.getElementById("copy"),
+        footerEl = document.getElementById("foot"),
+        previewButton = document.getElementById("pv");
+      const T = [
+        {
+          n: "Treeni",
+          type: "TREENI",
+          ey: "TORSTAI · LUKKOPAINI",
+          t: "TREENAA.<br><span>KEHITY.</span>",
+          c: "Yhtenäinen valmennus. Selkeä kehityspolku. Turvallinen ja vaativa ympäristö.",
+          f: "CAPRACOMBAT.FI · KUOPIO",
+        },
+        {
+          n: "Kilpailutulos",
+          type: "KILPAILUT",
+          ey: "NIPPON SPORT CUP",
+          t: "KULTAA.<br><span>CAPRALLE.</span>",
+          c: "Vahva suoritus kilpailumatolla. Työ jatkuu treeneissä.",
+          f: "CAPRA COMBAT · TEAM",
+        },
+        {
+          n: "Valmentaja",
+          type: "VALMENTAJA",
+          ey: "TUTUSTU VALMENTAJAAN",
+          t: "TIETO.<br><span>VAATIMUS.</span>",
+          c: "Valmennus, joka auttaa ymmärtämään mitä teet, miksi teet ja miten kehityt.",
+          f: "CAPRACOMBAT.FI",
+        },
+        {
+          n: "Tapahtuma",
+          type: "TAPAHTUMA",
+          ey: "SAVE THE DATE",
+          t: "OPEN MAT.<br><span>KAIKILLE.</span>",
+          c: "Tule treenaamaan, ottamaan kierroksia ja tapaamaan porukkaa.",
+          f: "KUOPIO · CAPRA COMBAT",
+        },
+        {
+          n: "Quote",
+          type: "CAPRA",
+          ey: "PAIKKA KAIKILLE",
+          t: "POLKU<br><span>HUIPULLE.</span>",
+          c: "Harrastajalle paikka kehittyä. Kilpailijalle ympäristö tavoitella enemmän.",
+          f: "CAPRA COMBAT",
+        },
+      ];
+      let photoSource = "";
+      let crop = { opacity: 68, x: 50, y: 50, zoom: 100 };
+      let theme = { olive: "#68724a", gold: "#c8ae4d", bg: "#11120f" };
+
+      function escapeHtml(value) {
+        return String(value)
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;");
+      }
+
+      function escapeAttribute(value) {
+        return escapeHtml(value).replaceAll('"', "&quot;");
+      }
+
+      function applyPhoto() {
+        photo.style.backgroundImage = photoSource
+          ? `url("${photoSource}")`
+          : "none";
+        photo.style.backgroundPosition = `${crop.x}% ${crop.y}%`;
+        photo.style.opacity = crop.opacity / 100;
+        photo.style.transform = `scale(${crop.zoom / 100})`;
+        photo.style.transformOrigin = `${crop.x}% ${crop.y}%`;
+      }
+
+      function applyTheme() {
+        document.documentElement.style.setProperty("--o", theme.olive);
+        document.documentElement.style.setProperty("--g", theme.gold);
+        document.documentElement.style.setProperty("--bg", theme.bg);
+      }
+      function fit() {
+        const s = shell.clientWidth / 1080;
+        canvas.style.transform = `scale(${s})`;
+        shell.style.height = 1350 * s + "px";
+      }
+      addEventListener("resize", fit);
+      fit();
+      function openS(h) {
+        sheet.innerHTML = h;
+        sheet.classList.add("open");
+      }
+      function templates() {
+        openS(
+          '<h3>Valitse template</h3><div class="grid">' +
+            T.map(
+              (x, i) =>
+                `<button class="tpl" onclick="useTpl(${i})">${x.n}</button>`,
+            ).join("") +
+            "</div>",
+        );
+      }
+      function useTpl(i) {
+        const x = T[i];
+        typeEl.textContent = x.type;
+        eyebrowEl.textContent = x.ey;
+        titleEl.innerHTML = x.t;
+        copyEl.textContent = x.c;
+        footerEl.textContent = x.f;
+        sheet.classList.remove("open");
+      }
+      function edit() {
+        openS(
+          `<h3>Tekstit</h3><label>Tyyppi<input id="editType" value="${escapeAttribute(typeEl.textContent)}"></label><label>Yläteksti<input id="editEyebrow" value="${escapeAttribute(eyebrowEl.textContent)}"></label><label>Otsikko<textarea id="editTitle">${escapeHtml(titleEl.innerText)}</textarea></label><label>Leipäteksti<textarea id="editCopy">${escapeHtml(copyEl.textContent)}</textarea></label><label>Alarivi<input id="editFooter" value="${escapeAttribute(footerEl.textContent)}"></label>`,
+        );
+        const editType = document.getElementById("editType");
+        const editEyebrow = document.getElementById("editEyebrow");
+        const editTitle = document.getElementById("editTitle");
+        const editCopy = document.getElementById("editCopy");
+        const editFooter = document.getElementById("editFooter");
+        editType.oninput = (event) => (typeEl.textContent = event.target.value);
+        editEyebrow.oninput = (event) =>
+          (eyebrowEl.textContent = event.target.value);
+        editTitle.oninput = (event) => {
+          const q = event.target.value.split("\n");
+          titleEl.innerHTML = q
+            .map((z, j, a) =>
+              j === a.length - 1
+                ? `<span>${escapeHtml(z)}</span>`
+                : escapeHtml(z),
+            )
+            .join("<br>");
+        };
+        editCopy.oninput = (event) => (copyEl.textContent = event.target.value);
+        editFooter.oninput = (event) =>
+          (footerEl.textContent = event.target.value);
+      }
+      function imageS() {
+        openS(
+          `<h3>Kuva</h3><label class="uploadButton" for="file">VAIHDA KUVA</label><label>Peittävyys<input id="imageOpacity" type="range" min="0" max="100" value="${crop.opacity}"></label><label>Zoom<input id="imageZoom" type="range" min="100" max="200" value="${crop.zoom}"></label><label>Vaakasijainti<input id="imageX" type="range" min="0" max="100" value="${crop.x}"></label><label>Pystysijainti<input id="imageY" type="range" min="0" max="100" value="${crop.y}"></label>`,
+        );
+        const imageOpacity = document.getElementById("imageOpacity");
+        const imageZoom = document.getElementById("imageZoom");
+        const imageX = document.getElementById("imageX");
+        const imageY = document.getElementById("imageY");
+        imageOpacity.oninput = (event) => {
+          crop.opacity = Number(event.target.value);
+          applyPhoto();
+        };
+        imageZoom.oninput = (event) => {
+          crop.zoom = Number(event.target.value);
+          applyPhoto();
+        };
+        imageX.oninput = (event) => {
+          crop.x = Number(event.target.value);
+          applyPhoto();
+        };
+        imageY.oninput = (event) => {
+          crop.y = Number(event.target.value);
+          applyPhoto();
+        };
+      }
+      fileInput.onchange = async (event) => {
+        const selected = event.target.files && event.target.files[0];
+        if (!selected) return;
+        try {
+          photoSource = await CapraImage.read(selected, {
+            maxDimension: 1600,
+            quality: 0.82,
+          });
+          applyPhoto();
+        } catch (error) {
+          alert("Kuvaa ei voitu avata. Kokeile JPG- tai PNG-kuvaa.");
+        } finally {
+          event.target.value = "";
+        }
+      };
+      function styleS() {
+        openS(
+          `<h3>Tyyli</h3><label>Oliivi<input id="themeOlive" type="color" value="${theme.olive}"></label><label>Okra<input id="themeGold" type="color" value="${theme.gold}"></label><label>Tausta<input id="themeBg" type="color" value="${theme.bg}"></label><button class="btn" onclick="canvas.classList.toggle('safe')">Safe area</button>`,
+        );
+        const themeOlive = document.getElementById("themeOlive");
+        const themeGold = document.getElementById("themeGold");
+        const themeBg = document.getElementById("themeBg");
+        themeOlive.oninput = (event) => {
+          theme.olive = event.target.value;
+          applyTheme();
+        };
+        themeGold.oninput = (event) => {
+          theme.gold = event.target.value;
+          applyTheme();
+        };
+        themeBg.oninput = (event) => {
+          theme.bg = event.target.value;
+          applyTheme();
+        };
+      }
+      async function exportPng() {
+        sheet.classList.remove("open");
+        try {
+          const c = await html2canvas(canvas, {
+            scale: 1,
+            width: 1080,
+            height: 1350,
+            useCORS: true,
+            backgroundColor: null,
+            onclone: (clone) => {
+              const cloneCanvas = clone.getElementById("canvas");
+              cloneCanvas.style.transform = "none";
+              cloneCanvas.style.borderRadius = "0";
+              cloneCanvas.style.boxShadow = "none";
+            },
+          });
+          const a = document.createElement("a");
+          a.download = "capra-post.png";
+          a.href = c.toDataURL("image/png");
+          a.click();
+        } catch (e) {
+          alert("PNG-vienti epäonnistui");
+        }
+      }
+      function preview(force) {
+        const next =
+          typeof force === "boolean"
+            ? force
+            : !app.classList.contains("preview");
+        app.classList.toggle("preview", next);
+        sheet.classList.remove("open");
+        previewButton.textContent = app.classList.contains("preview")
+          ? "Muokkaa"
+          : "Preview";
+        setTimeout(fit, 40);
+      }
+      function save() {
+        const project = JSON.stringify({
+          version: 2,
+          text: {
+            type: typeEl.textContent,
+            ey: eyebrowEl.textContent,
+            t: titleEl.innerHTML,
+            c: copyEl.textContent,
+            f: footerEl.textContent,
+          },
+          photoSource,
+          crop,
+          theme,
+        });
+        if (CapraImage.persist("postProjectV2", project)) {
+          alert("Projekti tallennettu");
+        } else {
+          alert(
+            "Projekti on liian suuri selaimen tallennustilaan. Pienennä kuvaa ja yritä uudelleen.",
+          );
+        }
+      }
+      const savedProject = localStorage.getItem("postProjectV2");
+      if (savedProject) {
+        try {
+          const restored = JSON.parse(savedProject);
+          if (restored.text) {
+            typeEl.textContent = restored.text.type;
+            eyebrowEl.textContent = restored.text.ey;
+            titleEl.innerHTML = restored.text.t;
+            copyEl.textContent = restored.text.c;
+            footerEl.textContent = restored.text.f;
+          }
+          if (typeof restored.photoSource === "string") {
+            photoSource = restored.photoSource;
+          }
+          if (restored.crop) crop = { ...crop, ...restored.crop };
+          if (restored.theme) theme = { ...theme, ...restored.theme };
+        } catch (error) {
+          console.warn("Tallennettua projektia ei voitu avata", error);
+        }
+      } else {
+        const legacyPhoto = localStorage.getItem("postPhoto");
+        const legacyText = localStorage.getItem("postText");
+        if (legacyPhoto) photoSource = legacyPhoto;
+        if (legacyText) {
+          try {
+            const restored = JSON.parse(legacyText);
+            typeEl.textContent = restored.type;
+            eyebrowEl.textContent = restored.ey;
+            titleEl.innerHTML = restored.t;
+            copyEl.textContent = restored.c;
+            footerEl.textContent = restored.f;
+          } catch (error) {
+            console.warn("Vanhaa projektia ei voitu avata", error);
+          }
+        }
+      }
+      applyTheme();
+      applyPhoto();
+    </script>
+  </body>
+</html>
