@@ -1,0 +1,159 @@
+ment.querySelectorAll(s)];
+const clone=o=>JSON.parse(JSON.stringify(o));
+const uid=()=>Math.random().toString(36).slice(2,10);
+const accent=()=>state.courses[state.course].accent==="olive"?C.olive:C.ochre;
+const currentSlide=()=>state.slides[state.activeSlide];
+const roleText=(role)=>{
+ const c=state.campaign,q=state.courses[state.course];
+ const map={
+  courseName:q.name,courseShort:q.short,courseSubtitle:q.subtitle,start:c.start,duration:c.duration,price:c.price,
+  friendPrice:c.friendPrice,friendDeadline:c.friendDeadline,payment:c.payment,website:c.website,email:c.email,
+  schedule:q.schedule,bullets:q.bullets.map(x=>"• "+x).join("\n"),first:q.first.map(x=>"• "+x).join("\n"),
+  coverHeadline:"ALOITA\nKAMPPAILU.",noExperience:"AIKAISEMPAA KOKEMUSTA EI TARVITA",
+  friendHeadline:`ALOITA KAVERIN KANSSA\n${c.friendPrice}`,cta:"ILMOITTAUDU NYT",
+  startLine:`ALKAEN ${c.start}`,priceLine:`${c.price} · ${c.duration}`,offerLine:`KAVERIN KANSSA ${c.friendPrice}`,
+  firstHeadline:"ENSIMMÄISEEN TREENIIN",whyHeadline:"MITÄ HARJOITTELET?",whoHeadline:"KENELLE KURSSI SOPII?",
+  questionHeadline:"VOINKO ALOITTAA ILMAN KOKEMUSTA?",questionAnswer:"Kyllä. Kurssi alkaa perusteista, eikä valmista kuntoa tai lajitaustaa tarvita.",
+  safeHeadline:"ONKO HARJOITTELU TURVALLISTA?",safeAnswer:"Harjoittelu etenee ohjatusti. Tekniikat ja pari­harjoitteet sovitetaan aloittelijoille.",
+  fitHeadline:"PITÄÄKÖ OLLA HYVÄSSÄ KUNNOSSA?",fitAnswer:"Ei tarvitse. Kunto kehittyy harjoittelun mukana ja jokainen aloittaa omalta tasoltaan.",
+  editorial1:"ALOITA OMALTA TASOLTASI.",editorial2:"OPI TEKEMÄLLÄ.",editorial3:"YHDESSÄ ETEENPÄIN.",
+  lastSpots:"PAIKAT OVAT RAJALLISET.",deadline:`Kaverietu voimassa ${c.friendDeadline} asti.`
+ };
+ return map[role]??"";
+};
+const text=(x,y,w,h,content,size=54,weight=700,color=C.white,opts={})=>({
+ id:uid(),type:"text",x,y,w,h,text:content,font:opts.font||"Inter",fontSize:size,weight:String(weight),color,
+ align:opts.align||"left",lineHeight:opts.lineHeight||1.05,letter:opts.letter||0,uppercase:opts.uppercase||false,
+ rotation:opts.rotation||0,opacity:opts.opacity??1,bg:opts.bg||"#000000",bgOpacity:opts.bgOpacity||0,padding:opts.padding||0,
+ locked:false,hidden:false,role:opts.role||null,name:opts.name||"Teksti"
+});
+const rect=(x,y,w,h,fill,opacity=1,radius=0,opts={})=>({id:uid(),type:"shape",x,y,w,h,fill,opacity,radius,rotation:0,locked:opts.locked||false,hidden:false,name:opts.name||"Laatikko"});
+const line=(x,y,w,h,fill,opacity=1)=>({id:uid(),type:"shape",x,y,w,h,fill,opacity,radius:Math.min(w,h)/2,rotation:0,locked:false,hidden:false,name:"Viiva"});
+const logo=(x,y,w,h,variant="light",style="lockup")=>({id:uid(),type:"logo",x,y,w,h,variant,style,opacity:1,rotation:0,locked:false,hidden:false,name:"Capra-logo"});
+const photoObj=()=>({src:"",zoom:1,x:0,y:0});
+
+function baseSlide(name,bg=C.black){return{id:uid(),name,bg,photo:photoObj(),elements:[]}}
+
+function templateHero(){
+ const q=state.courses[state.course],a=accent(),s=baseSlide("Hero – iso otsikko");
+ s.elements=[
+  rect(0,790,1080,560,C.black,.74,0,{locked:true}),
+  logo(60,55,260,82,"light","lockup"),
+  text(60,750,880,150,"ALOITA\nKAMPPAILU.",126,900,C.white,{font:"Barlow Condensed",lineHeight:.82,role:"coverHeadline",name:"Pääotsikko"}),
+  text(64,947,850,50,q.short,32,800,a,{letter:3,role:"courseShort",name:"Laji"}),
+  text(64,1015,870,68,q.subtitle,25,500,C.white,{lineHeight:1.25,role:"courseSubtitle",name:"Kuvaus"}),
+  rect(60,1124,290,90,C.off,1,4),text(80,1145,250,50,state.campaign.start,23,900,C.black,{role:"start",align:"center",name:"Aloitus"}),
+  rect(365,1124,250,90,a,1,4),text(382,1145,215,50,state.campaign.price,28,900,C.black,{role:"price",align:"center",name:"Hinta"}),
+  rect(630,1124,390,90,C.black,.7,4),text(653,1143,345,55,state.campaign.duration,23,800,C.white,{role:"duration",align:"center",name:"Kesto"}),
+  text(60,1268,500,30,state.campaign.website,19,700,a,{role:"website",name:"Verkkosivu"})
+ ];return s;
+}
+function templateEditorial(){
+ const a=accent(),s=baseSlide("Editorial – pieni otsikko");
+ s.elements=[
+  logo(55,50,225,74,"light","lockup"),
+  text(58,895,850,48,"ALOITA OMALTA TASOLTASI.",42,500,C.white,{letter:5,role:"editorial1",name:"Editorial-otsikko"}),
+  text(60,958,760,42,state.courses[state.course].subtitle,22,400,C.white,{lineHeight:1.35,role:"courseSubtitle",name:"Alaotsikko"}),
+  line(60,1032,75,5,accent()),
+  text(60,1075,520,34,state.courses[state.course].short,18,700,accent(),{letter:4,role:"courseShort",name:"Laji"}),
+  text(60,1265,500,28,state.campaign.website,17,600,C.white,{letter:2,role:"website",name:"Verkkosivu"})
+ ];return s;
+}
+function templateCenter(){
+ const s=baseSlide("Editorial – teksti keskellä");
+ s.elements=[
+  logo(48,48,190,66,"light","lockup"),
+  text(170,555,740,105,"ALOITA OMALTA TASOLTASI.",38,600,C.white,{align:"center",letter:2.5,role:"editorial1",name:"Keskiteksti"}),
+  text(250,665,580,46,state.courses[state.course].short,17,500,accent(),{align:"center",letter:5,role:"courseShort",name:"Pieni alaotsikko"}),
+  text(50,1265,380,25,"CAPRA COMBAT · KUOPIO",15,600,C.white,{letter:3,name:"Alatunniste"})
+ ];return s;
+}
+function templateSplit(){
+ const q=state.courses[state.course],a=accent(),s=baseSlide("Jaettu kuva + info",C.off);
+ s.elements=[
+  rect(620,0,460,1350,C.off,1,0,{locked:true}),
+  rect(620,0,12,1350,a,1,0,{locked:true}),
+  logo(670,55,290,90,"dark","lockup"),
+  text(670,250,330,185,"ALOITA\nKAMPPAILU.",86,900,C.black,{font:"Barlow Condensed",lineHeight:.86,role:"coverHeadline",name:"Pääotsikko"}),
+  text(670,455,330,70,q.short,22,800,a,{letter:2.5,role:"courseShort",name:"Laji"}),
+  text(670,555,330,90,q.subtitle,20,500,C.black,{lineHeight:1.35,role:"courseSubtitle",name:"Kuvaus"}),
+  text(670,700,320,44,state.campaign.start,24,800,C.black,{role:"start",name:"Aloitus"}),
+  text(670,760,320,44,state.campaign.duration,21,700,C.black,{role:"duration",name:"Kesto"}),
+  text(670,820,320,50,state.campaign.price,36,900,a,{role:"price",name:"Hinta"}),
+  text(670,935,330,105,state.campaign.payment,18,500,C.black,{lineHeight:1.4,role:"payment",name:"Maksaminen"}),
+  rect(670,1110,330,76,C.black,1,4),text(690,1128,290,42,"ILMOITTAUDU NYT",22,900,C.white,{align:"center",letter:1.8,role:"cta",name:"CTA"}),
+  text(670,1235,330,35,state.campaign.website,16,700,a,{role:"website",name:"Verkkosivu"})
+ ];return s;
+}
+function templatePoster(){
+ const q=state.courses[state.course],a=accent(),s=baseSlide("Kuva + tietokortit",C.off);
+ s.elements=[
+  rect(0,0,1080,565,C.black,1,0,{locked:true}),
+  logo(55,45,230,75,"light","lockup"),
+  text(55,320,900,150,"PERUSKURSSI\nKUOPIOSSA.",92,900,C.white,{font:"Barlow Condensed",lineHeight:.84,name:"Pääotsikko"}),
+  text(55,492,800,40,q.short,24,800,a,{letter:3,role:"courseShort",name:"Laji"}),
+  text(55,625,970,80,q.subtitle,24,500,C.black,{lineHeight:1.3,role:"courseSubtitle",name:"Kuvaus"}),
+  rect(55,745,300,180,C.white,1,7),text(75,774,260,28,"ALKAEN",15,800,C.olive,{letter:2,name:"Label"}),text(75,820,260,60,state.campaign.start,27,900,C.black,{role:"start",name:"Aloitus"}),
+  rect(390,745,300,180,C.white,1,7),text(410,774,260,28,"KESTO",15,800,C.olive,{letter:2,name:"Label"}),text(410,820,260,60,state.campaign.duration,27,900,C.black,{role:"duration",name:"Kesto"}),
+  rect(725,745,300,180,a,1,7),text(745,774,260,28,"HINTA",15,800,C.black,{letter:2,name:"Label"}),text(745,820,260,60,state.campaign.price,37,900,C.black,{role:"price",name:"Hinta"}),
+  text(55,990,970,110,state.campaign.payment,21,500,C.black,{lineHeight:1.35,role:"payment",name:"Maksaminen"}),
+  rect(55,1145,970,86,C.black,1,5),text(75,1165,930,48,"ILMOITTAUTUMINEN AUKI",23,900,C.white,{align:"center",letter:2,name:"CTA"}),
+  text(55,1270,600,28,state.campaign.website,18,700,a,{role:"website",name:"Verkkosivu"})
+ ];return s;
+}
+function templateFriend(){
+ const s=baseSlide("Kaverietu – oliivi",C.olive2);
+ s.elements=[
+  logo(55,50,245,78,"light","lockup"),
+  text(55,225,900,230,`ALOITA KAVERIN KANSSA\n${state.campaign.friendPrice}`,88,900,C.white,{font:"Barlow Condensed",lineHeight:.88,role:"friendHeadline",name:"Kaveriotsikko"}),
+  text(58,485,830,75,`Normaalihinta ${state.campaign.price} / henkilö.`,23,500,C.off,{name:"Normaalihinta"}),
+  rect(55,610,970,330,C.off,1,8),
+  text(85,645,910,225,"1. Molemmat täyttävät oman ilmoittautumisen\n2. Merkitkää lomakkeelle toistenne nimet\n3. Etu vahvistuu, kun molemmat ovat ilmoittautuneet",28,650,C.black,{lineHeight:1.65,name:"Ohjeet"}),
+  text(55,995,900,48,`VOIMASSA ${state.campaign.friendDeadline} ASTI`,24,800,C.ochre,{letter:2,role:"deadline",name:"Päivä"}),
+  text(55,1060,900,90,state.campaign.payment,21,500,C.white,{lineHeight:1.35,role:"payment",name:"Maksaminen"}),
+  rect(55,1180,970,78,C.ochre,1,4),text(75,1198,930,42,"ILMOITTAUDU YHDESSÄ",22,900,C.black,{align:"center",letter:2,name:"CTA"}),
+  text(55,1295,600,26,state.campaign.website,17,700,C.white,{role:"website",name:"Verkkosivu"})
+ ];return s;
+}
+function templateSchedule(){
+ const q=state.courses[state.course],a=accent(),s=baseSlide("Harjoitusajat ja hinta",C.black);
+ s.elements=[
+  logo(55,45,245,78,"light","lockup"),
+  text(55,190,900,110,"PERUSKURSSIN\nHARJOITUSAJAT",72,900,C.white,{font:"Barlow Condensed",lineHeight:.9,name:"Pääotsikko"}),
+  text(55,335,900,45,q.short,22,800,a,{letter:3,role:"courseShort",name:"Laji"}),
+  rect(55,420,970,470,C.charcoal,1,8),
+  text(90,465,900,365,q.schedule,42,800,C.white,{font:"Barlow Condensed",lineHeight:1.65,role:"schedule",name:"Harjoitusajat"}),
+  rect(55,950,300,160,C.off,1,6),text(75,980,260,28,"ALKAEN",15,800,C.olive,{letter:2,name:"Label"}),text(75,1025,260,50,state.campaign.start,24,900,C.black,{role:"start",name:"Aloitus"}),
+  rect(390,950,300,160,C.off,1,6),text(410,980,260,28,"KESTO",15,800,C.olive,{letter:2,name:"Label"}),text(410,1025,260,50,state.campaign.duration,24,900,C.black,{role:"duration",name:"Kesto"}),
+  rect(725,950,300,160,a,1,6),text(745,980,260,28,"HINTA",15,800,C.black,{letter:2,name:"Label"}),text(745,1020,260,60,state.campaign.price,37,900,C.black,{role:"price",name:"Hinta"}),
+  text(55,1175,970,70,state.campaign.payment,19,500,C.white,{lineHeight:1.35,role:"payment",name:"Maksaminen"}),
+  text(55,1290,600,25,state.campaign.website,17,700,a,{role:"website",name:"Verkkosivu"})
+ ];return s;
+}
+function templateLastSpots(){
+ const s=baseSlide("Viimeiset paikat");
+ s.elements=[
+  rect(0,0,1080,1350,C.black,.55,0,{locked:true}),
+  logo(55,50,245,78,"light","lockup"),
+  text(55,690,900,160,"PAIKAT OVAT\nRAJALLISET.",104,900,C.white,{font:"Barlow Condensed",lineHeight:.82,role:"lastSpots",name:"Pääotsikko"}),
+  text(58,888,860,55,state.courses[state.course].short,24,800,accent(),{letter:4,role:"courseShort",name:"Laji"}),
+  text(58,960,860,70,`${state.campaign.start} · ${state.campaign.duration} · ${state.campaign.price}`,24,600,C.white,{name:"Info"}),
+  rect(55,1085,970,90,accent(),1,5),text(75,1107,930,48,"ILMOITTAUDU NYT",25,900,C.black,{align:"center",letter:2,role:"cta",name:"CTA"}),
+  text(55,1215,970,42,`Kaverietu ${state.campaign.friendPrice} · voimassa ${state.campaign.friendDeadline} asti`,19,600,C.white,{name:"Kaverietu"}),
+  text(55,1288,600,25,state.campaign.website,17,700,accent(),{role:"website",name:"Verkkosivu"})
+ ];return s;
+}
+const singleBuilders={hero:templateHero,editorial:templateEditorial,center:templateCenter,split:templateSplit,poster:templatePoster,friend:templateFriend,schedule:templateSchedule,lastspots:templateLastSpots};
+
+function infoSlide(title,body,name="Info",accentColor=accent()){
+ const s=baseSlide(name,C.off);
+ s.elements=[
+  logo(55,50,245,78,"dark","lockup"),
+  text(55,205,940,150,title,82,900,C.black,{font:"Barlow Condensed",lineHeight:.9,name:"Otsikko"}),
+  line(55,390,105,6,accentColor),
+  text(55,455,950,610,body,34,600,C.black,{lineHeight:1.55,name:"Sisältö"}),
+  text(55,1265,600,26,state.campaign.website,17,700,accentColor,{role:"website",name:"Verkkosivu"})
+ ];return s;
+}
+function photoEditorialSlide(title,sub,name="Editorial"){
+ con
