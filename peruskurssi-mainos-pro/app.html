@@ -2,39 +2,54 @@
 <html lang="fi">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0f100d">
 <title>Capra Combat – PRO-mainosgeneraattori</title>
+<link rel="stylesheet" href="../vendor/capra-fonts.css">
+<script src="../vendor/capra-image.js"></script>
 <style>
 :root{--olive:#8b8544;--paper:#f2eee3;--ui:#171813;--line:#36382e}
 *{box-sizing:border-box}
-body{margin:0;background:#0f100d;color:#f4f1e8;font:14px/1.35 Arial,Helvetica,sans-serif}
+html,body{min-height:100%;max-width:100%}
+body{margin:0;background:#0f100d;color:#f4f1e8;font:14px/1.35 Inter,Arial,Helvetica,sans-serif;padding-bottom:env(safe-area-inset-bottom)}
 .app{display:grid;grid-template-columns:minmax(350px,455px) 1fr;min-height:100vh}
-.controls{padding:18px;overflow:auto;background:#151612;border-right:1px solid #2c2e26}
+.controls{padding:calc(18px + env(safe-area-inset-top)) 18px 18px;overflow:auto;background:#151612;border-right:1px solid #2c2e26}
 h1{font-size:21px;margin:0 0 4px} .intro{margin:0 0 14px;color:#b7b3a6}
 details{border:1px solid #303228;border-radius:9px;margin:9px 0;background:#1b1c17}
-summary{padding:11px 13px;cursor:pointer;font-weight:900} .section{padding:0 13px 13px}
+summary{display:flex;align-items:center;min-height:44px;padding:11px 13px;cursor:pointer;font-weight:900;touch-action:manipulation} .section{padding:0 13px 13px}
 label{display:block;margin:9px 0 4px;font-size:12px;font-weight:800;color:#c8c4b7}
-input[type=text],textarea,select{width:100%;padding:8px 9px;border:1px solid #3a3c32;border-radius:7px;background:#11120f;color:#f7f4ec}
+input[type=text],textarea,select{width:100%;min-height:44px;padding:8px 9px;border:1px solid #3a3c32;border-radius:7px;background:#11120f;color:#f7f4ec;font-size:16px}
 textarea{min-height:58px;resize:vertical} input[type=range]{width:100%}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:9px} .triple{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px}
 .checks{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:9px} .checks label{margin:0;font-weight:600}
 .actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;position:sticky;bottom:0;background:#151612;padding-top:12px}
-button{padding:12px;border-radius:8px;border:0;font-weight:900;cursor:pointer}
+button{min-height:44px;padding:12px;border-radius:8px;border:0;font-weight:900;cursor:pointer;touch-action:manipulation}
 .primary{background:#eee9dc;color:#111} .secondary{background:#2a2d23;color:#fff;border:1px solid #46493b}
 .stage{display:grid;place-items:center;padding:18px;background:#23241f;overflow:auto}
 canvas{max-width:100%;height:auto;background:#111;box-shadow:0 20px 50px #0009;touch-action:none}
 .hint{margin-top:8px;font-size:12px;color:#9f9b8e}
-@media(max-width:900px){.app{grid-template-columns:1fr}.controls{border-right:0;border-bottom:1px solid #2c2e26}.stage{padding:8px}}
+.file-input{position:fixed;width:1px;height:1px;opacity:0;pointer-events:none}
+.file-button{display:flex;align-items:center;justify-content:center;min-height:44px;margin:8px 0 12px;padding:10px 12px;border:1px solid #565a49;border-radius:8px;background:#292c23;color:#fff;font-size:13px;letter-spacing:.06em;cursor:pointer;touch-action:manipulation}
+.status{min-height:20px;margin:7px 0 0;color:#c8ae4d;font-size:12px}
+@media(max-width:900px){
+ body{overflow-x:hidden}
+ .app{display:flex;flex-direction:column;min-width:0}
+ .stage{order:1;width:100%;min-height:0;padding:calc(8px + env(safe-area-inset-top)) 8px 8px}
+ .controls{order:2;width:100%;padding:16px 14px calc(16px + env(safe-area-inset-bottom));border-right:0;border-top:1px solid #2c2e26}
+ canvas{width:min(100%,580px)}
+ .row,.triple{grid-template-columns:1fr}
+ input[type=range]{min-height:44px}
+}
 </style>
 </head>
 <body>
 <div class="app">
 <aside class="controls">
 <h1>Capra Combat – PRO-generaattori</h1>
-<p class="intro">Virallinen Capra-symboli on sisäänrakennettu. Klikkaa ja vedä kuvaa, logoa, otsikkoa tai ingressiä suoraan esikatselussa.</p>
+<p class="intro">Virallinen Capra Combat -logo on sisäänrakennettu. Vedä kuvaa, logoa, otsikkoa tai ingressiä suoraan esikatselussa.</p>
 
 <details open><summary>Vasen kurssi</summary><div class="section">
-<label>Kuva</label><input id="leftImage" type="file" accept="image/*">
+<input class="file-input" id="leftImage" type="file" accept="image/*,.heic,.heif"><label class="file-button" for="leftImage">VAIHDA VASEN KUVA</label>
 <div class="row"><div><label>Zoom</label><input id="leftZoom" type="range" min=".5" max="3.5" step=".01" value="1"></div>
 <div><label>Kuvan tummennus</label><input id="leftShade" type="range" min="0" max=".8" step=".01" value=".10"></div></div>
 <label>Pääotsikko</label><textarea id="leftTitle">VAPAAOTTELUN
@@ -62,7 +77,7 @@ ALOITTAA VAPAAOTTELU.</textarea>
 </div></details>
 
 <details open><summary>Oikea kurssi</summary><div class="section">
-<label>Kuva</label><input id="rightImage" type="file" accept="image/*">
+<input class="file-input" id="rightImage" type="file" accept="image/*,.heic,.heif"><label class="file-button" for="rightImage">VAIHDA OIKEA KUVA</label>
 <div class="row"><div><label>Zoom</label><input id="rightZoom" type="range" min=".5" max="3.5" step=".01" value="1"></div>
 <div><label>Kuvan tummennus</label><input id="rightShade" type="range" min="0" max=".8" step=".01" value=".10"></div></div>
 <label>Pääotsikko</label><textarea id="rightTitle">BRASILIALAISEN
@@ -93,11 +108,8 @@ JA OHJATUSTI.</textarea>
 </div></details>
 
 <details><summary>Logo ja yhteiset asetukset</summary><div class="section">
-<label>Oma korvaava logo (PNG/SVG)</label><input id="customLogo" type="file" accept="image/png,image/svg+xml,image/webp">
-<div class="row"><div><label>Logon koko</label><input id="logoSize" type="range" min="45" max="155" value="92"></div>
-<div><label>CAPRA-tekstin koko</label><input id="brandSize" type="range" min="18" max="45" value="31"></div></div>
-<label>Brändin nimi</label><input id="brand" type="text" value="CAPRA">
-<label>Alateksti</label><input id="brandSub" type="text" value="COMBAT">
+<div class="row"><div><label>Virallinen logo</label><select id="logoVariant"><option value="light">Vaalea master</option><option value="dark">Tumma master</option></select></div>
+<div><label>Logon koko</label><input id="logoSize" type="range" min="100" max="240" value="180"></div></div>
 <label>Infoteksti</label><textarea id="infoText">Paikka vahvistetaan ilmoittautumalla.
 Maksuohjeet lähetetään erikseen.</textarea>
 <label>CTA</label><input id="cta" type="text" value="ILMOITTAUDU NYT">
@@ -107,14 +119,12 @@ Maksuohjeet lähetetään erikseen.</textarea>
   <div><label>Infotekstin väri</label><input id="infoColor" type="color" value="#171815"></div>
   <div><label>CTA-tekstin väri</label><input id="ctaTextColor" type="color" value="#f5f1e8"></div>
 </div>
-<div class="row">
-  <div><label>Verkko-osoitteen väri</label><input id="urlColor" type="color" value="#8b8544"></div>
-  <div><label>Logo-tekstin väri</label><input id="brandColor" type="color" value="#f4f1e9"></div>
-</div>
+<div><label>Verkko-osoitteen väri</label><input id="urlColor" type="color" value="#8b8544"></div>
 <label>PNG-viennin tarkkuus</label><select id="exportScale"><option value="1">1× – 1024 × 1536</option><option value="2" selected>2× – 2048 × 3072</option><option value="4">4× – 4096 × 6144</option></select>
 </div></details>
 
 <div class="actions"><button id="resetBtn" class="secondary">Palauta sijainnit</button><button id="downloadBtn" class="primary">Lataa PNG</button></div>
+<p class="status" id="status" role="status" aria-live="polite"></p>
 <p class="hint">Vedä esikatselussa: yläosan logo, otsikko, ingressi tai niiden ulkopuolella taustakuva. Kummankin puolen elementit liikkuvat erikseen.</p>
 </aside>
 <main class="stage"><canvas id="poster" width="1024" height="1536"></canvas></main>
@@ -122,19 +132,20 @@ Maksuohjeet lähetetään erikseen.</textarea>
 
 <script>
 const $=id=>document.getElementById(id), canvas=$('poster'),ctx=canvas.getContext('2d');
-const officialLogo=new Image(); officialLogo.src='assets/asset-01-9e479d7f0165.png';
-let activeLogo=officialLogo;
+const officialLogos={light:new Image(),dark:new Image()};
+officialLogos.light.src='../assets/capra-logo-light.jpeg';
+officialLogos.dark.src='../assets/capra-logo-dark.jpeg';
 const S={
  left:{img:null,imgX:0,imgY:0,zoom:1,logoX:0,logoY:0,titleX:0,titleY:0,descX:0,descY:0},
  right:{img:null,imgX:0,imgY:0,zoom:1,logoX:0,logoY:0,titleX:0,titleY:0,descX:0,descY:0},
  drag:null
 };
-function loadImage(input,cb){const f=input.files?.[0];if(!f)return;const u=URL.createObjectURL(f),im=new Image();im.onload=()=>{cb(im);URL.revokeObjectURL(u);draw()};im.src=u}
+function decodeImage(source){return new Promise((resolve,reject)=>{const im=new Image();im.onload=()=>resolve(im);im.onerror=reject;im.src=source})}
+async function loadImage(input,cb){const f=input.files?.[0];if(!f)return;try{const source=await CapraImage.read(f,{maxDimension:2400,quality:.92}),im=await decodeImage(source);cb(im);$('status').textContent='Kuva vaihdettu';draw()}catch(error){$('status').textContent='Kuvaa ei voitu avata'}finally{input.value=''}}
 $('leftImage').onchange=e=>loadImage(e.target,im=>S.left.img=im);
 $('rightImage').onchange=e=>loadImage(e.target,im=>S.right.img=im);
-$('customLogo').onchange=e=>loadImage(e.target,im=>activeLogo=im);
-document.querySelectorAll('input,textarea,select').forEach(el=>el.addEventListener('input',()=>{if(el.id==='leftZoom')S.left.zoom=+el.value;if(el.id==='rightZoom')S.right.zoom=+el.value;draw()}));
-officialLogo.onload=draw;
+document.querySelectorAll('input:not([type=file]),textarea,select').forEach(el=>el.addEventListener('input',()=>{if(el.id==='leftZoom')S.left.zoom=+el.value;if(el.id==='rightZoom')S.right.zoom=+el.value;draw()}));
+Object.values(officialLogos).forEach(im=>im.onload=draw);
 
 function rr(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}
 function cover(im,w,h,z){const sc=Math.max(w/im.width,h/im.height)*z;return{w:im.width*sc,h:im.height*sc}}
@@ -148,10 +159,8 @@ function imageArea(side,x,y,w,h){
 function lines(text,x,y,maxW,lineH,color,font,align='left'){ctx.save();ctx.fillStyle=color;ctx.font=font;ctx.textAlign=align;ctx.textBaseline='top';text.split('\n').forEach((t,i)=>ctx.fillText(t,x,y+i*lineH,maxW));ctx.restore()}
 function logoBlock(side,x,w){
  if(!$(side+'ShowLogo').checked)return;
- const s=S[side], size=+$('logoSize').value, lx=x+72+s.logoX, ly=38+s.logoY;
- if(activeLogo.complete){const ratio=activeLogo.width/activeLogo.height;ctx.drawImage(activeLogo,lx,ly,size*ratio,size)}
- ctx.textBaseline='top';ctx.textAlign='left';ctx.fillStyle=$('brandColor').value;ctx.font=`500 ${+$('brandSize').value}px Arial`;ctx.fillText($('brand').value,lx+size*1.02,ly+18);
- ctx.fillStyle=$('olive').value;ctx.font='500 15px Arial';ctx.fillText($('brandSub').value,lx+size*1.03,ly+64);
+ const s=S[side],size=+$('logoSize').value,lx=x+34+s.logoX,ly=24+s.logoY,logo=officialLogos[$('logoVariant').value];
+ if(logo.complete&&logo.naturalWidth){const fit=Math.min(size/logo.naturalWidth,size/logo.naturalHeight),dw=logo.naturalWidth*fit,dh=logo.naturalHeight*fit;ctx.drawImage(logo,lx+(size-dw)/2,ly+(size-dh)/2,dw,dh)}
 }
 function infoCol(x,y,w,label,val,color){ctx.textAlign='center';ctx.textBaseline='top';ctx.fillStyle=color;ctx.font='900 18px Arial Narrow,Arial';ctx.fillText(label,x+w/2,y);ctx.fillStyle=color;ctx.font='900 27px Arial Narrow,Arial';ctx.fillText(val,x+w/2,y+34,w-8)}
 function panel(side,x,w){
@@ -175,14 +184,14 @@ function panel(side,x,w){
 function draw(){ctx.clearRect(0,0,1024,1536);ctx.fillStyle='#0c0d0b';ctx.fillRect(0,0,1024,1536);panel('left',16,492);ctx.fillStyle='#f1eee5';ctx.fillRect(508,0,8,1536);panel('right',516,492)}
 function pos(e){const r=canvas.getBoundingClientRect(),p=e.touches?e.touches[0]:e;return{x:(p.clientX-r.left)*1024/r.width,y:(p.clientY-r.top)*1536/r.height}}
 function hit(side,p){const s=S[side],baseX=side==='left'?16:516,ty=side==='left'?804:730,dy=side==='left'?1018:1008;
- if(p.y<160)return'logo'; if(p.y>ty+s.titleY-20&&p.y<dy+s.descY-15)return'title'; if(p.y>=dy+s.descY-15&&p.y<1110)return'desc'; return'image'}
+ if(p.y>20+s.logoY&&p.y<40+s.logoY+(+$('logoSize').value))return'logo'; if(p.y>ty+s.titleY-20&&p.y<dy+s.descY-15)return'title'; if(p.y>=dy+s.descY-15&&p.y<1110)return'desc'; return'image'}
 canvas.onpointerdown=e=>{const p=pos(e);if(p.y>1138)return;const side=p.x<512?'left':'right';S.drag={side,target:hit(side,p),x:p.x,y:p.y};canvas.setPointerCapture(e.pointerId)};
 canvas.onpointermove=e=>{if(!S.drag)return;const p=pos(e),d=S.drag,s=S[d.side],dx=p.x-d.x,dy=p.y-d.y;
  if(d.target==='image'){s.imgX+=dx;s.imgY+=dy} if(d.target==='logo'){s.logoX+=dx;s.logoY+=dy} if(d.target==='title'){s.titleX+=dx;s.titleY+=dy} if(d.target==='desc'){s.descX+=dx;s.descY+=dy}
  d.x=p.x;d.y=p.y;draw()};
 canvas.onpointerup=canvas.onpointercancel=()=>S.drag=null;
 $('resetBtn').onclick=()=>{['left','right'].forEach(k=>Object.assign(S[k],{imgX:0,imgY:0,logoX:0,logoY:0,titleX:0,titleY:0,descX:0,descY:0,zoom:1}));$('leftZoom').value=$('rightZoom').value=1;draw()};
-$('downloadBtn').onclick=()=>{const scale=+$('exportScale').value,temp=document.createElement('canvas');temp.width=1024*scale;temp.height=1536*scale;const t=temp.getContext('2d');t.scale(scale,scale);t.drawImage(canvas,0,0);const a=document.createElement('a');a.download=`capra-combat-peruskurssit-${scale}x.png`;a.href=temp.toDataURL('image/png',1);a.click()};
+$('downloadBtn').onclick=async()=>{await document.fonts.ready;draw();const scale=+$('exportScale').value,temp=document.createElement('canvas');temp.width=1024*scale;temp.height=1536*scale;const t=temp.getContext('2d');t.scale(scale,scale);t.drawImage(canvas,0,0);temp.toBlob(blob=>{if(!blob)return;$('status').textContent='PNG valmis';const url=URL.createObjectURL(blob),a=document.createElement('a');a.download=`capra-combat-peruskurssit-${scale}x.png`;a.href=url;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)},'image/png')};
 draw();
 </script>
 </body>
