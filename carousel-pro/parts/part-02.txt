@@ -1,4 +1,3 @@
-(0,0,0,0)');
   ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
   // subtle vignette
   const vg=ctx.createRadialGradient(W*.5,H*.47,300,W*.5,H*.47,900);
@@ -164,9 +163,11 @@ function updateTabs(){
  const root=document.getElementById('slideTabs');root.innerHTML='';
  slides.forEach((_,i)=>{const b=document.createElement('button');b.textContent=i+1;b.className=i===current?'active':'';b.onclick=()=>{current=i;syncUI()};root.appendChild(b)});
 }
-document.getElementById('imageUpload').addEventListener('change',e=>{
+document.getElementById('imageUpload').addEventListener('change',async e=>{
  const f=e.target.files[0];if(!f)return;
- const r=new FileReader();r.onload=()=>{slides[current].image=r.result;getImg(r.result);render()};r.readAsDataURL(f);e.target.value='';
+ try{const source=await CapraImage.read(f,{maxDimension:2200,quality:.92});slides[current].image=source;const im=getImg(source);if(im.complete)render();document.getElementById('imageStatus').textContent='Kuva vaihdettu'}
+ catch(error){document.getElementById('imageStatus').textContent='Kuvaa ei voitu avata'}
+ finally{e.target.value=''}
 });
 document.getElementById('resetSlide').onclick=()=>{
  slides[current]=structuredClone(initialSlides[current]);Object.assign(slides[current],defaults,slides[current]);syncUI();
@@ -181,21 +182,18 @@ function downloadBlob(blob,name){
  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();
  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1500);
 }
-function exportCurrent(name){
- return new Promise(resolve=>{
-   render();
-   canvas.toBlob(b=>{downloadBlob(b,name);resolve()},'image/png');
- });
+async function canvasBlob(){
+ await document.fonts.ready;render();
+ return new Promise((resolve,reject)=>canvas.toBlob(blob=>blob?resolve(blob):reject(new Error('PNG-vienti epäonnistui')),'image/png'));
+}
+async function exportCurrent(name){
+ const blob=await canvasBlob();downloadBlob(blob,name);
 }
 document.getElementById('downloadCurrent').onclick=()=>exportCurrent(`capra-carousel-${String(current+1).padStart(2,'0')}.png`);
 document.getElementById('downloadAll').onclick=async()=>{
- const old=current;
- for(let i=0;i<slides.length;i++){
-   current=i;syncUI();await new Promise(r=>setTimeout(r,160));
-   await exportCurrent(`capra-carousel-${String(i+1).padStart(2,'0')}.png`);
-   await new Promise(r=>setTimeout(r,280));
- }
- current=old;syncUI();
+ const button=document.getElementById('downloadAll'),oldText=button.textContent,old=current,zip=new JSZip();button.disabled=true;
+ try{for(let i=0;i<slides.length;i++){button.textContent=`Kuva ${i+1}/5`;current=i;syncUI();zip.file(`capra-carousel-${String(i+1).padStart(2,'0')}.png`,await canvasBlob())}downloadBlob(await zip.generateAsync({type:'blob'}),'capra-carousel-5-dian-paketti.zip')}
+ finally{current=old;syncUI();button.disabled=false;button.textContent=oldText}
 };
 
 document.getElementById('saveConfig').onclick=()=>{
