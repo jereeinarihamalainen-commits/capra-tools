@@ -1,4 +1,4 @@
-STI';el.appendChild(inner);
+;el.appendChild(inner);
       el.dataset.rawText=data.text??'TEKSTI';el.dataset.upper=data.upper?'1':'0';el.dataset.italic=data.italic?'1':'0';
       el.style.fontFamily=data.font||"'Inter', sans-serif";el.style.fontSize=`${data.size??42}px`;el.style.fontWeight=data.weight??700;
       el.style.color=valColor(data.color||'$fg');el.dataset.colorToken=data.color||'$fg';el.style.letterSpacing=`${data.spacing??0}px`;el.style.lineHeight=data.line??1.05;
@@ -10,7 +10,7 @@ STI';el.appendChild(inner);
       const img=document.createElement('img');img.src=data.src||placeholder();img.alt='';el.appendChild(img);applyImageData(el,data);
     }
     if(data.type==='logo'){
-      const img=document.createElement('img');img.src=data.src||LOGO;img.alt='Capra Combat';el.appendChild(img);
+      const img=document.createElement('img');img.src=data.src||LOGO_LIGHT;img.alt='Capra Combat';el.appendChild(img);
     }
     if(data.type==='shape'){
       el.style.setProperty('--fill',valColor(data.fill||'$olive'));el.dataset.fillToken=data.fill||'$olive';el.style.borderRadius=`${data.radius??0}px`;
@@ -120,7 +120,9 @@ STI';el.appendChild(inner);
   }
   function fitCanvas(){
     const area=document.querySelector('.canvas-area'),f=formats[formatKey];
-    const availableW=Math.max(260,area.clientWidth-50),availableH=Math.max(360,window.innerHeight-120);
+    const mobile=window.matchMedia('(max-width:760px)').matches;
+    const availableW=Math.max(260,area.clientWidth-(mobile?24:50));
+    const availableH=Math.max(360,mobile?area.clientHeight-24:window.innerHeight-120);
     const fit=Math.min(availableW/f.w,availableH/f.h,.72);scale=userZoom??fit;
     canvas.style.transform=`scale(${scale})`;shell.style.width=(f.w*scale)+'px';shell.style.height=(f.h*scale)+'px';
     document.getElementById('zoomLabel').textContent=Math.round(scale*100)+'%';
@@ -157,6 +159,10 @@ STI';el.appendChild(inner);
   }));
 
   function wire(id,event,fn){document.getElementById(id).addEventListener(event,fn)}
+  document.querySelectorAll('[data-mobile-tab]').forEach(button=>button.addEventListener('click',()=>{
+    const group=button.dataset.mobileTab;leftPanel.dataset.mobileGroup=group;
+    document.querySelectorAll('[data-mobile-tab]').forEach(item=>item.classList.toggle('active',item===button));
+  }));
   wire('formatSelect','change',e=>{formatKey=e.target.value;setCanvasSize();pushHistory()});
   wire('guidesBtn','click',e=>{canvas.classList.toggle('show-guides');e.currentTarget.classList.toggle('active')});
   wire('gridBtn','click',e=>{canvas.classList.toggle('show-grid');e.currentTarget.classList.toggle('active')});
