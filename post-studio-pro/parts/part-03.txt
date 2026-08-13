@@ -1,0 +1,141 @@
+z:8,src:LOGO}
+      ]
+    },
+    beginner:{
+      name:'Peruskurssi',
+      desc:'Aloittamisen kynnys + CTA',
+      elements:[
+        {type:'shape',name:'Tausta',x:0,y:0,w:1080,h:1350,z:0,fill:'$paper'},
+        {type:'image',name:'Kurssikuva',x:0,y:0,w:1080,h:660,z:1,src:placeholder('LISÄÄ PERUSKURSSIKUVA'),gray:10,contrast:110,brightness:86,saturation:88,overlay:'#000000',overlayAlpha:6},
+        {type:'shape',name:'Oliivipalkki',x:0,y:650,w:1080,h:20,z:3,fill:'$olive'},
+        {type:'text',name:'Eyebrow',x:66,y:710,w:850,h:48,z:5,text:'PERUSKURSSIT · KUOPIO',font:"'Michroma', sans-serif",size:22,weight:400,color:'$olive',spacing:3,line:1},
+        {type:'text',name:'Otsikko',x:66,y:786,w:900,h:190,z:5,text:'SINUN EI TARVITSE\nOLLA VALMIS.',font:"'Inter', sans-serif",size:78,weight:900,color:'#0a0a0a',spacing:-2,line:.95},
+        {type:'text',name:'Body',x:68,y:1005,w:830,h:100,z:5,text:'Perusteet opetetaan alusta. Lähtötasosi saa olla mikä tahansa.',font:"'Inter', sans-serif",size:31,weight:600,color:'#25251f',line:1.25},
+        {type:'shape',name:'CTA laatikko',x:66,y:1170,w:500,h:90,z:5,fill:'$olive',radius:0},
+        {type:'text',name:'CTA',x:90,y:1196,w:450,h:42,z:6,text:'ILMOITTAUDU PERUSKURSSILLE',font:"'Inter', sans-serif",size:24,weight:900,color:'#ffffff',spacing:1,line:1},
+        {type:'logo',name:'Capra logo',x:740,y:1170,w:285,h:92,z:8,src:LOGO}
+      ]
+    },
+    person:{
+      name:'Harrastajatarina',
+      desc:'Henkilö + sitaatti',
+      elements:[
+        {type:'shape',name:'Tausta',x:0,y:0,w:1080,h:1350,z:0,fill:'$paper'},
+        {type:'image',name:'Henkilökuva',x:470,y:0,w:610,h:1350,z:1,src:placeholder('LISÄÄ HENKILÖKUVA'),gray:18,contrast:112,brightness:86,saturation:82,overlay:'#000000',overlayAlpha:4},
+        {type:'shape',name:'Tumma blokki',x:0,y:0,w:470,h:1350,z:2,fill:'$bg'},
+        {type:'text',name:'Sarja',x:56,y:78,w:330,h:65,z:5,text:'CAPRA / IHMISET',font:"'Michroma', sans-serif",size:18,weight:400,color:'$ochre',spacing:2,line:1},
+        {type:'text',name:'Sitaatti',x:56,y:300,w:360,h:490,z:5,text:'“MATOLLA AJATUKSET IRTOAVAT MUUSTA ARJESTA.”',font:"'Inter', sans-serif",size:53,weight:800,color:'$fg',spacing:-1,line:1.0},
+        {type:'text',name:'Nimi',x:56,y:1010,w:350,h:70,z:5,text:'ETUNIMI SUKUNIMI',font:"'Inter', sans-serif",size:31,weight:900,color:'$ochre',spacing:.5,line:1},
+        {type:'text',name:'Info',x:56,y:1092,w:350,h:115,z:5,text:'BJJ / NO-GI\nHARRASTAJA',font:"'Inter', sans-serif",size:23,weight:700,color:'$fg',spacing:1,line:1.25},
+        {type:'logo',name:'Capra logo',x:735,y:1160,w:295,h:100,z:8,src:LOGO}
+      ]
+    },
+    result:{
+      name:'Kisatulos',
+      desc:'Mitali / ottelutulos',
+      elements:[
+        {type:'image',name:'Kisakuva',x:0,y:0,w:1080,h:1350,z:1,src:placeholder('LISÄÄ KISAKUVA'),gray:14,contrast:120,brightness:76,saturation:82,overlay:'#000000',overlayAlpha:24},
+        {type:'shape',name:'Okra yläpalkki',x:0,y:0,w:1080,h:145,z:3,fill:'$ochre'},
+        {type:'text',name:'Tapahtuma',x:58,y:45,w:860,h:52,z:4,text:'KILPAILUN NIMI · 2026',font:"'Michroma', sans-serif",size:22,weight:400,color:'#0a0a0a',spacing:2,line:1},
+        {type:'text',name:'Sijoitus',x:62,y:640,w:890,h:205,z:5,text:'🥇\nKULTAA.',font:"'Inter', sans-serif",size:112,weight:900,color:'$fg',spacing:-3,line:.88},
+        {type:'text',name:'Nimi',x:62,y:890,w:880,h:76,z:5,text:'ETUNIMI SUKUNIMI',font:"'Inter', sans-serif",size:58,weight:900,color:'$ochre',spacing:-1,line:1},
+        {type:'text',name:'Luokka',x:62,y:980,w:850,h:86,z:5,text:'-XX KG · VÄRIVYÖT / NO-GI',font:"'Michroma', sans-serif",size:23,weight:400,color:'$fg',spacing:2,line:1.15},
+        {type:'text',name:'Lisärivi',x:62,y:1080,w:760,h:80,z:5,text:'3 ottelua · 3 voittoa',font:"'Inter', sans-serif",size:29,weight:600,color:'$fg',line:1.15},
+        {type:'logo',name:'Capra logo',x:720,y:1160,w:300,h:100,z:8,src:LOGO}
+      ]
+    },
+    competitor:{
+      name:'Kilpailija',
+      desc:'Polku huipulle / profiili',
+      elements:[
+        {type:'shape',name:'Tausta',x:0,y:0,w:1080,h:1350,z:0,fill:'$bg'},
+        {type:'image',name:'Kilpailijakuva',x:0,y:0,w:1080,h:960,z:1,src:placeholder('LISÄÄ KILPAILIJAKUVA'),gray:35,contrast:116,brightness:78,saturation:70,overlay:'#000000',overlayAlpha:12},
+        {type:'shape',name:'Okra pystyviiva',x:70,y:70,w:12,h:800,z:4,fill:'$ochre'},
+        {type:'text',name:'Eyebrow',x:108,y:78,w:790,h:50,z:5,text:'CAPRA COMBAT · KILPAILIJAT',font:"'Michroma', sans-serif",size:20,weight:400,color:'$ochre',spacing:2,line:1},
+        {type:'text',name:'Nimi',x:108,y:690,w:860,h:180,z:5,text:'ETUNIMI\nSUKUNIMI',font:"'Inter', sans-serif",size:86,weight:900,color:'$fg',spacing:-2,line:.9},
+        {type:'shape',name:'Alaosa',x:0,y:960,w:1080,h:390,z:3,fill:'$ochre'},
+        {type:'text',name:'Quote',x:70,y:1020,w:750,h:165,z:5,text:'“KEHITYS VAATII, ETTÄ TULET TAKAISIN MYÖS HUONOJEN PÄIVIEN JÄLKEEN.”',font:"'Inter', sans-serif",size:32,weight:800,color:'#0a0a0a',line:1.15},
+        {type:'text',name:'Tag',x:70,y:1215,w:600,h:55,z:5,text:'POLKU HUIPULLE.',font:"'Michroma', sans-serif",size:22,weight:400,color:'#0a0a0a',spacing:2,line:1},
+        {type:'logo',name:'Capra logo',x:748,y:1192,w:285,h:94,z:8,src:LOGO}
+      ]
+    },
+    junior:{
+      name:'Juniorit',
+      desc:'Vanhemmalle selkeä info',
+      elements:[
+        {type:'shape',name:'Tausta',x:0,y:0,w:1080,h:1350,z:0,fill:'$paper'},
+        {type:'shape',name:'Oliivi yläosa',x:0,y:0,w:1080,h:390,z:1,fill:'$olive'},
+        {type:'text',name:'Eyebrow',x:64,y:70,w:830,h:48,z:4,text:'CAPRA COMBAT · JUNIORIT',font:"'Michroma', sans-serif",size:21,weight:400,color:'#ffffff',spacing:2,line:1},
+        {type:'text',name:'Otsikko',x:64,y:155,w:900,h:165,z:4,text:'KAMPPAILUA.\nLIIKETTÄ. OPPIMISTA.',font:"'Inter', sans-serif",size:67,weight:900,color:'#ffffff',spacing:-2,line:.95},
+        {type:'image',name:'Juniorikuva',x:64,y:430,w:952,h:500,z:2,src:placeholder('LISÄÄ JUNIORIKUVA'),gray:0,contrast:106,brightness:94,saturation:95,overlay:'#000000',overlayAlpha:0},
+        {type:'text',name:'Info otsikko',x:64,y:980,w:400,h:50,z:5,text:'JUNIORITOIMINTA',font:"'Michroma', sans-serif",size:20,weight:400,color:'$olive',spacing:2,line:1},
+        {type:'text',name:'Info',x:64,y:1050,w:760,h:115,z:5,text:'Turvallista ja tavoitteellista harjoittelua lapsille ja nuorille.',font:"'Inter', sans-serif",size:34,weight:700,color:'#12130f',line:1.2},
+        {type:'text',name:'CTA',x:64,y:1195,w:650,h:60,z:5,text:'TUTUSTU JUNIORITOIMINTAAN →',font:"'Inter', sans-serif",size:26,weight:900,color:'$olive',spacing:.5,line:1},
+        {type:'logo',name:'Capra logo',x:744,y:1168,w:282,h:92,z:8,src:LOGO}
+      ]
+    },
+    event:{
+      name:'Tapahtuma',
+      desc:'Open mat / leiri / workshop',
+      elements:[
+        {type:'shape',name:'Tausta',x:0,y:0,w:1080,h:1350,z:0,fill:'$bg'},
+        {type:'shape',name:'Okra alaosa',x:0,y:930,w:1080,h:420,z:2,fill:'$ochre'},
+        {type:'text',name:'Eyebrow',x:70,y:76,w:850,h:50,z:4,text:'CAPRA COMBAT · KUOPIO',font:"'Michroma', sans-serif",size:21,weight:400,color:'$ochre',spacing:3,line:1},
+        {type:'text',name:'Otsikko',x:70,y:220,w:900,h:300,z:4,text:'OPEN\nMAT.',font:"'Inter', sans-serif",size:126,weight:900,color:'$fg',spacing:-5,line:.85},
+        {type:'text',name:'Kuvaus',x:70,y:600,w:830,h:155,z:4,text:'Kaksi tuntia vapaata harjoittelua, sparria ja drillailua. Kaikki tasot tervetulleita.',font:"'Inter', sans-serif",size:33,weight:600,color:'$fg',line:1.25},
+        {type:'text',name:'Päivä',x:70,y:990,w:390,h:60,z:5,text:'SUNNUNTAI',font:"'Michroma', sans-serif",size:22,weight:400,color:'#0a0a0a',spacing:2,line:1},
+        {type:'text',name:'Aika',x:70,y:1065,w:510,h:105,z:5,text:'12:00–14:00',font:"'Inter', sans-serif",size:70,weight:900,color:'#0a0a0a',spacing:-2,line:.95},
+        {type:'text',name:'Paikka',x:70,y:1200,w:620,h:58,z:5,text:'CAPRA COMBAT · KUOPIO',font:"'Michroma', sans-serif",size:19,weight:400,color:'#0a0a0a',spacing:2,line:1},
+        {type:'logo',name:'Capra logo',x:748,y:1178,w:285,h:94,z:8,src:LOGO}
+      ]
+    },
+    info:{
+      name:'Info / Karuselli',
+      desc:'3 pointtia / opettava postaus',
+      elements:[
+        {type:'shape',name:'Tausta',x:0,y:0,w:1080,h:1350,z:0,fill:'$paper'},
+        {type:'shape',name:'Tumma yläpalkki',x:0,y:0,w:1080,h:165,z:1,fill:'$bg'},
+        {type:'text',name:'Eyebrow',x:62,y:60,w:820,h:48,z:4,text:'CAPRA COMBAT · 01/05',font:"'Michroma', sans-serif",size:21,weight:400,color:'$ochre',spacing:3,line:1},
+        {type:'text',name:'Otsikko',x:62,y:235,w:900,h:190,z:4,text:'3 ASIAA,\nJOTKA KANNATTAA TIETÄÄ.',font:"'Inter', sans-serif",size:75,weight:900,color:'#0a0a0a',spacing:-2,line:.95},
+        {type:'shape',name:'Numero 1',x:65,y:520,w:70,h:70,z:3,fill:'$olive',radius:35},
+        {type:'text',name:'1',x:65,y:535,w:70,h:42,z:4,text:'1',font:"'Inter', sans-serif",size:31,weight:900,color:'#ffffff',align:'center',line:1},
+        {type:'text',name:'Pointti 1',x:172,y:510,w:810,h:92,z:4,text:'Ensimmäinen pointti tähän.',font:"'Inter', sans-serif",size:39,weight:800,color:'#11110f',line:1.12},
+        {type:'shape',name:'Numero 2',x:65,y:695,w:70,h:70,z:3,fill:'$olive',radius:35},
+        {type:'text',name:'2',x:65,y:710,w:70,h:42,z:4,text:'2',font:"'Inter', sans-serif",size:31,weight:900,color:'#ffffff',align:'center',line:1},
+        {type:'text',name:'Pointti 2',x:172,y:685,w:810,h:92,z:4,text:'Toinen pointti tähän.',font:"'Inter', sans-serif",size:39,weight:800,color:'#11110f',line:1.12},
+        {type:'shape',name:'Numero 3',x:65,y:870,w:70,h:70,z:3,fill:'$olive',radius:35},
+        {type:'text',name:'3',x:65,y:885,w:70,h:42,z:4,text:'3',font:"'Inter', sans-serif",size:31,weight:900,color:'#ffffff',align:'center',line:1},
+        {type:'text',name:'Pointti 3',x:172,y:860,w:810,h:92,z:4,text:'Kolmas pointti tähän.',font:"'Inter', sans-serif",size:39,weight:800,color:'#11110f',line:1.12},
+        {type:'shape',name:'Alapalkki',x:0,y:1130,w:1080,h:220,z:2,fill:'$bg'},
+        {type:'text',name:'CTA',x:62,y:1190,w:650,h:62,z:5,text:'TALLENNA TÄMÄ MYÖHEMMÄKSI.',font:"'Inter', sans-serif",size:28,weight:900,color:'$fg',spacing:.5,line:1},
+        {type:'logo',name:'Capra logo',x:744,y:1164,w:284,h:94,z:8,src:LOGO}
+      ]
+    }
+  };
+
+  let formatKey='portrait', currentTemplate='training', selectedId=null, scale=.5, userZoom=null;
+  let history=[], future=[], isRestoring=false, pendingImageTarget=null;
+
+  function valColor(v){
+    const cs=getComputedStyle(canvas);
+    if(v==='$olive') return cs.getPropertyValue('--canvas-olive').trim();
+    if(v==='$ochre') return cs.getPropertyValue('--canvas-ochre').trim();
+    if(v==='$fg') return cs.getPropertyValue('--canvas-fg').trim();
+    if(v==='$paper') return cs.getPropertyValue('--canvas-paper').trim();
+    if(v==='$muted') return cs.getPropertyValue('--canvas-muted').trim();
+    if(v==='$bg') return cs.getPropertyValue('--canvas-bg').trim();
+    return v||'#ffffff';
+  }
+  const createId=()=> 'el_'+Math.random().toString(36).slice(2,10);
+
+  function createElement(data){
+    const el=document.createElement('div');
+    el.className=`canvas-el ${data.type}-el`;
+    el.dataset.id=data.id||createId(); el.dataset.type=data.type; el.dataset.name=data.name||data.type;
+    el.dataset.locked=data.locked?'1':'0'; el.dataset.visible=data.visible===false?'0':'1';
+    el.style.left=`${data.x??100}px`;el.style.top=`${data.y??100}px`;el.style.width=`${data.w??300}px`;el.style.height=`${data.h??120}px`;
+    el.style.zIndex=data.z??5;el.style.opacity=(data.opacity??100)/100;el.dataset.rotation=data.rotation??0;el.style.transform=`rotate(${data.rotation??0}deg)`;
+    if(data.visible===false)el.style.display='none';if(data.locked)el.classList.add('locked');
+
+    if(data.type==='text'){
+      const inner=document.createElement('div');inner.className='text-inner';inner.contentEditable='false';inner.spellcheck=false;inner.innerText=data.text??'TEK
