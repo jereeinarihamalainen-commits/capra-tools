@@ -1,4 +1,4 @@
-ontent=old;btn.disabled=false}
+=old;btn.disabled=false}
   });
 
   function hexToRgba(hex,a=1){

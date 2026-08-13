@@ -1,16 +1,20 @@
 :180,w:360,h:160,z:15,fill:'$olive',radius:0});selectElement(el.dataset.id);pushHistory()});
-  wire('addLogoBtn','click',()=>{const el=createElement({type:'logo',name:'Capra logo',x:120,y:120,w:340,h:112,z:25,src:LOGO});selectElement(el.dataset.id);pushHistory()});
-  wire('addImageBtn','click',()=>{pendingImageTarget='new';imageFile.click()});
-  wire('replaceImageBtn','click',()=>{const el=getSelected();if(!el||el.dataset.type!=='image')return;pendingImageTarget=el.dataset.id;imageFile.click()});
-  imageFile.addEventListener('change',e=>{
-    const file=e.target.files?.[0];if(!file)return;const r=new FileReader();
-    r.onload=()=>{
-      if(pendingImageTarget==='new'){
-        const el=createElement({type:'image',name:'Uusi kuva',x:80,y:140,w:720,h:900,z:10,src:r.result,gray:0,contrast:100,brightness:100,saturation:100});selectElement(el.dataset.id);
+  wire('addLogoBtn','click',()=>{const el=createElement({type:'logo',name:'Capra logo',x:120,y:120,w:180,h:180,z:25,src:LOGO_LIGHT});selectElement(el.dataset.id);pushHistory()});
+  wire('addImageBtn','click',()=>{pendingImageTarget='new'});
+  wire('replaceImageBtn','click',()=>{const el=getSelected();if(!el||el.dataset.type!=='image')return;pendingImageTarget=el.dataset.id});
+  imageFile.addEventListener('change',async e=>{
+    const file=e.target.files?.[0],target=pendingImageTarget;if(!file)return;
+    try{
+      const source=await CapraImage.read(file,{maxDimension:1800,quality:.84});
+      if(target==='new'){
+        const el=createElement({type:'image',name:'Uusi kuva',x:80,y:140,w:720,h:900,z:10,src:source,gray:0,contrast:100,brightness:100,saturation:100});selectElement(el.dataset.id);
       }else{
-        const el=canvas.querySelector(`.canvas-el[data-id="${pendingImageTarget}"]`);if(el?.dataset.type==='image')el.querySelector('img').src=r.result;
-      }pushHistory();
-    };r.readAsDataURL(file);e.target.value='';
+        const el=canvas.querySelector(`.canvas-el[data-id="${target}"]`);if(el?.dataset.type==='image')el.querySelector('img').src=source;
+      }
+      pushHistory();
+    }catch(error){
+      alert('Kuvaa ei voitu avata. Kokeile JPG- tai PNG-kuvaa.');
+    }finally{e.target.value='';pendingImageTarget=null}
   });
 
   function commonInput(id,apply){
@@ -86,6 +90,7 @@
 
   wire('resetBtn','click',()=>{if(confirm('Palautetaanko valittu template alkuperäiseen muotoon?'))loadTemplate(currentTemplate)});
   wire('openInspector','click',()=>inspectorPanel.classList.add('open'));
+  wire('closeInspector','click',()=>inspectorPanel.classList.remove('open'));
 
   document.addEventListener('keydown',e=>{
     const el=getSelected();if(!el)return;
@@ -147,8 +152,8 @@
     try{
       if(!window.html2canvas)throw new Error('html2canvas ei latautunut');
       const f=formats[formatKey];
-      const shot=await html2canvas(canvas,{backgroundColor:null,scale:1,width:f.w,height:f.h,useCORS:true,logging:false,allowTaint:true});
+      const shot=await html2canvas(canvas,{backgroundColor:null,scale:1,width:f.w,height:f.h,useCORS:true,logging:false,allowTaint:true,onclone:clone=>{clone.getElementById('postCanvas').style.transform='none'}});
       const a=document.createElement('a'),date=new Date().toISOString().slice(0,10);a.download=`capra-combat-${currentTemplate}-${date}.png`;a.href=shot.toDataURL('image/png',1);a.click();
     }catch(err){
       alert('PNG-vienti epäonnistui. Tarkista internet-yhteys ja avaa tiedosto tavallisessa selaimessa.\\n\\n'+err.message);
-    }finally{if(prevSel)selectElement(prevSel);btn.textC
+    }finally{if(prevSel)selectElement(prevSel);btn.textContent

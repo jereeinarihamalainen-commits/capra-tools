@@ -2,13 +2,14 @@
 <html lang="fi">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Capra Combat — Post Studio</title>
   <meta name="theme-color" content="#0a0a0a">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800;900&family=League+Spartan:wght@500;600;700;800&family=Michroma&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="../vendor/html2canvas.min.js"></script>
+  <script src="../vendor/capra-image.js"></script>
   <style>
     :root{
       --ui-bg:#090a09;
@@ -34,14 +35,14 @@
       background:var(--ui-bg);color:var(--ui-text);overflow:hidden;
     }
     button,input,select,textarea{font:inherit}
-    button{cursor:pointer}
-    .app{height:100vh;display:grid;grid-template-columns:350px 1fr 326px;background:var(--ui-bg)}
+    button{cursor:pointer;touch-action:manipulation}
+    .app{height:100vh;height:100svh;display:grid;grid-template-columns:350px 1fr 326px;background:var(--ui-bg)}
     .panel{min-width:0;background:var(--ui-panel);border-color:var(--ui-border);overflow:auto;scrollbar-width:thin;scrollbar-color:#4b4e47 #10110f}
     .panel.left{border-right:1px solid var(--ui-border)}
     .panel.right{border-left:1px solid var(--ui-border)}
     .panel-inner{padding:18px}
     .brand-row{display:flex;align-items:center;gap:12px;margin-bottom:18px}
-    .brand-thumb{width:68px;height:44px;object-fit:contain;background:#080808;border:1px solid #2a2d28;border-radius:8px;padding:3px}
+    .brand-thumb{display:block;width:68px;height:auto;object-fit:contain;background:#080808;border:1px solid #2a2d28;border-radius:8px;padding:3px}
     .brand-row h1{margin:0;font-size:13px;line-height:1.18;letter-spacing:.11em;text-transform:uppercase}
     .brand-row small{display:block;color:var(--ui-muted);font-weight:500;margin-top:4px;letter-spacing:0}
     .section{border-top:1px solid var(--ui-border);padding-top:16px;margin-top:16px}
@@ -69,6 +70,7 @@
     .row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
     .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
     .btn{border:1px solid #343730;background:#191a17;color:#fff;border-radius:7px;padding:10px 12px;font-weight:700;font-size:11px}
+    .row > label.btn{display:flex;align-items:center;justify-content:center}
     .btn:hover{background:#22241f}
     .btn.primary{background:var(--ui-accent-2);border-color:var(--ui-accent-2);color:#0a0a0a}
     .btn.primary:hover{filter:brightness(1.06)}
@@ -127,46 +129,75 @@
     }
     .image-el::after{content:"";position:absolute;inset:0;background:var(--overlay,transparent);pointer-events:none}
     .shape-el{background:var(--fill,#fff)}
-    .logo-el img{width:100%;height:100%;display:block;object-fit:contain}
+    .logo-el img{display:block;width:auto;max-width:100%;height:100%;object-fit:contain;margin-left:auto}
 
     .empty-note{color:var(--ui-muted);font-size:11px;line-height:1.55;padding:12px;border:1px dashed #373a34;border-radius:8px}
     .selected-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
     .selected-title strong{font-size:12px}.selected-title code{font-size:9.5px;color:#aaa}
     .mini-actions{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
-    .file-input{display:none}
+    .file-input{position:fixed;width:1px;height:1px;opacity:0;pointer-events:none}
     .image-drop{border:1px dashed #484b43;border-radius:8px;padding:12px;text-align:center;color:#c8c9c2;font-size:10px;background:#0c0d0b}
     .status{font-size:10px;color:#a6a89f}
     .kbd{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;border:1px solid #34372f;border-bottom-width:2px;border-radius:4px;padding:1px 5px;color:#cfd0c8;background:#171815}
-    .mobile-warning{display:none}
+    .mobile-warning,.mobile-tabs,.close-inspector{display:none}
     @media(max-width:1120px){
       .app{grid-template-columns:290px 1fr}
       .panel.right{position:fixed;right:0;top:58px;bottom:0;width:326px;z-index:40;transform:translateX(100%);transition:.2s;box-shadow:-15px 0 50px rgba(0,0,0,.3)}
       .panel.right.open{transform:translateX(0)}.mobile-warning{display:block}
     }
     @media(max-width:760px){
-      body{overflow:auto}.app{display:block;height:auto;min-height:100vh}.panel.left{height:auto;border-right:0;border-bottom:1px solid var(--ui-border)}
-      .workspace{min-height:740px}.topbar{position:sticky}.canvas-area{padding:18px}.panel.right{top:0}
+      html,body{min-width:0;max-width:100%;height:auto;overflow-x:hidden}
+      body{overflow-y:auto;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}
+      .app{display:flex;flex-direction:column;height:auto;min-height:100svh;min-width:0}
+      .workspace{order:1;width:100%;height:calc(100svh - env(safe-area-inset-top));min-height:620px;overflow:hidden;display:flex;flex-direction:column}
+      .topbar{position:relative;flex:0 0 auto;height:auto;min-height:64px;padding:8px 10px;gap:8px}
+      .topbar .left-tools,.topbar .right-tools{gap:6px}
+      .canvas-area{flex:1;min-height:0;padding:12px;align-items:center}
+      .panel.left{order:2;width:100%;height:auto;border-right:0;border-bottom:1px solid var(--ui-border)}
+      .panel.left .panel-inner{padding:14px}
+      .brand-row{margin-bottom:12px}
+      .mobile-tabs{position:sticky;top:0;z-index:30;display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:0 -2px 14px;padding:8px 0;background:var(--ui-panel)}
+      .mobile-tabs button{min-height:44px;border:1px solid #34372f;border-radius:8px;background:#171815;color:#d7d8d1;font-size:10px;font-weight:800}
+      .mobile-tabs button.active{border-color:var(--ui-accent-2);background:#2a2615;color:#fff}
+      .panel.left .section[data-mobile-group]{display:none}
+      .panel.left[data-mobile-group="pohjat"] .section[data-mobile-group="pohjat"],
+      .panel.left[data-mobile-group="elementit"] .section[data-mobile-group="elementit"],
+      .panel.left[data-mobile-group="tyyli"] .section[data-mobile-group="tyyli"],
+      .panel.left[data-mobile-group="tyokalut"] .section[data-mobile-group="tyokalut"]{display:block}
+      .panel.right{top:0;bottom:0;width:min(100vw,380px);max-width:100%;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}
+      .close-inspector{display:inline-flex;align-items:center;justify-content:center;margin-left:auto;min-width:70px;min-height:44px}
+      .btn,.chip,.palette-btn,.swatch,.tpl-btn{min-height:44px}
+      .field input[type="text"],.field input[type="number"],.field input[type="url"],.field select,.field textarea{min-height:44px;font-size:16px}
+      .field input[type="range"]{min-height:44px}
+      .image-drop .btn{display:inline-flex;align-items:center;justify-content:center}
     }
   </style>
 </head>
 <body>
 <div class="app">
-  <aside class="panel left">
+  <aside class="panel left" data-mobile-group="pohjat">
     <div class="panel-inner">
       <div class="brand-row">
-        <img class="brand-thumb" src="../peruskurssi-mainos-pro/assets/asset-01-9e479d7f0165.png" alt="Capra Combat logo">
+        <img class="brand-thumb" src="../assets/capra-logo-light.jpeg" alt="Capra Combat logo">
         <div>
           <h1>Capra Combat<br>Post Studio</h1>
           <small>Somegeneraattori</small>
         </div>
       </div>
 
-      <div class="section">
+      <nav class="mobile-tabs" aria-label="Editorin osiot">
+        <button type="button" class="active" data-mobile-tab="pohjat">Pohjat</button>
+        <button type="button" data-mobile-tab="elementit">Elementit</button>
+        <button type="button" data-mobile-tab="tyyli">Tyyli</button>
+        <button type="button" data-mobile-tab="tyokalut">Työkalut</button>
+      </nav>
+
+      <div class="section" data-mobile-group="pohjat">
         <div class="section-title">1 — Valitse template</div>
         <div class="template-grid" id="templateGrid"></div>
       </div>
 
-      <div class="section">
+      <div class="section" data-mobile-group="pohjat">
         <div class="section-title">2 — Julkaisun koko</div>
         <div class="field">
           <select id="formatSelect">
@@ -178,7 +209,7 @@
         <div class="hint">4:5 on ensisijainen feed-formaatti. Story-koko sopii myös Reels-kansiin.</div>
       </div>
 
-      <div class="section">
+      <div class="section" data-mobile-group="tyyli">
         <div class="section-title">3 — Capra-paletti</div>
         <div class="palette-row">
           <button class="palette-btn" data-palette="core">Core</button>
