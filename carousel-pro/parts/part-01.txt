@@ -2,27 +2,32 @@
 <html lang="fi">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0d0d">
 <title>Capra Combat – Instagram Carousel Generator</title>
+<link rel="stylesheet" href="../vendor/capra-fonts.css">
+<script src="../vendor/capra-image.js"></script>
+<script src="../vendor/jszip.min.js"></script>
 <style>
 :root{
   --bg:#0b0d0d; --panel:#121515; --panel2:#181c1b; --line:#2a302e;
   --text:#f3f1eb; --muted:#9ca39e; --olive:#68724a; --ochre:#c8ae4d;
 }
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+html,body{min-height:100%;max-width:100%}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;padding-bottom:env(safe-area-inset-bottom)}
 button,input,select,textarea{font:inherit}
 .app{display:grid;grid-template-columns:minmax(560px,1fr) 410px;min-height:100vh}
 .stage-wrap{padding:22px;display:flex;flex-direction:column;gap:14px;align-items:center;justify-content:flex-start;overflow:auto}
 .toolbar{width:min(100%,830px);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .toolbar .spacer{flex:1}
-button{border:1px solid var(--line);background:#171b1a;color:#f4f2ed;padding:10px 13px;border-radius:10px;cursor:pointer}
+button{min-height:44px;border:1px solid var(--line);background:#171b1a;color:#f4f2ed;padding:10px 13px;border-radius:10px;cursor:pointer;touch-action:manipulation}
 button:hover{background:#222725}
 button.primary{background:var(--olive);border-color:var(--olive);color:white;font-weight:700}
 button.gold{background:var(--ochre);border-color:var(--ochre);color:#151515;font-weight:700}
 button.icon{min-width:42px}
 .slide-tabs{display:flex;gap:7px;flex-wrap:wrap}
-.slide-tabs button{width:42px;height:42px;padding:0;border-radius:50%}
+.slide-tabs button{width:44px;height:44px;padding:0;border-radius:50%}
 .slide-tabs button.active{background:var(--olive);border-color:var(--olive)}
 .canvas-shell{width:min(100%,760px);aspect-ratio:4/5;position:relative;background:#000;box-shadow:0 24px 70px rgba(0,0,0,.42);border-radius:4px;overflow:hidden}
 canvas{display:block;width:100%;height:100%;touch-action:none;cursor:grab}
@@ -39,19 +44,26 @@ canvas.dragging{cursor:grabbing}
 .field:last-child{margin-bottom:0}
 label{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#b7bdb9;margin-bottom:6px}
 label output{color:#e9e7e0;font-variant-numeric:tabular-nums}
-input[type="text"],input[type="number"],select,textarea{width:100%;border:1px solid #303634;background:#0d100f;color:#f3f1eb;border-radius:9px;padding:9px 10px;outline:none}
+input[type="text"],input[type="number"],select,textarea{width:100%;min-height:44px;border:1px solid #303634;background:#0d100f;color:#f3f1eb;border-radius:9px;padding:9px 10px;outline:none;font-size:16px}
 textarea{min-height:90px;resize:vertical;line-height:1.35}
 input[type="range"]{width:100%;accent-color:var(--olive)}
-input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #303634;background:#0d100f;border-radius:9px}
-.file{position:relative;overflow:hidden}
-.file input{position:absolute;inset:0;opacity:0;cursor:pointer}
+input[type="color"]{width:100%;height:44px;padding:2px;border:1px solid #303634;background:#0d100f;border-radius:9px}
+.file-input{position:fixed;width:1px;height:1px;opacity:0;pointer-events:none}
+.file{display:flex;align-items:center;justify-content:center;min-height:44px;border:1px solid var(--line);background:#171b1a;color:#f4f2ed;padding:10px 13px;border-radius:10px;cursor:pointer;touch-action:manipulation;font-weight:700}
 .toggle{display:flex;align-items:center;gap:8px;font-size:12px;color:#c8cdca}
 .toggle input{accent-color:var(--olive)}
 .mini{font-size:11px;color:var(--muted);line-height:1.45}
 .kbd{display:inline-block;border:1px solid #343a37;background:#111413;border-radius:5px;padding:1px 5px;color:#dfe2df}
 @media(max-width:1050px){
+  body{overflow-x:hidden}
   .app{grid-template-columns:1fr}
-  .sidebar{position:relative;height:auto;border-left:0;border-top:1px solid var(--line)}
+  .stage-wrap{padding:calc(12px + env(safe-area-inset-top)) 12px 14px}
+  .toolbar{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .slide-tabs{flex:0 0 auto;flex-wrap:nowrap}
+  .toolbar .spacer{display:none}.toolbar button{flex:0 0 auto}
+  .canvas-shell{width:min(calc(100vw - 24px),620px)}
+  .sidebar{position:relative;height:auto;border-left:0;border-top:1px solid var(--line);padding:16px 14px calc(18px + env(safe-area-inset-bottom))}
+  input[type="range"]{min-height:44px}
 }
 </style>
 </head>
@@ -71,7 +83,7 @@ input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #303634;
     <div class="hint">
       Vedä hiirellä tai sormella <b>otsikkoa</b>, <b>leipätekstiä</b>, <b>korostusviivaa</b> tai <b>Capra-logoa</b>.
       Kuvan rajausta säädetään oikean reunan liu'uilla. Vienti on aina 1080 × 1350 px.
-      <br>Logo on upotettu generaattoriin alkuperäisestä Capra Combat -logotiedostosta; <b>CAPRA NOTES</b> -tekstiä ei käytetä.
+      <br>Logona käytetään virallista Capra Combat -masterkuvaa oikeassa kuvasuhteessa.
     </div>
   </main>
 
@@ -84,7 +96,8 @@ input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #303634;
     <section class="group">
       <h2>Kuva</h2>
       <div class="field">
-        <button class="file" style="width:100%">Vaihda taustakuva<input id="imageUpload" type="file" accept="image/*"></button>
+        <input class="file-input" id="imageUpload" type="file" accept="image/*,.heic,.heif"><label class="file" for="imageUpload">VAIHDA TAUSTAKUVA</label>
+        <div class="mini" id="imageStatus" role="status" aria-live="polite"></div>
       </div>
       <div class="row">
         <div class="field"><label>Kuva X <output id="imageXOut"></output></label><input id="imageX" type="range" min="0" max="100" step="1"></div>
@@ -166,7 +179,7 @@ input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #303634;
     <section class="group">
       <h2>Asetukset</h2>
       <div class="row">
-        <button id="loadConfigBtn" class="file">Lataa JSON<input id="loadConfig" type="file" accept=".json,application/json"></button>
+        <input class="file-input" id="loadConfig" type="file" accept=".json,application/json"><label id="loadConfigBtn" class="file" for="loadConfig">Lataa JSON</label>
         <button id="duplicateSlide">Kopioi dia seuraavaan</button>
       </div>
     </section>
@@ -176,7 +189,7 @@ input[type="color"]{width:100%;height:38px;padding:2px;border:1px solid #303634;
 <script>
 const W=1080,H=1350;
 const initialSlides = [{"title": "4 asiaa,\njotka tekevät\nsinusta paremman\nharjoittelijan.", "body": "", "image": "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=", "imageX": 62, "imageY": 48, "zoom": 1.18, "shade": 0.18, "grad": 0.74, "gradDir": "left", "titleX": 92, "titleY": 430, "titleW": 720, "titleSize": 88, "bodyX": 92, "bodyY": 850, "bodyW": 680, "bodySize": 46, "logoX": 540, "logoY": 1220, "logoSize": 230, "accentX": 92, "accentY": 350, "accentW": 86, "accentH": 4}, {"title": "Älä yritä voittaa\njokaista erää.", "body": "Yritä ratkaista\ntämän päivän ongelma.", "image": "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=", "imageX": 56, "imageY": 53, "zoom": 1.28, "shade": 0.22, "grad": 0.7, "gradDir": "left", "titleX": 72, "titleY": 165, "titleW": 700, "titleSize": 70, "bodyX": 72, "bodyY": 430, "bodyW": 700, "bodySize": 56, "logoX": 540, "logoY": 1215, "logoSize": 210, "accentX": 72, "accentY": 375, "accentW": 58, "accentH": 4}, {"title": "Hakeudu tilanteisiin,\njoissa olet huono.", "body": "Niitä välttelemällä\net kehity.", "image": "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=", "imageX": 65, "imageY": 48, "zoom": 1.2, "shade": 0.18, "grad": 0.66, "gradDir": "left", "titleX": 60, "titleY": 210, "titleW": 650, "titleSize": 62, "bodyX": 60, "bodyY": 420, "bodyW": 610, "bodySize": 54, "logoX": 540, "logoY": 1212, "logoSize": 210, "accentX": 60, "accentY": 120, "accentW": 720, "accentH": 2}, {"title": "Hyvä harjoittelu\nei aina tunnu hyvältä.", "body": "Epäonnistuminen\nkertoo usein siitä,\nettä tehtävä haastaa.", "image": "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=", "imageX": 50, "imageY": 48, "zoom": 1.15, "shade": 0.28, "grad": 0.68, "gradDir": "left", "titleX": 70, "titleY": 220, "titleW": 730, "titleSize": 64, "bodyX": 70, "bodyY": 465, "bodyW": 650, "bodySize": 48, "logoX": 175, "logoY": 1195, "logoSize": 210, "accentX": 70, "accentY": 405, "accentW": 56, "accentH": 4}, {"title": "Kehitys syntyy\nlaadukkaista toistoista.", "body": "Ei yhdestä\ntäydellisestä treenistä.", "image": "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=", "imageX": 53, "imageY": 48, "zoom": 1.16, "shade": 0.2, "grad": 0.66, "gradDir": "left", "titleX": 60, "titleY": 180, "titleW": 770, "titleSize": 66, "bodyX": 60, "bodyY": 440, "bodyW": 700, "bodySize": 57, "logoX": 540, "logoY": 1210, "logoSize": 220, "accentX": 60, "accentY": 655, "accentW": 116, "accentH": 4}];
-const LOGO_DATA = "../peruskurssi-mainos-pro/assets/asset-01-9e479d7f0165.png";
+const LOGO_DATA = "../assets/capra-logo-light.jpeg";
 let slides = structuredClone(initialSlides);
 let current = 0;
 const canvas = document.getElementById('canvas');
@@ -219,4 +232,4 @@ function drawOverlays(s){
   if(s.gradDir==='bottom') g=ctx.createLinearGradient(0,H,0,0);
   g.addColorStop(0,`rgba(0,0,0,${s.grad})`);
   g.addColorStop(.62,`rgba(0,0,0,${s.grad*.38})`);
-  g.addColorStop(1,'rgba
+  g.addColorStop(1,'rgba(0,0,0,0)');
