@@ -1,0 +1,67 @@
+o(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}
+function drawTextCanvas(ctx,e){
+ if(e.bgOpacity){ctx.fillStyle=hexAlpha(e.bg,e.bgOpacity);roundRect(ctx,0,0,e.w,e.h,0);ctx.fill()}
+ const p=e.padding||0,txt=e.uppercase?String(e.text).toUpperCase():String(e.text),font=`${e.weight} ${e.fontSize}px "${e.font}",Arial,sans-serif`;ctx.font=font;ctx.fillStyle=e.color;ctx.textBaseline="top";
+ const lines=wrapLines(ctx,txt,e.w-p*2),lh=e.fontSize*e.lineHeight;let y=p;
+ lines.forEach(l=>{drawSpaced(ctx,l,p,y,e.letter,e.align,e.w-p*2);y+=lh})
+}
+async function drawLogoCanvas(ctx,e){
+ const light=e.variant==="light",olive=e.variant==="olive",im=await loadImage(light?SYMBOL_WHITE:olive?SYMBOL_OLIVE:SYMBOL_BLACK);const sh=e.h,sw=sh*(im.naturalWidth/im.naturalHeight);ctx.drawImage(im,0,0,sw,sh);
+ if(e.style==="lockup"){const start=sw+e.h*.18;ctx.textBaseline="middle";ctx.textAlign="left";ctx.fillStyle=light?C.off:olive?C.olive:C.black;ctx.font=`500 ${e.h*.34}px Inter,Arial`;drawSpaced(ctx,"CAPRA",start,e.h*.34,e.h*.08,"left",e.w-start);ctx.fillStyle=C.olive;ctx.font=`600 ${e.h*.16}px Inter,Arial`;drawSpaced(ctx,"COMBAT",start,e.h*.75,e.h*.09,"left",e.w-start)}
+}
+async function exportCurrent(){
+ const btn=$("#exportBtn"),old=btn.textContent;btn.disabled=true;btn.textContent="Luodaan…";try{const c=await renderExport(),fmt=$("#exportFormat").value,mime=fmt==="jpg"?"image/jpeg":"image/png",q=+$("#jpgQuality").value;downloadData(c.toDataURL(mime,q),`capra-${state.course}-${slug(currentSlide().name)}.${fmt}`)}finally{btn.disabled=false;btn.textContent=old}
+}
+async function exportAll(){
+ const btn=$("#exportAllBtn"),old=btn.textContent;btn.disabled=true;try{
+  if(typeof JSZip!=="undefined"){const zip=new JSZip();for(let i=0;i<state.slides.length;i++){btn.textContent=`Kuva ${i+1}/${state.slides.length}`;const c=await renderExport(i),blob=await new Promise(r=>c.toBlob(r,"image/png"));zip.file(`${String(i+1).padStart(2,"0")}-${slug(state.slides[i].name)}.png`,blob)}zip.file("instagram-caption.txt",$("#captionText").value);zip.file("meta-mainosteksti.txt",`PÄÄTEKSTI\n${$("#adPrimaryText").value}\n\nOTSIKKO\n${$("#adHeadlineText").value}\n\nKUVAUS\n${$("#adDescriptionText").value}`);const out=await zip.generateAsync({type:"blob"});downloadBlob(out,`capra-${state.course}-${state.mode}.zip`)}
+  else{for(let i=0;i<state.slides.length;i++){const c=await renderExport(i);downloadData(c.toDataURL("image/png"),`${String(i+1).padStart(2,"0")}-${slug(state.slides[i].name)}.png`);await new Promise(r=>setTimeout(r,250))}}
+ }finally{btn.disabled=false;btn.textContent=old}
+}
+function slug(s){return String(s).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")}
+function downloadData(data,name){const a=document.createElement("a");a.href=data;a.download=name;a.click()}
+function downloadBlob(blob,name){const u=URL.createObjectURL(blob),a=document.createElement("a");a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)}
+
+function saveProject(){const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});downloadBlob(blob,`capra-peruskurssi-projekti-${state.course}.json`)}
+function openProject(file){const r=new FileReader();r.onload=()=>{try{pushHistory();state=JSON.parse(r.result);ensureState();syncAll();toast("Projekti avattu")}catch(e){toast("Projektitiedosto ei kelpaa")}};r.readAsText(file)}
+function autosave(){localStorage.setItem("capraCourseAdStudioV1",JSON.stringify(state))}
+function resetProject(){if(!confirm("Palautetaanko generaattori? Kaikki nykyiset muutokset poistuvat."))return;localStorage.removeItem("capraCourseAdStudioV1");location.reload()}
+
+function switchMode(mode){
+ state.mode=mode;$$(".modebtn").forEach(b=>b.classList.toggle("active",b.dataset.mode===mode));$("#singleLibrary").style.display=mode==="single"?"block":"none";$("#carouselLibrary").style.display=mode==="carousel"?"block":"none";
+ if(mode==="single"){if(state.slides.length!==1)state.slides=[singleBuilders[state.activeTemplate]()];state.activeSlide=0}
+ else{if(state.slides.length===1)state.slides=buildDeck(state.activeDeck)}
+ state.selected=null;state.backgroundSelected=false;syncAll()
+}
+function syncAll(){
+ ensureState();renderTemplateLibraries();renderSlideList();renderContentFields();renderStage();renderElementEditor();generateCopy();$("#courseSelect").value=state.course;autosave()
+}
+
+function bindUi(){
+ $$(".modebtn").forEach(b=>b.onclick=()=>switchMode(b.dataset.mode));
+ $("#courseSelect").onchange=e=>{pushHistory();state.course=e.target.value;if(state.mode==="single")applySingleTemplate(state.activeTemplate,true);else applyDeck(state.activeDeck,true);renderContentFields()};
+ $("#undoBtn").onclick=undo;$("#redoBtn").onclick=redo;
+ $("#safeBtn").onclick=()=>{$("#stage").dataset.safe=$("#stage").dataset.safe==="1"?"0":"1";renderStage()};
+ $("#gridBtn").onclick=()=>{$("#stage").dataset.grid=$("#stage").dataset.grid==="1"?"0":"1";renderStage()};
+ $("#uploadPhotoBtn").onclick=()=>$("#photoInput").click();$("#photoInput").onchange=e=>uploadPhoto(e.target.files[0]);
+ $("#selectBackgroundBtn").onclick=()=>{state.backgroundSelected=true;state.selected=null;renderStage();renderElementEditor();toast("Vedä kuvaa esikatselussa")};
+ $("#fitPhotoBtn").onclick=fitPhoto;$("#addTextBtn").onclick=addText;$("#addShapeBtn").onclick=addShape;$("#addLineBtn").onclick=addLine;$("#addLogoBtn").onclick=addLogo;
+ $("#refreshContentBtn").onclick=refreshRoles;$("#regenCopyBtn").onclick=generateCopy;
+ $("#exportBtn").onclick=exportCurrent;$("#exportAllBtn").onclick=exportAll;
+ $("#saveProjectBtn").onclick=saveProject;$("#downloadProjectBtn").onclick=saveProject;$("#openProjectBtn").onclick=()=>$("#projectInput").click();$("#projectInput").onchange=e=>openProject(e.target.files[0]);
+ $("#resetProjectBtn").onclick=resetProject;$("#duplicateSlideBtn").onclick=()=>{pushHistory();const n=clone(currentSlide());n.id=uid();n.name+=" kopio";n.elements.forEach(e=>e.id=uid());state.slides.splice(state.activeSlide+1,0,n);state.activeSlide++;syncAll()};
+ $("#addSlideBtn").onclick=()=>{pushHistory();state.slides.push(baseSlide("Tyhjä sivu",C.black));state.activeSlide=state.slides.length-1;syncAll()};
+ $$(".tab").forEach(b=>b.onclick=()=>{$$(".tab").forEach(x=>x.classList.remove("active"));$$(".panel").forEach(x=>x.classList.remove("active"));b.classList.add("active");$("#panel-"+b.dataset.tab).classList.add("active")});
+ $$("[data-copy]").forEach(b=>b.onclick=()=>{navigator.clipboard.writeText($("#"+b.dataset.copy).value);toast("Kopioitu")});
+ $("#captionText").oninput=e=>state.copy.caption=e.target.value;$("#adPrimaryText").oninput=e=>state.copy.primary=e.target.value;$("#adHeadlineText").oninput=e=>state.copy.headline=e.target.value;$("#adDescriptionText").oninput=e=>state.copy.description=e.target.value;
+ window.addEventListener("resize",renderStage);
+ window.addEventListener("keydown",e=>{if(["INPUT","TEXTAREA","SELECT"].includes(document.activeElement.tagName))return;const el=findEl(state.selected);if((e.key==="Delete"||e.key==="Backspace")&&el){deleteElement();e.preventDefault()}if(el&&["ArrowLeft","ArrowRight","ArrowUp","ArrowDown"].includes(e.key)){pushHistory();const n=e.shiftKey?10:1;if(e.key==="ArrowLeft")el.x-=n;if(e.key==="ArrowRight")el.x+=n;if(e.key==="ArrowUp")el.y-=n;if(e.key==="ArrowDown")el.y+=n;syncAll();e.preventDefault()}if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="z"){e.shiftKey?redo():undo();e.preventDefault()}});
+}
+bindContentFields();bindElementEditor();bindUi();
+const saved=localStorage.getItem("capraCourseAdStudioV1");
+if(saved){try{state=JSON.parse(saved);ensureState()}catch(e){}}
+if(!state.slides.length)state.slides=[templateHero()];
+switchMode(state.mode||"single");
+</script>
+</body>
+</html>
