@@ -1,0 +1,199 @@
+(state.theme) themeSelect.value = state.theme;
+          if (state.accent) accentColor.value = state.accent;
+          if (state.typeScale) typeScale.value = state.typeScale;
+          if (state.previewZoom) previewZoom.value = state.previewZoom;
+          if (state.photoPosition !== undefined) photoPosition.value = state.photoPosition;
+          if (state.photoData) photoData = state.photoData;
+          if (state.heroBackgroundDarkness !== undefined) heroBackgroundDarkness.value = state.heroBackgroundDarkness;
+          if (state.heroBackgroundPosition !== undefined) heroBackgroundPosition.value = state.heroBackgroundPosition;
+          if (state.heroBackgroundData) heroBackgroundData = state.heroBackgroundData;
+          if (state.coachPhotoPosition !== undefined) coachPhotoPosition.value = state.coachPhotoPosition;
+          if (state.coachPhotoData) coachPhotoData = state.coachPhotoData;
+          if (state.extras) extraElements.innerHTML = state.extras;
+        } catch (error) {
+          updateStatus("Luonnosta ei voitu avata");
+        }
+      }
+
+      function resizeImage(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onerror = reject;
+          reader.onload = () => {
+            const image = new Image();
+            image.onerror = reject;
+            image.onload = () => {
+              const max = 1600;
+              const scale = Math.min(1, max / Math.max(image.width, image.height));
+              const canvas = document.createElement("canvas");
+              canvas.width = Math.round(image.width * scale);
+              canvas.height = Math.round(image.height * scale);
+              canvas.getContext("2d").drawImage(image, 0, 0, canvas.width, canvas.height);
+              resolve(canvas.toDataURL("image/jpeg", 0.84));
+            };
+            image.src = reader.result;
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+
+      function addTextCard() {
+        const card = document.createElement("div");
+        card.className = "custom-card";
+        card.innerHTML = '<button class="element-delete" type="button" aria-label="Poista elementti">×</button><p contenteditable="true">Kirjoita tähän oma lisätieto. Voit muokata tätä tekstiä suoraan esitteessä.</p>';
+        extraElements.appendChild(card);
+        bindCustomElements();
+        card.querySelector("p").focus();
+        saveDraft();
+      }
+
+      function addDivider() {
+        const divider = document.createElement("div");
+        divider.className = "custom-divider";
+        divider.innerHTML = '<button class="element-delete" type="button" aria-label="Poista elementti">×</button>';
+        extraElements.appendChild(divider);
+        bindCustomElements();
+        saveDraft();
+      }
+
+      function syncFormAttributes() {
+        document.querySelectorAll("select option").forEach((option) => option.removeAttribute("selected"));
+        themeSelect.querySelector(`option[value="${themeSelect.value}"]`)?.setAttribute("selected", "selected");
+        toggleInputs().forEach((input) => {
+          if (input.checked) input.setAttribute("checked", "checked");
+          else input.removeAttribute("checked");
+        });
+        accentColor.setAttribute("value", accentColor.value);
+        typeScale.setAttribute("value", typeScale.value);
+        previewZoom.setAttribute("value", previewZoom.value);
+        photoPosition.setAttribute("value", photoPosition.value);
+        heroBackgroundDarkness.setAttribute("value", heroBackgroundDarkness.value);
+        heroBackgroundPosition.setAttribute("value", heroBackgroundPosition.value);
+        coachPhotoPosition.setAttribute("value", coachPhotoPosition.value);
+      }
+
+      function downloadCurrentHtml() {
+        syncFormAttributes();
+        const source = "<!doctype html>\n" + document.documentElement.outerHTML;
+        const blob = new Blob([source], { type: "text/html;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "capra-junioriesite-muokattu.html";
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      }
+
+      editableElements().forEach(bindEditable);
+      loadDraft();
+      bindCustomElements();
+      applyControls();
+
+      [themeSelect, accentColor, typeScale, previewZoom, photoPosition, heroBackgroundDarkness, heroBackgroundPosition, coachPhotoPosition].forEach((control) => {
+        control.addEventListener("input", () => { applyControls(); saveDraft(); });
+        control.addEventListener("change", () => { applyControls(); saveDraft(); });
+      });
+
+      toggleInputs().forEach((input) => {
+        input.addEventListener("change", () => { applyControls(); saveDraft(); });
+      });
+
+      document.getElementById("photoUpload").addEventListener("change", async (event) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+        updateStatus("Kuvaa käsitellään…");
+        try {
+          photoData = await resizeImage(file);
+          applyPhoto();
+          saveDraft();
+        } catch (error) {
+          updateStatus("Kuvan lisääminen epäonnistui");
+        }
+      });
+
+      document.getElementById("removePhoto").addEventListener("click", () => {
+        photoData = "";
+        document.getElementById("photoUpload").value = "";
+        applyPhoto();
+        saveDraft();
+      });
+
+      document.getElementById("fitPhoto").addEventListener("click", () => {
+        photoPosition.value = 50;
+        applyPhoto();
+        saveDraft();
+      });
+
+      document.getElementById("heroBackgroundUpload").addEventListener("change", async (event) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+        updateStatus("Hero-taustaa käsitellään…");
+        try {
+          heroBackgroundData = await resizeImage(file);
+          applyHeroBackground();
+          saveDraft();
+        } catch (error) {
+          updateStatus("Hero-taustakuvan lisääminen epäonnistui");
+        }
+      });
+
+      document.getElementById("removeHeroBackground").addEventListener("click", () => {
+        heroBackgroundData = "";
+        document.getElementById("heroBackgroundUpload").value = "";
+        applyHeroBackground();
+        saveDraft();
+      });
+
+      document.getElementById("centerHeroBackground").addEventListener("click", () => {
+        heroBackgroundPosition.value = 50;
+        applyHeroBackground();
+        saveDraft();
+      });
+
+      document.getElementById("coachPhotoUpload").addEventListener("change", async (event) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+        updateStatus("Valmentajakuvaa käsitellään…");
+        try {
+          coachPhotoData = await resizeImage(file);
+          applyCoachPhoto();
+          saveDraft();
+        } catch (error) {
+          updateStatus("Valmentajakuvan lisääminen epäonnistui");
+        }
+      });
+
+      document.getElementById("removeCoachPhoto").addEventListener("click", () => {
+        coachPhotoData = "";
+        document.getElementById("coachPhotoUpload").value = "";
+        applyCoachPhoto();
+        saveDraft();
+      });
+
+      document.getElementById("centerCoachPhoto").addEventListener("click", () => {
+        coachPhotoPosition.value = 50;
+        applyCoachPhoto();
+        saveDraft();
+      });
+
+      document.getElementById("addTextCard").addEventListener("click", addTextCard);
+      document.getElementById("addDivider").addEventListener("click", addDivider);
+      document.getElementById("downloadHtml").addEventListener("click", downloadCurrentHtml);
+      document.getElementById("savePdf").addEventListener("click", () => {
+        document.activeElement?.blur();
+        window.print();
+      });
+
+      document.getElementById("resetEditor").addEventListener("click", () => {
+        const confirmed = window.confirm("Palautetaanko kaikki tekstit ja asetukset alkuperäisiksi? Tätä ei voi perua.");
+        if (!confirmed) return;
+        localStorage.removeItem(STORAGE_KEY);
+        window.location.reload();
+      });
+    })();
+  </script>
+
+
+</body></html>
