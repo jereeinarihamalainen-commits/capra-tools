@@ -1,0 +1,148 @@
+"side-button" id="removeHeroBackground" type="button">Poista tausta</button>
+            <button class="side-button" id="centerHeroBackground" type="button">Keskitä</button>
+          </div>
+        </section>
+
+        <section class="control-group">
+          <h3>Jere Hämäläinen · kuva</h3>
+          <div class="field">
+            <label for="coachPhotoUpload">Lisää valmentajakuva</label>
+            <input id="coachPhotoUpload" type="file" accept="image/*">
+          </div>
+          <div class="field">
+            <label for="coachPhotoPosition">Kuvan pystysijainti</label>
+            <div class="range-row">
+              <input id="coachPhotoPosition" type="range" min="0" max="100" value="50">
+              <span class="range-value" id="coachPhotoPositionValue">50 %</span>
+            </div>
+          </div>
+          <div class="photo-actions">
+            <button class="side-button" id="removeCoachPhoto" type="button">Poista kuva</button>
+            <button class="side-button" id="centerCoachPhoto" type="button">Keskitä</button>
+          </div>
+        </section>
+
+        <section class="control-group">
+          <h3>Näytä elementit</h3>
+          <div class="toggle-list">
+            <label class="toggle-row">Ylätunniste <input type="checkbox" data-target="flyerHeader" checked="checked"></label>
+            <label class="toggle-row">Kuvapaikka <input type="checkbox" data-target="heroVisual" checked="checked"></label>
+            <label class="toggle-row">Pikatiedot <input type="checkbox" data-target="factStrip" checked="checked"></label>
+            <label class="toggle-row">Harjoitusten sisältö <input type="checkbox" data-target="benefitsSection" checked="checked"></label>
+            <label class="toggle-row">Vanhempien tiedot <input type="checkbox" data-target="parentSection" checked="checked"></label>
+            <label class="toggle-row">Valmentaja <input type="checkbox" data-target="coachSection" checked="checked"></label>
+            <label class="toggle-row">Ilmoittautuminen <input type="checkbox" data-target="ctaSection" checked="checked"></label>
+            <label class="toggle-row">Alatunniste <input type="checkbox" data-target="flyerFooter" checked="checked"></label>
+          </div>
+        </section>
+
+        <section class="control-group">
+          <h3>Lisää elementti</h3>
+          <div class="stack-buttons">
+            <button class="side-button" id="addTextCard" type="button">+ Tekstikortti</button>
+            <button class="side-button" id="addDivider" type="button">+ Erotinviiva</button>
+          </div>
+        </section>
+
+        <div class="help-card">
+          <strong>PDF-tallennus</strong>
+          <ol>
+            <li>Paina “Tallenna PDF”.</li>
+            <li>Valitse tulostimeksi “Tallenna PDF-muodossa”.</li>
+            <li>Paperikoko A4, reunukset “Ei mitään”.</li>
+            <li>Ota taustagrafiikka käyttöön, jos selain kysyy.</li>
+          </ol>
+        </div>
+      </aside>
+
+      <main class="workspace">
+        <div class="workspace-head">
+          <span class="edit-hint">Katkoviivalla näkyviä tekstejä voi muokata</span>
+          <span>A4 · 210 × 297 mm</span>
+        </div>
+
+        <div class="sheet-stage">
+          <article class="brochure" id="brochure" data-theme="olive" aria-label="Capra Combatin junioritoiminnan esite" style="--accent: #c8ae4d; --type-scale: 1; --preview-zoom: 0.9;">
+            <header class="flyer-header" id="flyerHeader">
+              <div class="flyer-brand">
+                <img src="../assets/capra-logo.png" alt="Capra Combat">
+                <span><b>CAPRA</b><small>COMBAT · KUOPIO</small></span>
+              </div>
+              <div class="header-label" contenteditable="true" data-edit-key="headerLabel">Junioritoiminta<br>Syksy 2026</div>
+            </header>
+
+            <section class="flyer-hero" id="flyerHero">
+              <div class="hero-copy">
+                <p class="flyer-kicker" contenteditable="true" data-edit-key="heroKicker">Uusi junioriryhmä · syksy 2026</p>
+                <h1 contenteditable="true" data-edit-key="heroTitle">Vahva alku.<br><em>Hyvässä porukassa.</em></h1>
+                <p class="hero-lead" contenteditable="true" data-edit-key="heroLead">Brasilialaista jujutsua ja lukkopainia junioreille. Ketteryyttä, voimaa, kamppailutaitoja ja oppimista turvallisessa harjoitusympäristössä.</p>
+              </div>
+
+              <div class="hero-side">
+                <div class="hero-visual" id="heroVisual" style="background-position: center 50%;">
+                  <span class="photo-placeholder">Lisää halutessasi oma kuva</span>
+                </div>
+                <div class="date-card">
+                  <p class="date-label" contenteditable="true" data-edit-key="dateLabel">Kausi alkaa</p>
+                  <p class="date-main" contenteditable="true" data-edit-key="dateMain">17.9</p>
+                  <div class="date-details">
+                    <span contenteditable="true" data-edit-key="dateDay">Torstaisin 16.30–17.45<br>Lauantaisin 11:00-12:00<br><br></span>
+                    <span contenteditable="true" data-edit-key="datePrice">99 € / syyskausi</span>
+                    <span contenteditable="true" data-edit-key="dateEnd">Joulukuun loppuun</span>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="fact-strip" id="factStrip" aria-label="Junioriryhmän pikatiedot">
+              <div class="fact"><span>01</span><small contenteditable="true" data-edit-key="fact1Label">Laji</small><strong contenteditable="true" data-edit-key="fact1Value">BJJ &amp; lukkopaini</strong></div>
+              <div class="fact"><span>02</span><small contenteditable="true" data-edit-key="fact2Label">Päivä</small><strong contenteditable="true" data-edit-key="fact2Value">Torstai</strong></div>
+              <div class="fact"><span>03</span><small contenteditable="true" data-edit-key="fact3Label">Aika</small><strong contenteditable="true" data-edit-key="fact3Value">16.30–17.45</strong></div>
+              <div class="fact"><span>04</span><small contenteditable="true" data-edit-key="fact4Label">Kausi</small><strong contenteditable="true" data-edit-key="fact4Value">99 €</strong></div>
+            </section>
+
+            <div class="flyer-body">
+              <section id="benefitsSection">
+                <h2 class="section-heading" data-index="01" contenteditable="true" data-edit-key="benefitsTitle">Mitä harjoituksissa tehdään?</h2>
+                <div class="benefit-grid">
+                  <article class="benefit">
+                    <span class="benefit-number">01</span>
+                    <h3 contenteditable="true" data-edit-key="benefit1Title">Liikutaan monipuolisesti</h3>
+                    <p contenteditable="true" data-edit-key="benefit1Text">Harjoittelemme kehonhallintaa, tasapainoa, voimaa ja nopeutta.</p>
+                  </article>
+                  <article class="benefit">
+                    <span class="benefit-number">02</span>
+                    <h3 contenteditable="true" data-edit-key="benefit2Title">Opitaan lajitaitoja</h3>
+                    <p contenteditable="true" data-edit-key="benefit2Text">BJJ:n ja lukkopainin perusteita opetellaan vaiheittain ja junioreille sopivasti.</p>
+                  </article>
+                  <article class="benefit">
+                    <span class="benefit-number">03</span>
+                    <h3 contenteditable="true" data-edit-key="benefit3Title">Toimitaan yhdessä</h3>
+                    <p contenteditable="true" data-edit-key="benefit3Text">Opimme huomioimaan harjoituskaverin, kuuntelemaan ohjeita ja toimimaan ryhmänä.</p>
+                  </article>
+                </div>
+              </section>
+
+              <section id="parentSection">
+                <h2 class="section-heading" data-index="02" contenteditable="true" data-edit-key="parentTitle">Selkeä info vanhemmille</h2>
+                <div class="parent-grid">
+                  <article class="info-card dark">
+                    <p class="info-card-title" contenteditable="true" data-edit-key="scheduleTitle">Aika ja kausi</p>
+                    <div class="schedule-list">
+                      <div class="schedule-item"><span contenteditable="true" data-edit-key="schedule1Label">Ensimmäinen harjoitus</span><strong contenteditable="true" data-edit-key="schedule1Value">17.9.2026</strong></div>
+                      <div class="schedule-item"><span contenteditable="true" data-edit-key="schedule2Label">Harjoitukset</span><strong contenteditable="true" data-edit-key="schedule2Value">To 16.30–17.45<br>La 11:00-12:00</strong></div>
+                      <div class="schedule-item"><span contenteditable="true" data-edit-key="schedule3Label">Kausi</span><strong contenteditable="true" data-edit-key="schedule3Value">Joulukuun loppuun</strong></div>
+                      <div class="schedule-item price"><span contenteditable="true" data-edit-key="schedule4Label">Kausimaksu</span><strong contenteditable="true" data-edit-key="schedule4Value">99 €</strong></div>
+                    </div>
+                  </article>
+
+                  <article class="info-card">
+                    <p class="info-card-title" contenteditable="true" data-edit-key="gearTitle">Mukaan harjoituksiin</p>
+                    <ul class="gear-list">
+                      <li contenteditable="true" data-edit-key="gear1"><span><strong>Sisäliikuntavaatteet</strong>Joustavat ja mukavat.</span></li>
+                      <li contenteditable="true" data-edit-key="gear2"><span><strong>Pyyhe</strong>Jalkojen pesuun.</span></li>
+                      <li contenteditable="true" data-edit-key="gear3"><span><strong>Sisäkengät</strong>Tatamille siirtymiseen.</span></li>
+                      <li contenteditable="true" data-edit-key="gear4"><span><strong>Hammassuojat</strong>Suositeltavat.</span></li>
+                    </ul>
+                  </article>
+                </div
