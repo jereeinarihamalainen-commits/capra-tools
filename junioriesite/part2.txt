@@ -1,0 +1,425 @@
+   letter-spacing: 0.16em;
+      text-align: right;
+      text-transform: uppercase;
+    }
+
+    .flyer-hero {
+      --hero-bg-image: none;
+      --hero-bg-darkness: 0.72;
+      --hero-bg-position: 50%;
+      min-height: 77mm;
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(54mm, 0.72fr);
+      background: var(--ink);
+      color: var(--light);
+    }
+
+    .flyer-hero::before {
+      position: absolute;
+      z-index: -2;
+      inset: 0;
+      background-image: var(--hero-bg-image);
+      background-position: center var(--hero-bg-position);
+      background-size: cover;
+      background-repeat: no-repeat;
+      content: "";
+    }
+
+    .flyer-hero::after {
+      position: absolute;
+      z-index: -1;
+      inset: 0;
+      background: rgba(16, 17, 14, var(--hero-bg-darkness));
+      content: "";
+      pointer-events: none;
+    }
+
+    .hero-copy {
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      padding: 11mm 9mm 10mm 12mm;
+    }
+
+    .hero-copy::before {
+      position: absolute;
+      z-index: -2;
+      inset: 0;
+      opacity: 0.07;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.9) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.9) 1px, transparent 1px);
+      background-size: 14mm 14mm;
+      content: "";
+    }
+
+    .hero-copy::after {
+      position: absolute;
+      z-index: -1;
+      right: -10mm;
+      bottom: -30mm;
+      color: rgba(104, 114, 74, 0.16);
+      content: "C";
+      font-size: 33rem;
+      font-weight: 800;
+      line-height: 0.7;
+      transform: rotate(-7deg);
+    }
+
+    .flyer-kicker {
+      display: flex;
+      align-items: center;
+      gap: 3mm;
+      margin: 0 0 7mm;
+      color: #c9c8c1;
+      font-size: 0.8rem;
+      font-weight: 900;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    .flyer-kicker::before {
+      width: 9mm;
+      height: 1mm;
+      background: var(--accent);
+      content: "";
+    }
+
+    .flyer-hero h1 {
+      max-width: 116mm;
+      margin: 0;
+      font-size: 4.65rem;
+      font-weight: 740;
+      letter-spacing: -0.05em;
+      line-height: 0.98;
+    }
+
+    .flyer-hero h1 em { color: var(--secondary-light); font-style: normal; }
+
+    .hero-lead {
+      max-width: 109mm;
+      margin: 7mm 0 0;
+      color: #d3d2cb;
+      font-size: 1.42rem;
+      line-height: 1.5;
+    }
+
+    .hero-side {
+      min-width: 0;
+      display: grid;
+      grid-template-rows: 35mm 1fr;
+      border-left: 1px solid rgba(250,249,245,0.16);
+    }
+
+    .hero-visual {
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      background: var(--secondary);
+      background-position: center center;
+      background-size: cover;
+    }
+
+    .hero-visual::before {
+      position: absolute;
+      z-index: -2;
+      inset: 0;
+      opacity: 0.14;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.8) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.8) 1px, transparent 1px);
+      background-size: 11mm 11mm;
+      content: "";
+    }
+
+    .hero-visual::after {
+      position: absolute;
+      z-index: -1;
+      right: -3mm;
+      bottom: -12mm;
+      color: rgba(250,249,245,0.15);
+      content: "JUNIORIT";
+      font-size: 4rem;
+      font-weight: 900;
+      letter-spacing: -0.06em;
+      line-height: 0.9;
+      transform: rotate(-90deg);
+      transform-origin: right bottom;
+    }
+
+    .hero-visual.has-photo::before {
+      z-index: 0;
+      opacity: 1;
+      background: linear-gradient(180deg, rgba(16,17,14,0.04), rgba(16,17,14,0.5));
+    }
+
+    .hero-visual.has-photo::after { display: none; }
+
+    .photo-placeholder {
+      position: absolute;
+      right: 5mm;
+      bottom: 4mm;
+      left: 5mm;
+      color: rgba(250,249,245,0.72);
+      font-size: 0.66rem;
+      font-weight: 900;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    .hero-visual.has-photo .photo-placeholder { display: none; }
+
+    .date-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 3mm;
+      padding: 6mm;
+      background: var(--paper);
+      color: var(--ink);
+    }
+
+    .date-card::before {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 18mm;
+      height: 1.2mm;
+      background: var(--accent);
+      content: "";
+    }
+
+    .date-label {
+      margin: 0;
+      color: var(--secondary);
+      font-size: 0.7rem;
+      font-weight: 900;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .date-main {
+      margin: 0;
+      font-size: 4rem;
+      font-weight: 740;
+      letter-spacing: -0.06em;
+      line-height: 0.86;
+    }
+
+    .date-details {
+      display: grid;
+      gap: 1.8mm;
+      padding-top: 3mm;
+      border-top: 1px solid var(--line);
+      font-size: 0.86rem;
+      font-weight: 800;
+      line-height: 1.25;
+    }
+
+    .fact-strip {
+      min-height: 21mm;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      background: var(--secondary);
+      color: var(--light);
+    }
+
+    .fact {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 1.2mm;
+      padding: 3.5mm 5mm;
+      border-right: 1px solid rgba(250,249,245,0.18);
+    }
+
+    .fact:last-child { border-right: 0; }
+    .fact span { color: rgba(250,249,245,0.55); font-size: 0.58rem; font-weight: 900; letter-spacing: 0.15em; }
+    .fact small { color: #d6dac8; font-size: 0.66rem; font-weight: 800; letter-spacing: 0.11em; text-transform: uppercase; }
+    .fact strong { font-size: 1.15rem; line-height: 1.1; }
+
+    .flyer-body {
+      display: grid;
+      gap: 5mm;
+      padding: 8mm 12mm 7mm;
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: center;
+      gap: 3mm;
+      margin: 0 0 4mm;
+      font-size: 0.72rem;
+      font-weight: 900;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .section-heading::before {
+      display: grid;
+      width: 6mm;
+      height: 6mm;
+      place-items: center;
+      border: 1px solid var(--line);
+      color: var(--secondary);
+      content: attr(data-index);
+      font-size: 0.58rem;
+    }
+
+    .benefit-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .benefit {
+      min-height: 35mm;
+      padding: 4mm 5mm 4mm 0;
+      border-right: 1px solid var(--line);
+    }
+
+    .benefit + .benefit { padding-left: 5mm; }
+    .benefit:last-child { padding-right: 0; border-right: 0; }
+
+    .benefit-number {
+      color: var(--accent);
+      font-size: 0.66rem;
+      font-weight: 900;
+      letter-spacing: 0.13em;
+    }
+
+    .benefit h3 {
+      margin: 5mm 0 2mm;
+      font-size: 1.45rem;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+    }
+
+    .benefit p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.83rem;
+      line-height: 1.5;
+    }
+
+    .parent-grid {
+      display: grid;
+      grid-template-columns: 0.92fr 1.08fr;
+      gap: 4mm;
+    }
+
+    .info-card {
+      min-height: 48mm;
+      padding: 5mm;
+      border: 1px solid var(--line);
+      background: rgba(250,249,245,0.42);
+    }
+
+    .info-card.dark {
+      border-color: transparent;
+      background: var(--ink);
+      color: var(--light);
+    }
+
+    .info-card-title {
+      margin: 0 0 3mm;
+      color: var(--secondary);
+      font-size: 0.7rem;
+      font-weight: 900;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    .dark .info-card-title { color: var(--accent); }
+
+    .schedule-list { display: grid; }
+
+    .schedule-item {
+      min-height: 7.2mm;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 4mm;
+      border-top: 1px solid rgba(250,249,245,0.16);
+    }
+
+    .schedule-item span { color: #aaa9a2; font-size: 0.68rem; font-weight: 800; text-transform: uppercase; }
+    .schedule-item strong { font-size: 0.84rem; text-align: right; }
+    .schedule-item.price { margin-top: 1.5mm; padding: 1.5mm 2.5mm; border: 0; background: var(--accent); color: var(--ink); }
+    .schedule-item.price span { color: var(--ink); }
+    .schedule-item.price strong { font-size: 1.2rem; }
+
+    .gear-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2.5mm 4mm;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .gear-list li {
+      min-height: 16mm;
+      display: grid;
+      grid-template-columns: 6mm 1fr;
+      gap: 2.5mm;
+      align-items: start;
+      padding-top: 2.5mm;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.35;
+    }
+
+    .gear-list li::before {
+      display: grid;
+      width: 5.5mm;
+      height: 5.5mm;
+      place-items: center;
+      border: 1px solid var(--line);
+      color: var(--secondary);
+      content: "✓";
+      font-size: 0.72rem;
+      font-weight: 900;
+    }
+
+    .gear-list strong { display: block; color: var(--ink); font-size: 0.84rem; }
+
+    .coach-card {
+      display: grid;
+      grid-template-columns: 35mm 1fr;
+      min-height: 31mm;
+      border: 1px solid var(--line);
+      background: rgba(250,249,245,0.42);
+    }
+
+    .coach-monogram {
+      position: relative;
+      isolation: isolate;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      background: var(--secondary);
+      color: var(--light);
+      font-size: 3rem;
+      font-weight: 740;
+      letter-spacing: -0.08em;
+    }
+
+    .coach-monogram::after {
+      position: absolute;
+      z-index: -1;
+      inset: 0;
+      opacity: 0.12;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.9) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.9) 1px, transparent 1px);
+      background-size: 9mm 9mm;
+      content: "";
+    }
+
