@@ -1,0 +1,216 @@
+>
+              </section>
+
+              <section id="coachSection">
+                <h2 class="section-heading" data-index="03" contenteditable="true" data-edit-key="coachSectionTitle">Vastuullinen ja kokenut valmennus</h2>
+                <article class="coach-card">
+                  <div class="coach-monogram" id="coachPhoto" contenteditable="true" data-edit-key="coachMonogram">JH</div>
+                  <div class="coach-copy">
+                    <div>
+                      <h3 contenteditable="true" data-edit-key="coachName">Jere Hämäläinen</h3>
+                      <p class="coach-role" contenteditable="true" data-edit-key="coachRole">Junioreiden päävalmentaja</p>
+                    </div>
+                    <p class="coach-description" contenteditable="true" data-edit-key="coachText">Jerellä on laaja yli 10 vuoden kokemus lajista, kilpailemisesta ja valmentamisesta. Hänellä on myös kokemusta lasten erityisryhmien valmentamisesta. Valmennuksessa korostuvat selkeys, turvallisuus ja jokaisen lapsen yksilöllinen kohtaaminen.</p>
+                  </div>
+                </article>
+              </section>
+
+              <div class="extra-elements" id="extraElements"></div>
+
+              <section class="cta-band" id="ctaSection">
+                <div>
+                  <h3 contenteditable="true" data-edit-key="ctaTitle">Tervetuloa mukaan Capra Junioreihin.</h3>
+                  <p contenteditable="true" data-edit-key="ctaText">Ilmoittautumiset sähköpostitse. Maksuohjeet lähetetään erikseen.</p>
+                </div>
+                <div class="cta-contact">
+                  <strong contenteditable="true" data-edit-key="ctaEmail">info@capracombat.fi</strong>
+                  <span contenteditable="true" data-edit-key="ctaWebsite">www.capracombat.fi/juniorit</span>
+                </div>
+              </section>
+            </div>
+
+            <footer class="flyer-footer" id="flyerFooter">
+              <span contenteditable="true" data-edit-key="footerLeft">Capra Combat · Kuopio</span>
+              <strong contenteditable="true" data-edit-key="footerCenter">Paikka kaikille. Polku huipulle.</strong>
+              <span contenteditable="true" data-edit-key="footerRight">Juniorit 2026</span>
+            </footer>
+          </article>
+        </div>
+
+        <p class="print-note">Vinkki: esite on suunniteltu yhdelle A4-sivulle. Jos lisäät paljon tekstiä tai omia elementtejä, pienennä tekstien kokoa sivupaneelista ennen PDF-tallennusta.</p>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const STORAGE_KEY = "capra-junioriesite-editori-v1";
+      const brochure = document.getElementById("brochure");
+      const flyerHero = document.getElementById("flyerHero");
+      const heroVisual = document.getElementById("heroVisual");
+      const coachPhoto = document.getElementById("coachPhoto");
+      const extraElements = document.getElementById("extraElements");
+      const saveStatus = document.getElementById("saveStatus");
+      const themeSelect = document.getElementById("themeSelect");
+      const accentColor = document.getElementById("accentColor");
+      const typeScale = document.getElementById("typeScale");
+      const previewZoom = document.getElementById("previewZoom");
+      const photoPosition = document.getElementById("photoPosition");
+      const photoPositionValue = document.getElementById("photoPositionValue");
+      const heroBackgroundDarkness = document.getElementById("heroBackgroundDarkness");
+      const heroBackgroundDarknessValue = document.getElementById("heroBackgroundDarknessValue");
+      const heroBackgroundPosition = document.getElementById("heroBackgroundPosition");
+      const heroBackgroundPositionValue = document.getElementById("heroBackgroundPositionValue");
+      const coachPhotoPosition = document.getElementById("coachPhotoPosition");
+      const coachPhotoPositionValue = document.getElementById("coachPhotoPositionValue");
+      const typeScaleValue = document.getElementById("typeScaleValue");
+      const previewZoomValue = document.getElementById("previewZoomValue");
+      function cssUrlValue(value) {
+        const match = String(value || "").match(/^url\(["']?(.*?)["']?\)$/);
+        return match ? match[1] : "";
+      }
+
+      let photoData = heroVisual.dataset.photoImage || cssUrlValue(heroVisual.style.backgroundImage);
+      let heroBackgroundData = flyerHero.dataset.backgroundImage || "";
+      let coachPhotoData = coachPhoto.dataset.photoImage || cssUrlValue(coachPhoto.style.backgroundImage);
+      let saveTimer = null;
+
+      const editableElements = () => [...document.querySelectorAll("[data-edit-key]")];
+      const toggleInputs = () => [...document.querySelectorAll("input[data-target]")];
+
+      function stateFromEditor() {
+        const text = {};
+        editableElements().forEach((element) => { text[element.dataset.editKey] = element.innerHTML; });
+
+        const visibility = {};
+        toggleInputs().forEach((input) => { visibility[input.dataset.target] = input.checked; });
+
+        return {
+          text,
+          visibility,
+          theme: themeSelect.value,
+          accent: accentColor.value,
+          typeScale: Number(typeScale.value),
+          previewZoom: Number(previewZoom.value),
+          photoPosition: Number(photoPosition.value),
+          photoData,
+          heroBackgroundDarkness: Number(heroBackgroundDarkness.value),
+          heroBackgroundPosition: Number(heroBackgroundPosition.value),
+          heroBackgroundData,
+          coachPhotoPosition: Number(coachPhotoPosition.value),
+          coachPhotoData,
+          extras: extraElements.innerHTML
+        };
+      }
+
+      function updateStatus(message = "Luonnos tallennettu") {
+        saveStatus.textContent = message;
+      }
+
+      function saveDraft() {
+        clearTimeout(saveTimer);
+        updateStatus("Tallennetaan…");
+        saveTimer = setTimeout(() => {
+          try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(stateFromEditor()));
+            updateStatus();
+          } catch (error) {
+            updateStatus("Tallennus ei onnistunut");
+          }
+        }, 180);
+      }
+
+      function applyPhoto() {
+        heroVisual.dataset.photoImage = photoData;
+        if (photoData) {
+          heroVisual.style.backgroundImage = `url("${photoData}")`;
+          heroVisual.classList.add("has-photo");
+        } else {
+          heroVisual.style.backgroundImage = "";
+          heroVisual.classList.remove("has-photo");
+        }
+        heroVisual.style.backgroundPosition = `center ${photoPosition.value}%`;
+        photoPositionValue.textContent = `${photoPosition.value} %`;
+      }
+
+      function applyHeroBackground() {
+        const darkness = Number(heroBackgroundDarkness.value) / 100;
+        flyerHero.dataset.backgroundImage = heroBackgroundData;
+        flyerHero.style.setProperty("--hero-bg-darkness", String(darkness));
+        flyerHero.style.setProperty("--hero-bg-position", `${heroBackgroundPosition.value}%`);
+        flyerHero.style.setProperty("--hero-bg-image", heroBackgroundData ? `url("${heroBackgroundData}")` : "none");
+        heroBackgroundDarknessValue.textContent = `${heroBackgroundDarkness.value} %`;
+        heroBackgroundPositionValue.textContent = `${heroBackgroundPosition.value} %`;
+      }
+
+      function applyCoachPhoto() {
+        coachPhoto.dataset.photoImage = coachPhotoData;
+        coachPhoto.style.setProperty("--coach-photo-position", `${coachPhotoPosition.value}%`);
+        if (coachPhotoData) {
+          coachPhoto.style.backgroundImage = `url("${coachPhotoData}")`;
+          coachPhoto.classList.add("has-photo");
+        } else {
+          coachPhoto.style.backgroundImage = "";
+          coachPhoto.classList.remove("has-photo");
+        }
+        coachPhotoPositionValue.textContent = `${coachPhotoPosition.value} %`;
+      }
+
+      function applyControls() {
+        brochure.dataset.theme = themeSelect.value;
+        brochure.style.setProperty("--accent", accentColor.value);
+        brochure.style.setProperty("--type-scale", String(Number(typeScale.value) / 100));
+        brochure.style.setProperty("--preview-zoom", String(Number(previewZoom.value) / 100));
+        typeScaleValue.textContent = `${typeScale.value} %`;
+        previewZoomValue.textContent = `${previewZoom.value} %`;
+
+        toggleInputs().forEach((input) => {
+          const target = document.getElementById(input.dataset.target);
+          if (target) target.classList.toggle("is-hidden", !input.checked);
+        });
+
+        applyPhoto();
+        applyHeroBackground();
+        applyCoachPhoto();
+      }
+
+      function bindEditable(element) {
+        element.addEventListener("input", saveDraft);
+        element.addEventListener("paste", () => setTimeout(saveDraft, 0));
+      }
+
+      function bindCustomElements() {
+        extraElements.querySelectorAll("[contenteditable='true']").forEach(bindEditable);
+        extraElements.querySelectorAll(".element-delete").forEach((button) => {
+          button.addEventListener("click", () => {
+            button.closest(".custom-card, .custom-divider")?.remove();
+            saveDraft();
+          });
+        });
+      }
+
+      function loadDraft() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return;
+          const state = JSON.parse(raw);
+
+          if (state.text) {
+            editableElements().forEach((element) => {
+              if (Object.prototype.hasOwnProperty.call(state.text, element.dataset.editKey)) {
+                element.innerHTML = state.text[element.dataset.editKey];
+              }
+            });
+          }
+
+          if (state.visibility) {
+            toggleInputs().forEach((input) => {
+              if (Object.prototype.hasOwnProperty.call(state.visibility, input.dataset.target)) {
+                input.checked = Boolean(state.visibility[input.dataset.target]);
+              }
+            });
+          }
+
+          if 
