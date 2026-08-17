@@ -1,0 +1,336 @@
+    .coach-monogram.has-photo {
+      background-position: center var(--coach-photo-position, 50%);
+      background-size: cover;
+      background-repeat: no-repeat;
+      color: transparent;
+      text-shadow: none;
+    }
+
+    .coach-monogram.has-photo::after {
+      z-index: 0;
+      opacity: 1;
+      background: linear-gradient(180deg, rgba(16,17,14,0.02), rgba(16,17,14,0.16));
+      pointer-events: none;
+    }
+
+    .coach-copy {
+      display: grid;
+      grid-template-columns: minmax(42mm, 0.58fr) 1fr;
+      gap: 6mm;
+      align-items: center;
+      padding: 4.5mm 5mm;
+    }
+
+    .coach-copy h3 {
+      margin: 0;
+      font-size: 1.75rem;
+      letter-spacing: -0.04em;
+      line-height: 1;
+    }
+
+    .coach-role {
+      margin: 2mm 0 0;
+      color: var(--secondary);
+      font-size: 0.66rem;
+      font-weight: 900;
+      letter-spacing: 0.11em;
+      line-height: 1.35;
+      text-transform: uppercase;
+    }
+
+    .coach-description {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.48;
+    }
+
+    .extra-elements { display: grid; gap: 3mm; }
+    .extra-elements:empty { display: none; }
+
+    .custom-card {
+      position: relative;
+      padding: 4mm 5mm;
+      border-left: 1.4mm solid var(--accent);
+      background: rgba(104,114,74,0.11);
+      color: var(--ink);
+      font-size: 0.9rem;
+      line-height: 1.45;
+    }
+
+    .custom-card p { margin: 0; }
+
+    .custom-divider {
+      position: relative;
+      height: 1px;
+      background: var(--line);
+    }
+
+    .element-delete {
+      position: absolute;
+      z-index: 4;
+      top: -8px;
+      right: -8px;
+      width: 24px;
+      height: 24px;
+      display: grid;
+      place-items: center;
+      padding: 0;
+      border: 0;
+      border-radius: 50%;
+      background: #a4463a;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 900;
+      opacity: 0;
+      transition: opacity 150ms ease;
+    }
+
+    .custom-card:hover .element-delete,
+    .custom-divider:hover .element-delete { opacity: 1; }
+
+    .cta-band {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 8mm;
+      min-height: 25mm;
+      padding: 5mm 7mm;
+      background: var(--ink);
+      color: var(--light);
+    }
+
+    .cta-band h3 {
+      margin: 0;
+      font-size: 1.8rem;
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+    }
+
+    .cta-band p {
+      margin: 2mm 0 0;
+      color: #bfc0b8;
+      font-size: 0.8rem;
+    }
+
+    .cta-contact {
+      min-width: 54mm;
+      padding: 4mm;
+      background: var(--accent);
+      color: var(--ink);
+      text-align: center;
+    }
+
+    .cta-contact strong { display: block; font-size: 0.95rem; }
+    .cta-contact span { display: block; margin-top: 1mm; font-size: 0.7rem; font-weight: 800; }
+
+    .flyer-footer {
+      min-height: 12mm;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8mm;
+      padding: 3mm 12mm;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.62rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .flyer-footer strong { color: var(--secondary); }
+
+    [contenteditable="true"] {
+      border-radius: 2px;
+      outline: 1px dashed transparent;
+      outline-offset: 3px;
+      transition: background 130ms ease, outline-color 130ms ease;
+    }
+
+    [contenteditable="true"]:hover {
+      background: rgba(200,174,77,0.09);
+      outline-color: rgba(104,114,74,0.54);
+    }
+
+    [contenteditable="true"]:focus {
+      background: rgba(200,174,77,0.16);
+      outline: 2px solid var(--accent);
+    }
+
+    .is-hidden { display: none !important; }
+
+    .print-note {
+      max-width: 210mm;
+      margin: 15px auto 0;
+      padding: 12px 14px;
+      border-left: 3px solid #68724a;
+      background: rgba(247,246,241,0.78);
+      color: #5c5e55;
+      font-size: 11px;
+      line-height: 1.55;
+    }
+
+    @media (max-width: 1050px) {
+      .editor-layout { grid-template-columns: 285px minmax(0, 1fr); }
+      .sidebar { padding: 17px; }
+      .workspace { padding: 24px 18px; }
+    }
+
+    @media (max-width: 780px) {
+      .appbar { position: static; align-items: flex-start; flex-direction: column; }
+      .app-actions { width: 100%; display: grid; grid-template-columns: repeat(3, 1fr); }
+      .editor-layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--ui-line); }
+      .workspace { padding: 18px 10px; }
+      .sheet-stage { justify-content: flex-start; }
+    }
+
+    @media print {
+      @page { size: A4 portrait; margin: 0; }
+
+      html,
+      body {
+        width: 210mm;
+        height: 297mm;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #fff !important;
+      }
+
+      body {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      .appbar,
+      .sidebar,
+      .workspace-head,
+      .print-note,
+      .element-delete { display: none !important; }
+
+      .app-shell,
+      .editor-layout,
+      .workspace,
+      .sheet-stage {
+        display: block !important;
+        width: 210mm !important;
+        min-width: 0 !important;
+        height: 297mm !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: visible !important;
+        background: transparent !important;
+      }
+
+      .brochure {
+        width: 210mm !important;
+        min-height: 297mm !important;
+        margin: 0 !important;
+        box-shadow: none !important;
+        transform: none !important;
+      }
+
+      [contenteditable="true"] {
+        background: transparent !important;
+        outline: 0 !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="appbar">
+      <div class="app-brand">
+        <img src="../assets/capra-logo.png" alt="">
+        <div class="app-brand-copy">
+          <strong>Junioriesitteen editori</strong>
+          <span>Capra Combat · A4-esite</span>
+        </div>
+      </div>
+
+      <div class="app-actions">
+        <button class="ui-button ghost" id="downloadHtml" type="button">Lataa HTML</button>
+        <button class="ui-button ghost" id="resetEditor" type="button">Palauta</button>
+        <button class="ui-button primary" id="savePdf" type="button">Tallenna PDF ↗</button>
+      </div>
+    </header>
+
+    <div class="editor-layout">
+      <aside class="sidebar" aria-label="Esitteen asetukset">
+        <h2>Muokkaa esitettä</h2>
+        <p class="sidebar-intro">Klikkaa esitteen tekstiä ja kirjoita sen tilalle oma teksti. Muutokset tallentuvat automaattisesti tähän selaimeen.</p>
+
+        <div class="status-line"><span class="status-dot"></span><span id="saveStatus">Luonnos tallennettu</span></div>
+
+        <section class="control-group">
+          <h3>Ulkoasu</h3>
+          <div class="field">
+            <label for="themeSelect">Värityyli</label>
+            <select id="themeSelect">
+              <option value="olive" selected="selected">Capra oliivi</option>
+              <option value="black">Musta ja kulta</option>
+              <option value="light">Vaalea</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="accentColor">Korostusväri</label>
+            <input id="accentColor" type="color" value="#c8ae4d">
+          </div>
+          <div class="field">
+            <label for="typeScale">Tekstien koko</label>
+            <div class="range-row">
+              <input id="typeScale" type="range" min="90" max="108" step="1" value="100">
+              <span class="range-value" id="typeScaleValue">100 %</span>
+            </div>
+          </div>
+          <div class="field">
+            <label for="previewZoom">Esikatselun koko</label>
+            <div class="range-row">
+              <input id="previewZoom" type="range" min="55" max="110" step="5" value="90">
+              <span class="range-value" id="previewZoomValue">90 %</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="control-group">
+          <h3>Oma kuva</h3>
+          <div class="field">
+            <label for="photoUpload">Lisää harjoituskuva</label>
+            <input id="photoUpload" type="file" accept="image/*">
+          </div>
+          <div class="field">
+            <label for="photoPosition">Kuvan pystysijainti</label>
+            <div class="range-row">
+              <input id="photoPosition" type="range" min="0" max="100" value="10">
+              <span class="range-value" id="photoPositionValue">10 %</span>
+            </div>
+          </div>
+          <div class="photo-actions">
+            <button class="side-button" id="removePhoto" type="button">Poista kuva</button>
+            <button class="side-button" id="fitPhoto" type="button">Keskitä</button>
+          </div>
+        </section>
+
+        <section class="control-group">
+          <h3>Hero-taustakuva</h3>
+          <div class="field">
+            <label for="heroBackgroundUpload">Lisää koko hero-osion taustakuva</label>
+            <input id="heroBackgroundUpload" type="file" accept="image/*">
+          </div>
+          <div class="field">
+            <label for="heroBackgroundDarkness">Himmennys</label>
+            <div class="range-row">
+              <input id="heroBackgroundDarkness" type="range" min="0" max="90" step="1" value="72">
+              <span class="range-value" id="heroBackgroundDarknessValue">72 %</span>
+            </div>
+          </div>
+          <div class="field">
+            <label for="heroBackgroundPosition">Kuvan pystysijainti</label>
+            <div class="range-row">
+              <input id="heroBackgroundPosition" type="range" min="0" max="100" value="50">
+              <span class="range-value" id="heroBackgroundPositionValue">50 %</span>
+            </div>
+          </div>
+          <div class="photo-actions">
+            <button class=
