@@ -21,9 +21,72 @@ $('#photoInput').addEventListener('change',e=>loadImageFile(e.target.files[0],'p
 $('#markInput').addEventListener('change',e=>loadImageFile(e.target.files[0],'markData'));
 $$('.preset-btn').forEach(b=>b.onclick=()=>{if(b.dataset.preset==='core')Object.assign(state,{brightness:82,contrast:118,grayscale:18,warmth:7});if(b.dataset.preset==='bw')Object.assign(state,{brightness:84,contrast:128,grayscale:100,warmth:0});if(b.dataset.preset==='warm')Object.assign(state,{brightness:88,contrast:116,grayscale:8,warmth:18});syncInputs();render()});
 $('#reset').onclick=()=>{state={...defaults,photoData:state.photoData,markData:state.markData};syncInputs();render()};
-async function capture(format=state.format){const prev=state.format,safe=$('#safeToggle').checked;state.format=format;$('#safeToggle').checked=false;render();if(document.fonts&&document.fonts.ready)await document.fonts.ready;await new Promise(r=>setTimeout(r,100));const canvas=await html2canvas(poster,{backgroundColor:null,scale:1,useCORS:true,logging:false});state.format=prev;$('#safeToggle').checked=safe;render();return canvas}
+
+function waitFrame(){return new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))}
+async function waitForImages(root){
+  const images=[...root.querySelectorAll('img')].filter(img=>img.src&&!img.hidden);
+  await Promise.all(images.map(img=>{
+    if(img.complete&&img.naturalWidth>0){
+      if(typeof img.decode==='function')return img.decode().catch(()=>{});
+      return Promise.resolve();
+    }
+    return new Promise(resolve=>{const done=()=>resolve();img.addEventListener('load',done,{once:true});img.addEventListener('error',done,{once:true});setTimeout(done,1500)});
+  }));
+}
+
+async function capture(format=state.format){
+  const prevFormat=state.format;
+  const safeWas=$('#safeToggle').checked;
+  state.format=format;
+  $('#safeToggle').checked=false;
+  render();
+
+  if(document.fonts&&document.fonts.ready)await document.fonts.ready;
+  await waitFrame();
+
+  // Capture an unscaled off-screen clone. This avoids iOS/Safari/html2canvas
+  // mis-rendering text when the live preview sits inside a CSS transform.
+  const clone=poster.cloneNode(true);
+  clone.classList.remove('show-safe');
+  clone.style.position='fixed';
+  clone.style.left='-10000px';
+  clone.style.top='0';
+  clone.style.margin='0';
+  clone.style.transform='none';
+  clone.style.maxWidth='none';
+  clone.style.maxHeight='none';
+  clone.style.boxShadow='none';
+  clone.setAttribute('aria-hidden','true');
+  document.body.appendChild(clone);
+
+  try{
+    await waitForImages(clone);
+    await waitFrame();
+    const w=clone.offsetWidth;
+    const h=clone.offsetHeight;
+    const canvas=await html2canvas(clone,{
+      backgroundColor:'#10110e',
+      scale:1,
+      useCORS:true,
+      allowTaint:false,
+      logging:false,
+      width:w,
+      height:h,
+      windowWidth:Math.max(w,1280),
+      windowHeight:Math.max(h,720),
+      scrollX:0,
+      scrollY:0
+    });
+    return canvas;
+  }finally{
+    clone.remove();
+    state.format=prevFormat;
+    $('#safeToggle').checked=safeWas;
+    render();
+  }
+}
 function canvasBlob(canvas,type='image/png',quality=1){return new Promise(resolve=>canvas.toBlob(resolve,type,quality))}
 function dlBlob(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},800)}
-$('#download').onclick=async()=>{const b=$('#download');b.disabled=true;b.textContent='Viedään…';try{const c=await capture(state.format),blob=await canvasBlob(c);dlBlob(blob,`capra-cast-${state.format}-${state.episode}.png`)}catch(e){alert('Vienti epäonnistui. Kokeile päivittää sivu ja uudelleen.')}finally{b.disabled=false;b.textContent='Tallenna PNG'}};
-$('#downloadAll').onclick=async()=>{const b=$('#downloadAll');b.disabled=true;b.textContent='Rakennetaan ZIP…';try{const zip=new JSZip();for(const f of ['youtube','instagram','reels','tiktok']){b.textContent=`Viedään ${f}…`;const c=await capture(f),blob=await canvasBlob(c);zip.file(`capra-cast-${f}-${state.episode}.png`,blob)}const out=await zip.generateAsync({type:'blob'});dlBlob(out,`capra-cast-${state.episode}-kaikki-koot.zip`)}catch(e){alert('ZIP-vienti epäonnistui. Voit viedä koot myös yksittäin.')}finally{b.disabled=false;b.textContent='Vie kaikki 4 kokoa ZIP'}};
+$('#download').onclick=async()=>{const b=$('#download');b.disabled=true;b.textContent='Viedään…';try{const c=await capture(state.format),blob=await canvasBlob(c);dlBlob(blob,`capra-cast-${state.format}-${state.episode}.png`)}catch(e){console.error(e);alert('Vienti epäonnistui. Päivitä sivu ja kokeile uudelleen.')}finally{b.disabled=false;b.textContent='Tallenna PNG'}};
+$('#downloadAll').onclick=async()=>{const b=$('#downloadAll');b.disabled=true;b.textContent='Rakennetaan ZIP…';try{const zip=new JSZip();for(const f of ['youtube','instagram','reels','tiktok']){b.textContent=`Viedään ${f}…`;const c=await capture(f),blob=await canvasBlob(c);zip.file(`capra-cast-${f}-${state.episode}.png`,blob)}const out=await zip.generateAsync({type:'blob'});dlBlob(out,`capra-cast-${state.episode}-kaikki-koot.zip`)}catch(e){console.error(e);alert('ZIP-vienti epäonnistui. Voit viedä koot myös yksittäin.')}finally{b.disabled=false;b.textContent='Vie kaikki 4 kokoa ZIP'}};
 window.addEventListener('resize',fit);syncInputs();render();
