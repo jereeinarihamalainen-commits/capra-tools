@@ -7,6 +7,18 @@
 <title>Capra Cast Thumbnail Studio</title>
 <link rel="stylesheet" href="../vendor/capra-fonts.css">
 <link rel="stylesheet" href="style.css?v=2">
+<style>
+.wordmark::after{
+  content:"";
+  display:inline-block;
+  width:1.55em;
+  height:1.28em;
+  margin-left:.22em;
+  vertical-align:-.36em;
+  background:url('mascot.svg?v=1') center/contain no-repeat;
+  filter:drop-shadow(0 0 .12em rgba(255,42,180,.34)) drop-shadow(0 0 .14em rgba(0,205,255,.24));
+}
+</style>
 </head>
 <body>
 <div class="app">
@@ -110,6 +122,6 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
-<script src="app.js?v=3"></script>
+<script src="app.js?v=4"></script>
 </body>
 </html>
