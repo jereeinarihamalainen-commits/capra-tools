@@ -4,124 +4,109 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0b0c0a">
-<title>Capra Cast Thumbnail Studio</title>
+<title>Capra Cast Studio v2</title>
 <link rel="stylesheet" href="../vendor/capra-fonts.css">
-<link rel="stylesheet" href="style.css?v=2">
-<style>
-.wordmark::after{
-  content:"";
-  display:inline-block;
-  width:1.55em;
-  height:1.28em;
-  margin-left:.22em;
-  vertical-align:-.36em;
-  background:url('mascot.svg?v=1') center/contain no-repeat;
-  filter:drop-shadow(0 0 .12em rgba(255,42,180,.34)) drop-shadow(0 0 .14em rgba(0,205,255,.24));
-}
-</style>
+<link rel="stylesheet" href="style.css?v=6">
 </head>
 <body>
 <div class="app">
 <aside class="panel">
-  <div class="brandline"><h1>CAPRA <span class="cast">CAST</span></h1><span style="font-size:9px;color:#6f756a;letter-spacing:.12em">THUMBNAIL STUDIO</span></div>
-  <p>Yksi Capra Cast -ilme, valmiit rajaukset YouTubeen, Instagramiin, Reelseihin ja TikTokiin.</p>
+  <div class="brandline"><h1>CAPRA <span>CAST</span></h1><b>STUDIO V2</b></div>
+  <p>Lukittu Capra Cast -masterpohja. Lataa alkuperäinen podcast-kuva, liikuta tekstejä suoraan kannessa ja vie oikeat somekoot.</p>
 
-  <div class="section">
-    <h2 class="section-title">1 · Koko</h2>
+  <section class="section">
+    <h2 class="section-title">1 · Formaatti</h2>
     <div class="formats">
-      <button class="format-btn active" data-format="youtube">YouTube<small>1280 × 720 · 16:9</small></button>
-      <button class="format-btn" data-format="instagram">Instagram<small>1080 × 1350 · 4:5</small></button>
-      <button class="format-btn" data-format="reels">IG Reels<small>1080 × 1920 · 9:16</small></button>
-      <button class="format-btn" data-format="tiktok">TikTok<small>1080 × 1920 · 9:16</small></button>
+      <button class="format-btn active" data-format="youtube">YouTube<small>1280 × 720</small></button>
+      <button class="format-btn" data-format="instagram">Instagram<small>1080 × 1350</small></button>
+      <button class="format-btn" data-format="reels">Reels<small>1080 × 1920</small></button>
+      <button class="format-btn" data-format="tiktok">TikTok<small>1080 × 1920</small></button>
     </div>
-    <div class="toggle"><span>Näytä platform-safe-alue</span><input id="safeToggle" type="checkbox"></div>
-  </div>
+    <label class="toggle"><span>Näytä safe area</span><input id="safeToggle" type="checkbox"></label>
+  </section>
 
-  <div class="section">
-    <h2 class="section-title">2 · Sisältö</h2>
-    <div class="field"><label>Hook / otsikko</label><textarea id="headline">MITÄ LAADUKAS\nHARJOITTELU\nOIKEASTI VAATII?</textarea></div>
-    <div class="field"><label>Okra-korostus</label><input id="accent" type="text" value="HARJOITTELU"></div>
+  <section class="section">
+    <h2 class="section-title">2 · Tekstit</h2>
+    <div class="field"><label>Otsikko</label><textarea id="headline">ONKO PENKKIPUNNERRUS\nKAMPPAILIJAN\nTÄRKEIN LIIKE?</textarea></div>
+    <div class="field"><label>Korostettava sana (valinnainen)</label><input id="accent" type="text" value=""></div>
     <div class="field"><label>Vieraan nimi</label><input id="guestName" type="text" value="KALLE MÄENHARJU"></div>
     <div class="field"><label>Titteli</label><input id="guestRole" type="text" value="LIIKUNTALÄÄKETIETEEN KANDIDAATTI"></div>
     <div class="row2">
-      <div class="field"><label>Jakso</label><input id="episode" type="text" value="01"></div>
+      <div class="field"><label>Jakso</label><input id="episode" type="text" value="1"></div>
       <div class="field"><label>Aiheet</label><input id="topics" type="text" value="URHEILU · TERVEYS · SUORITUSKYKY"></div>
     </div>
-  </div>
+  </section>
 
-  <div class="section">
-    <h2 class="section-title">3 · Kuva</h2>
-    <label class="upload">Lisää podcast-kuva<input id="photoInput" type="file" accept="image/*"></label>
-    <div class="preset-grid" style="margin-top:8px">
-      <button class="preset-btn" data-preset="core">Core Dark</button>
-      <button class="preset-btn" data-preset="bw">Documentary B&W</button>
-      <button class="preset-btn" data-preset="warm">Warm Fight</button>
+  <section class="section">
+    <h2 class="section-title">3 · Podcast-kuva</h2>
+    <label class="upload">Lisää alkuperäinen kuva<input id="photoInput" type="file" accept="image/*"></label>
+    <div class="field">
+      <label>Kuvan sovitus</label>
+      <select id="fitMode">
+        <option value="contain" selected>Näytä koko kuva — ei rajaa eikä venytä</option>
+        <option value="cover">Täytä pinta — rajaa tarvittaessa, ei venytä</option>
+      </select>
     </div>
-    <div class="range-row"><span>Rajaus X</span><input id="posX" type="range" min="0" max="100" value="68"><output>68</output></div>
-    <div class="range-row"><span>Rajaus Y</span><input id="posY" type="range" min="0" max="100" value="50"><output>50</output></div>
-    <div class="range-row"><span>Zoom</span><input id="zoom" type="range" min="100" max="220" value="112"><output>112%</output></div>
-    <div class="range-row"><span>Tummuus</span><input id="brightness" type="range" min="45" max="115" value="82"><output>82%</output></div>
-    <div class="range-row"><span>Kontrasti</span><input id="contrast" type="range" min="80" max="155" value="118"><output>118%</output></div>
-    <div class="range-row"><span>Mustavalk.</span><input id="grayscale" type="range" min="0" max="100" value="18"><output>18%</output></div>
-    <div class="range-row"><span>Lämpö</span><input id="warmth" type="range" min="0" max="40" value="7"><output>7%</output></div>
-  </div>
+    <label class="toggle"><span>Pehmeä taustatäyttö tyhjiin alueisiin</span><input id="blurBg" type="checkbox" checked></label>
+    <div class="range-row"><span>X</span><input id="posX" type="range" min="0" max="100" value="50"><output>50</output></div>
+    <div class="range-row"><span>Y</span><input id="posY" type="range" min="0" max="100" value="50"><output>50</output></div>
+    <div class="range-row"><span>Zoom</span><input id="zoom" type="range" min="70" max="180" value="100"><output>100%</output></div>
+    <div class="range-row"><span>Kirkkaus</span><input id="brightness" type="range" min="45" max="120" value="82"><output>82%</output></div>
+    <div class="range-row"><span>Kontrasti</span><input id="contrast" type="range" min="80" max="150" value="112"><output>112%</output></div>
+    <div class="range-row"><span>Mustavalk.</span><input id="grayscale" type="range" min="0" max="100" value="8"><output>8%</output></div>
+  </section>
 
-  <div class="section">
-    <h2 class="section-title">4 · Capra-merkki</h2>
-    <label class="upload">Lataa tarkka Capra-symboli (PNG/SVG)<input id="markInput" type="file" accept="image/*,.svg"></label>
-    <div class="range-row"><span>Opacity</span><input id="markOpacity" type="range" min="0" max="30" value="9"><output>9%</output></div>
+  <section class="section">
+    <h2 class="section-title">4 · Liikuta tekstiä</h2>
+    <p class="help">Vedä kannessa haluamaasi tekstielementtiä sormella tai hiirellä. Sijainti tallentuu erikseen jokaiselle formaatille.</p>
+    <div class="field"><label>Valittu elementti</label><select id="selectedElement">
+      <option value="hook">Otsikko</option><option value="brand">CAPRA CAST</option><option value="episodeLabel">Jakso</option><option value="guest">Vieras + titteli</option><option value="topics">Aiheet</option><option value="signature">Footer</option>
+    </select></div>
+    <div class="range-row"><span>X</span><input id="textX" type="range" min="0" max="100" value="5"><output>5%</output></div>
+    <div class="range-row"><span>Y</span><input id="textY" type="range" min="0" max="100" value="50"><output>50%</output></div>
+    <div class="range-row"><span>Koko</span><input id="textScale" type="range" min="55" max="145" value="100"><output>100%</output></div>
+    <button class="secondary full-btn" id="resetPositions">Palauta tämän koon sommittelu</button>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">5 · Capra-merkki</h2>
+    <div class="range-row"><span>Opacity</span><input id="markOpacity" type="range" min="0" max="25" value="7"><output>7%</output></div>
     <div class="range-row"><span>Koko</span><input id="markScale" type="range" min="60" max="170" value="110"><output>110%</output></div>
-    <div class="range-row"><span>Siirto X</span><input id="markX" type="range" min="-40" max="40" value="0"><output>0</output></div>
-    <div class="range-row"><span>Siirto Y</span><input id="markY" type="range" min="-40" max="40" value="0"><output>0</output></div>
-  </div>
+    <div class="range-row"><span>X</span><input id="markX" type="range" min="-40" max="40" value="0"><output>0</output></div>
+    <div class="range-row"><span>Y</span><input id="markY" type="range" min="-40" max="40" value="0"><output>0</output></div>
+  </section>
 
-  <div class="section">
-    <h2 class="section-title">5 · Sommittelu</h2>
-    <div class="formats">
-      <button class="layout-btn active" data-layout="editorial">Editorial</button>
-      <button class="layout-btn" data-layout="minimal">Minimal</button>
-      <button class="layout-btn" data-layout="poster">Poster</button>
-    </div>
-    <div class="tiny">Editorial on pääpohja: oikea podcast-still + iso Capra-symboli + valkoinen/okra typografia. Poster antaa kuvalle enemmän omaa tilaa. Minimal toimii lyhyelle hookille.</div>
-  </div>
-
-  <div class="section">
+  <section class="section">
     <div class="actions">
-      <button class="secondary" id="reset">Palauta Kalle-pohja</button>
+      <button class="secondary" id="reset">Palauta pohja</button>
       <button class="primary" id="download">Tallenna PNG</button>
       <button class="secondary full" id="downloadAll">Vie kaikki 4 kokoa ZIP</button>
     </div>
-    <p class="tiny">Värit: Capra Olive #68724A · Capra Ochre #C8AE4D. Safe-viivat eivät tule lopulliseen vientiin.</p>
-  </div>
+    <p class="tiny">Kuva piirretään aina oikealla kuvasuhteella. “Näytä koko kuva” ei koskaan venytä eikä leikkaa henkilöitä pois.</p>
+  </section>
 </aside>
 
 <main class="stage-wrap">
   <div class="preview-shell"><div class="scale" id="scale">
-    <div class="poster layout-editorial" id="poster" data-format="youtube">
+    <div class="poster" id="poster" data-format="youtube">
+      <div class="photo-bg"><img id="photoBgImg" alt=""></div>
       <div class="photo"><img id="photoImg" alt=""><div class="placeholder" id="placeholder">LISÄÄ PODCAST-KUVA</div></div>
-      <div class="mark" id="mark">
-        <svg id="fallbackMark" viewBox="0 0 1002 1046" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <path d="M 0 64 L 204 82 L 393 381 L 460 297 L 217 0 Z"/>
-          <path d="M 114 398 L 185 480 L 274 495 L 304 523 L 314 639 L 398 748 L 399 918 L 499 1045 L 601 917 L 602 747 L 687 637 L 697 524 L 726 496 L 817 479 L 886 399 L 709 411 L 554 669 L 551 888 L 499 956 L 450 890 L 446 668 L 294 414 Z"/>
-          <path d="M 1001 64 L 785 0 L 542 298 L 607 381 L 798 81 Z"/>
-        </svg>
-        <img id="customMark" alt="" hidden>
-      </div>
-      <div class="content">
-        <div class="topline"><div class="wordmark">CAPRA <span class="cast">CAST</span></div><div class="ep" id="epOut">01</div></div>
-        <div class="rule"></div>
-        <h2 class="hook" id="headlineOut"></h2>
-        <div class="guest"><div class="guest-name" id="guestNameOut"></div><div class="guest-role" id="guestRoleOut"></div></div>
-        <div class="topics" id="topicsOut"></div>
-        <div class="signature">PAIKKA KAIKILLE · POLKU HUIPULLE</div>
-      </div>
-      <div class="safe" id="safe" data-label="Safe area"></div>
+      <div class="photo-shade"></div>
+      <div class="mark" id="mark" aria-hidden="true"><svg viewBox="0 0 1002 1046" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M0 64 204 82 393 381 460 297 217 0Z"/><path d="M114 398 185 480 274 495 304 523 314 639 398 748 399 918 499 1045 601 917 602 747 687 637 697 524 726 496 817 479 886 399 709 411 554 669 551 888 499 956 450 890 446 668 294 414Z"/><path d="M1001 64 785 0 542 298 607 381 798 81Z"/></svg></div>
+
+      <div class="drag-item brand" data-key="brand"><div class="wordmark">CAPRA <span>CAST</span></div><div class="rule"></div></div>
+      <div class="drag-item episode-label" data-key="episodeLabel">JAKSO <span id="epOut">1</span></div>
+      <h2 class="drag-item hook" data-key="hook" id="headlineOut"></h2>
+      <div class="drag-item guest" data-key="guest"><div class="guest-name" id="guestNameOut"></div><div class="guest-role" id="guestRoleOut"></div></div>
+      <div class="drag-item topics" data-key="topics" id="topicsOut"></div>
+      <div class="drag-item signature" data-key="signature">PAIKKA KAIKILLE · POLKU HUIPULLE</div>
+      <div class="safe" data-label="Safe area"></div>
     </div>
   </div></div>
 </main>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
-<script src="app.js?v=4"></script>
+<script src="app.js?v=6"></script>
 </body>
 </html>
