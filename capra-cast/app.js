@@ -20,10 +20,43 @@ function highlight(text,term){let safe=esc(text).replace(/\n/g,'<br>');if(!term)
 function save(){const clean={...state};delete clean.photoData;try{localStorage.setItem('capraCastStateV2',JSON.stringify(clean))}catch(e){}}
 function applyFormatSize(el,format){const z=FORMAT_SIZES[format]||FORMAT_SIZES.youtube;el.dataset.format=format;el.style.width=z.w+'px';el.style.height=z.h+'px';el.style.minWidth=z.w+'px';el.style.minHeight=z.h+'px';el.style.maxWidth='none';el.style.maxHeight='none'}
 
+function layoutPhoto(){
+  if(!state.photoData||!photo.naturalWidth||!photo.naturalHeight)return;
+  const z=FORMAT_SIZES[state.format]||FORMAT_SIZES.youtube;
+  const iw=photo.naturalWidth, ih=photo.naturalHeight;
+  const base=state.fitMode==='cover'?Math.max(z.w/iw,z.h/ih):Math.min(z.w/iw,z.h/ih);
+  const s=base*(state.zoom/100);
+  const w=iw*s, h=ih*s;
+
+  // Explicit proportional pixel dimensions: width and height always come from
+  // the image's own aspect ratio. No CSS object-fit/browser quirk can stretch it.
+  photo.style.width=w+'px';
+  photo.style.height=h+'px';
+  photo.style.maxWidth='none';
+  photo.style.maxHeight='none';
+  photo.style.left=(z.w*state.posX/100)+'px';
+  photo.style.top=(z.h*state.posY/100)+'px';
+  photo.style.right='auto';
+  photo.style.bottom='auto';
+  photo.style.objectFit='fill';
+  photo.style.objectPosition='50% 50%';
+  photo.style.transform='translate(-50%,-50%)';
+  photo.style.transformOrigin='center center';
+}
+
+photo.addEventListener('load',()=>{layoutPhoto();fit()});
+
 function render(){
   applyFormatSize(poster,state.format);poster.className='poster editing';if($('#safeToggle').checked)poster.classList.add('show-safe');
   $('#headlineOut').innerHTML=highlight(state.headline,state.accent);$('#guestNameOut').textContent=state.guestName;$('#guestRoleOut').textContent=state.guestRole;$('#epOut').textContent=state.episode;$('#topicsOut').textContent=state.topics;
-  photo.src=state.photoData||'';photoBg.src=state.photoData||'';placeholder.style.display=state.photoData?'none':'grid';photo.style.objectFit=state.fitMode;photo.style.objectPosition=`${state.posX}% ${state.posY}%`;photo.style.transform=`scale(${state.zoom/100})`;photo.style.filter=`brightness(${state.brightness}%) contrast(${state.contrast}%) grayscale(${state.grayscale}%)`;photoBg.parentElement.style.display=state.photoData&&state.blurBg?'block':'none';
+  if(state.photoData){
+    if(photo.src!==state.photoData)photo.src=state.photoData;
+    if(photoBg.src!==state.photoData)photoBg.src=state.photoData;
+  }else{photo.removeAttribute('src');photoBg.removeAttribute('src')}
+  placeholder.style.display=state.photoData?'none':'grid';
+  photo.style.filter=`brightness(${state.brightness}%) contrast(${state.contrast}%) grayscale(${state.grayscale}%)`;
+  photoBg.parentElement.style.display=state.photoData&&state.blurBg?'block':'none';
+  layoutPhoto();
   mark.style.opacity=state.markOpacity/100;mark.style.transform=`translate(${state.markX}%,${state.markY}%) scale(${state.markScale/100})`;
   applyPositions();syncControls();fit();save();
 }
@@ -42,11 +75,11 @@ function fit(){const stage=$('.stage-wrap'),shell=$('.preview-shell'),z=FORMAT_S
 $$('.format-btn').forEach(b=>b.onclick=()=>{state.format=b.dataset.format;render()});
 ['headline','accent','guestName','guestRole','episode','topics'].forEach(k=>$('#'+k).addEventListener('input',e=>{state[k]=e.target.value;render()}));
 ['posX','posY','zoom','brightness','contrast','grayscale','markOpacity','markScale','markX','markY'].forEach(k=>$('#'+k).addEventListener('input',e=>{state[k]=+e.target.value;render()}));
-$('#fitMode').addEventListener('change',e=>{state.fitMode=e.target.value;render()});$('#blurBg').addEventListener('change',e=>{state.blurBg=e.target.checked;render()});$('#safeToggle').addEventListener('change',render);
+$('#fitMode').addEventListener('change',e=>{state.fitMode=e.target.value;state.zoom=100;state.posX=50;state.posY=50;render()});$('#blurBg').addEventListener('change',e=>{state.blurBg=e.target.checked;render()});$('#safeToggle').addEventListener('change',render);
 $('#selectedElement').addEventListener('change',e=>{state.selectedElement=e.target.value;render()});
 ['textX','textY','textScale'].forEach(id=>$('#'+id).addEventListener('input',e=>{const q=state.positions[state.format][state.selectedElement];if(id==='textX')q.x=+e.target.value;if(id==='textY')q.y=+e.target.value;if(id==='textScale')q.s=+e.target.value;render()}));
 $('#resetPositions').onclick=()=>{state.positions[state.format]=structuredClone(POS_DEFAULTS[state.format]);render()};
-function loadImageFile(file){if(!file)return;const r=new FileReader();r.onload=()=>{state.photoData=r.result;render()};r.readAsDataURL(file)}$('#photoInput').addEventListener('change',e=>loadImageFile(e.target.files[0]));
+function loadImageFile(file){if(!file)return;const r=new FileReader();r.onload=()=>{state.photoData=r.result;state.fitMode='contain';state.zoom=100;state.posX=50;state.posY=50;photo.onload=()=>{layoutPhoto();fit();photo.onload=null};photo.src=state.photoData;photoBg.src=state.photoData;render()};r.readAsDataURL(file)}$('#photoInput').addEventListener('change',e=>loadImageFile(e.target.files[0]));
 $('#reset').onclick=()=>{const keepPhoto=state.photoData;state={...defaults,photoData:keepPhoto,positions:structuredClone(POS_DEFAULTS)};render()};
 
 let drag=null;
@@ -61,4 +94,4 @@ async function capture(format=state.format){const z=FORMAT_SIZES[format],prev=st
 function canvasBlob(c){return new Promise((res,rej)=>c.toBlob(b=>b?res(b):rej(new Error('PNG-luonti epäonnistui')),'image/png',1))}function dlBlob(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1200)}
 $('#download').onclick=async()=>{const b=$('#download');b.disabled=true;b.textContent='Viedään…';try{dlBlob(await canvasBlob(await capture(state.format)),`capra-cast-${state.format}-${state.episode}.png`)}catch(e){alert('Vienti epäonnistui: '+e.message)}finally{b.disabled=false;b.textContent='Tallenna PNG'}};
 $('#downloadAll').onclick=async()=>{const b=$('#downloadAll');b.disabled=true;try{const zip=new JSZip();for(const f of Object.keys(FORMAT_SIZES)){b.textContent='Viedään '+f+'…';zip.file(`capra-cast-${f}-${state.episode}.png`,await canvasBlob(await capture(f)))}dlBlob(await zip.generateAsync({type:'blob'}),`capra-cast-${state.episode}-kaikki-koot.zip`)}catch(e){alert('ZIP-vienti epäonnistui: '+e.message)}finally{b.disabled=false;b.textContent='Vie kaikki 4 kokoa ZIP'}};
-window.addEventListener('resize',fit);render();
+window.addEventListener('resize',()=>{fit();layoutPhoto()});render();
