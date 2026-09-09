@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Jere Hämäläinen — Cinematic Site v4</title>
+<meta name="description" content="Jere Hämäläinen — cinematic portfolio prototype.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="noise"></div>
+<header class="site-head">
+  <a class="wordmark" href="#top">Jere Hämäläinen</a>
+  <div class="head-center">Valmennan · Rakennan · Kehitän</div>
+  <button class="menu-btn" aria-label="Siirry töihin" onclick="document.getElementById('work').scrollIntoView({behavior:'smooth'})"></button>
+</header>
+<div class="scroll-meta"><span id="sectionLabel">01 / INTRO</span><div class="track"><i id="progressBar"></i></div></div>
+<div class="scroll-cue">Scroll ↓</div>
+<main id="top">
+<section class="hero" data-label="01 / INTRO"><div class="sticky hero-stage">
+  <div class="hero-world" id="heroWorld"></div>
+  <div class="float-note" id="floatNote"><div class="kicker" style="color:#15130f;margin-bottom:10px">FIELD NOTE · 001</div><img class="paper-img" src="jere_site_assets/note.jpg" alt="Handwritten note"></div>
+  <div class="float-portrait" id="floatPortrait"><img src="jere_site_assets/portrait_gi.jpg" alt="Portrait of Jere in gi"></div>
+  <div class="float-capra" id="floatCapra"><img src="jere_site_assets/capra_bw.jpg" alt="Jiu-jitsu training scene"></div>
+  <div class="float-grana" id="floatGrana"><img src="jere_site_assets/grana_hero.jpg" alt="Grana website concept"></div>
+  <div class="hero-copy" id="heroCopy"><div class="kicker">Jere Hämäläinen · Kuopio</div><h1>Build something real.</h1><p>Placeholder-intro. Tämä versio käyttää nyt sinun oikeita kuvia: valmennusta, työympäristön tunnelmaa, käsinkirjoitettua paperia ja GRANA-projektia. Lopullinen teksti voidaan kirjoittaa myöhemmin tarkasti.</p></div>
+  <div class="hero-side" id="heroSide"><span class="dot"></span><p><b>WORKSPACE / 2026</b><br>Coaching.<br>Brand & web.<br>Field notes.</p></div><div class="hero-fade"></div>
+</div></section>
+<section class="statement" data-label="02 / THESIS"><div class="statement-grid"><div><div class="kicker">01 / Premise</div><p>Placeholder-teksti. Yksi vahva ajatus yhdistää tätä sivua: havainto ei vielä ole työ. Työ alkaa vasta, kun ideasta syntyy testattava asia.</p></div><h2>A thought <em>isn’t</em><br>the work.</h2></div></section>
+<section class="about" data-label="03 / ABOUT"><div class="sticky about-stage"><h2 class="about-title">Jere<br>Hämäläinen.</h2><div class="about-portrait" id="aboutPortrait"><img src="jere_site_assets/portrait_food.jpg" alt="Jere portrait"></div><div class="about-card"><div class="kicker">Quick profile</div><div style="margin-top:10px;font-size:12px;line-height:1.55;color:rgba(236,228,210,.75)">Placeholder: coach, builder, curious human.<br>Kuopio / Finland<br>Combat sports / brand / web</div></div><div class="about-copy"><div class="kicker">02 / About</div><h3>Coach. Builder. Curious human.</h3><p>Placeholder-teksti. Tästä osuudesta tehdään myöhemmin tarkempi henkilökuva: valmennus, yrittäjyys, brändi- ja verkkoprojektit sekä tapa oppia tekemällä.</p></div></div></section>
+<section class="work" id="work" data-label="04 / WORK"><div class="work-head"><h2>Selected<br>work.</h2><p>Placeholder-tekstit toistaiseksi. Rakenne ja kuvallinen kieli on jo lähempänä lopullista suuntaa: muutama vahva projekti, ei liian monta korttia.</p></div>
+<article class="project"><div class="project-copy"><div class="kicker">01 / Coaching</div><h3>Capra<br>Combat</h3><p>Placeholder project description. Valmennus, junioritoiminta, oppimisympäristöt ja kamppailulajien käytännön työ.</p><div class="project-meta"><span>Kuopio</span><span>2026 →</span></div></div><div class="media-single"><img src="jere_site_assets/capra_bw.jpg" alt="Capra coaching"></div></article>
+<article class="project"><div class="project-copy"><div class="kicker">02 / Brand + Web</div><h3>GRANA</h3><p>Placeholder project description. Premium-vesikalustebrändin maailma, verkkosivut ja digitaalinen kokemus.</p><div class="project-meta"><span>Design / Water / Everyday</span><span>2026</span></div></div><div class="grana-grid"><div class="slot big"><img src="jere_site_assets/grana_hero.jpg" alt="Grana hero"></div><div class="slot"><img src="jere_site_assets/grana_finishes.jpg" alt="Grana finishes"></div><div class="slot"><img src="jere_site_assets/grana_design.jpg" alt="Grana design cards"></div></div></article>
+<article class="project"><div class="project-copy"><div class="kicker">03 / Personal Brand</div><h3>Field<br>Notes</h3><p>Placeholder project description. Käsin kirjoitettuja havaintoja valmennuksesta, yrittämisestä, projekteista ja oppimisesta.</p><div class="project-meta"><span>Notes / Archive</span><span>Ongoing</span></div></div><div class="media-single portrait"><img src="jere_site_assets/note.jpg" alt="Handwritten field note"></div></article>
+</section>
+<section class="notes" data-label="05 / NOTES"><div class="sticky notes-stage"><h2 class="notes-title">Field<br>notes.</h2><div class="note-stack"><div class="note-card one" id="note1"><img src="jere_site_assets/capra_bw.jpg" alt="Training photo"></div><div class="note-card two" id="note2"><img src="jere_site_assets/portrait_gi.jpg" alt="Jere portrait"></div><div class="note-card three" id="note3"><img src="jere_site_assets/note.jpg" alt="Handwritten note"></div></div><div class="notes-copy"><div class="kicker">03 / Physical layer</div><h3>Keep the trace.</h3><p>Tässä kohtaa idea toimii hyvin: oikea paperi, oikeat valmennuskuvat ja oikea henkilökuva tekevät sivusta heti vähemmän geneerisen. Tekstit voidaan vielä vaihtaa paremmiksi.</p></div></div></section>
+<section class="writing" data-label="06 / WRITING"><div class="writing-head"><h2>Writing & thinking.</h2><p>Placeholder-arkisto. Myöhemmin tähän voidaan nostaa kirjoituksia valmentamisesta, projekteista ja oppimisesta.</p></div><div class="article-grid"><article class="article"><div class="micro">COACHING / PLACEHOLDER</div><h3>Tieto ei ole taitoa.</h3><p>Lyhyt ingressi tähän. 2–3 riviä siitä, mitä tekstissä käsitellään ja miksi sillä on merkitystä.</p></article><article class="article"><div class="micro">BUILDING / PLACEHOLDER</div><h3>Prototype before polish.</h3><p>Lyhyt ingressi tähän. Keskeneräinen mutta testattava asia opettaa enemmän kuin vielä yksi suunnittelukierros.</p></article><article class="article"><div class="micro">FIELD NOTES / PLACEHOLDER</div><h3>Mitä opin tällä viikolla.</h3><p>Lyhyt ingressi tähän. Pieni havainto, joka muuttui käytännön työkaluksi.</p></article></div></section>
+</main>
+<footer class="cta" data-label="07 / CONTACT"><h2>If it matters,<br><em>make it tangible.</em></h2><div class="cta-bottom"><span>Jere Hämäläinen · Kuopio</span><span>Placeholder / Email · Instagram · Projects</span></div></footer>
+<script src="script.js"></script>
+</body>
+</html>
