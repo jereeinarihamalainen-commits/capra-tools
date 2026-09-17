@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Valmennus - Jere Hämäläinen</title>
+  <style>
+    :root {
+      --bg: #f9f9f9;
+      --card-bg: #ffffff;
+      --text-main: #1a1a1a;
+      --text-muted: #666666;
+      --border: #e0e0e0;
+      --brand: #2c2c2c;
+      /* Kallen RIR-värit */
+      --rir-0: #ff4d4d; /* Punainen: 0 varaa */
+      --rir-1: #ffa64d; /* Oranssi: 1 varaa */
+      --rir-2: #4dff4d; /* Vihreä: 2-3 varaa */
+      --rir-3: #4da6ff; /* Sininen: 3-4 varaa */
+    }
+    
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Helvetica Neue', Arial, sans-serif; }
+    body { background-color: var(--bg); color: var(--text-main); line-height: 1.5; }
+    
+    header { background-color: var(--brand); color: white; padding: 1rem; text-align: center; }
+    header h1 { font-size: 1.2rem; font-weight: 500; letter-spacing: 1px; }
+    
+    .container { padding: 1rem; max-width: 600px; margin: 0 auto; }
+    
+    /* Navigointi roolien ja tabien välillä */
+    .tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; }
+    .tab-btn { flex: 1; padding: 0.75rem; border: 1px solid var(--border); background: var(--card-bg); cursor: pointer; border-radius: 4px; font-weight: bold; }
+    .tab-btn.active { background: var(--brand); color: white; border-color: var(--brand); }
+    
+    /* Kortit ja UI-elementit */
+    .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; margin-bottom: 1rem; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+    .card h3 { margin-bottom: 0.5rem; font-size: 1.1rem; }
+    .sub-text { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem; display: block; }
+    
+    input[type="text"], input[type="number"], input[type="date"], select, textarea {
+      width: 100%; padding: 0.75rem; margin-bottom: 1rem; border: 1px solid var(--border); border-radius: 4px; font-size: 1rem;
+    }
+    textarea { resize: vertical; min-height: 80px; }
+    
+    button.primary { width: 100%; padding: 1rem; background-color: var(--brand); color: white; border: none; border-radius: 4px; font-size: 1rem; font-weight: bold; cursor: pointer; margin-top: 1rem; }
+    button.primary:active { opacity: 0.9; }
+    
+    /* RIR-valitsin */
+    .set-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
+    .set-row input[type="number"] { width: 80px; margin-bottom: 0; text-align: center; }
+    .rir-btn { flex: 1; height: 44px; border: 2px solid transparent; border-radius: 4px; font-weight: bold; cursor: pointer; background: #eee; }
+    .rir-btn.r0 { background: var(--rir-0); color: white; }
+    .rir-btn.r1 { background: var(--rir-1); color: white; }
+    .rir-btn.r2 { background: var(--rir-2); color: black; }
+    .rir-btn.r3 { background: var(--rir-3); color: white; }
+    
+    .rir-btn.selected { border: 2px solid #000; transform: scale(1.05); }
+    
+    .add-set-btn { width: 100%; padding: 0.5rem; background: transparent; border: 1px dashed var(--text-muted); color: var(--text-muted); border-radius: 4px; cursor: pointer; margin-bottom: 1rem; }
+    
+    /* Nykytilan piilotus */
+    .view { display: none; }
+    .view.active { display: block; }
+
+    /* Valmentajan taulukot */
+    table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.9rem; }
+    th, td { padding: 0.5rem; border: 1px solid var(--border); text-align: left; }
+    th { background: #f0f0f0; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>VALMENNUS - JERE HÄMÄLÄINEN</h1>
+  </header>
+
+  <div class="container">
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchRole('client')">Asiakas (Kalle)</button>
+      <button class="tab-btn" onclick="switchRole('coach')">Valmentaja</button>
+    </div>
+
+    <!-- ASIAKKAAN NÄKYMÄ -->
+    <div id="client-view" class="view active">
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchClientTab('workout')">Treeni</button>
+        <button class="tab-btn" onclick="switchClientTab('load')">Muu Kuormitus</button>
+      </div>
+
+      <!-- Treenin kirjaus -->
+      <div id="client-workout" class="view active">
+        <div class="card">
+          <label>Viikko:</label>
+          <select id="week-select" onchange="renderExercises()">
+            <option value="32">Viikko 32</option>
+            <option value="33">Viikko 33</option>
+          </select>
+          <label>Päivä:</label>
+          <select id="day-select" onchange="renderExercises()">
+            <option value="Yläkroppa 1">Yläkroppa 1</option>
+            <option value="Alakroppa 1">Alakroppa 1</option>
+          </select>
+          <label>Aamupaino (kg):</label>
+          <input type="number" id="bw-input" step="0.1" placeholder="esim. 68.9">
+        </div>
+
+        <div id="exercises-container"></div>
+      </div>
+
+      <!-- Muun kuormituksen kirjaus (Tanssit jne) -->
+      <div id="client-load" class="view">
+        <div class="card">
+          <h3>Kirjaa tanssit / muu kuormitus</h3>
+          <label>Päivämäärä:</label>
+          <input type="date" id="load-date">
+          <label>Tapahtuma / Paikka:</label>
+          <input type="text" id="load-event" placeholder="esim. Kerhola / Sinitaivas">
+          <label>Kesto (h):</label>
+          <input type="number" id="load-duration" step="0.5" placeholder="esim. 4.5">
+          <label>Kuormittavuus:</label>
+          <select id="load-level">
+            <option value="Kevyt">Kevyt</option>
+            <option value="Keskitaso">Keskitaso</option>
+            <option value="Raskas">Raskas</option>
+            <option value="Helvetin raskas">Helvetin raskas</option>
+          </select>
+          <label>Seuraavan päivän mietteet:</label>
+          <textarea id="load-comments" placeholder="Miltä tuntui seuraavana päivänä?"></textarea>
+          <button class="primary" onclick="saveLoad()">Tallenna kuormitus</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- VALMENTAJAN NÄKYMÄ -->
+    <div id="coach-view" class="view">
+      <div class="card">
+        <h3>Asiakas: Kalle</h3>
+        <p class="sub-text">Toteutuneet treenit</p>
+        <div style="overflow-x: auto;">
+          <table id="coach-workout-table">
+            <thead>
+              <tr>
+                <th>Vko/Päivä</th>
+                <th>Liike</th>
+                <th>Toteuma (Toistot [RIR])</th>
+                <th>Paino</th>
+              </tr>
+            </thead>
+            <tbody id="coach-table-body">
+              <!-- JS täyttää -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Muu kuormitus</h3>
+        <div style="overflow-x: auto;">
+          <table id="coach-load-table">
+            <thead>
+              <tr>
+                <th>Pvm</th>
+                <th>Tapahtuma</th>
+                <th>Kesto/Taso</th>
+                <th>Mietteet</th>
+              </tr>
+            </thead>
+            <tbody id="coach-load-body">
+              <!-- JS täyttää -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <button class="add-set-btn" onclick="clearData()" style="color:red; border-color:red;">Nollaa kaikki testidatat</button>
+    </div>
+
+  </div>
+
+  <script>
+    let appData = { ohjelmat: [], toteutumat: [], kuormitukset: [] };
+
+    // --- Initalisointi & Local Storage -logiikka ---
+    window.onload = function() {
+      initData();
+      renderExercises();
+      renderCoachView();
+      document.getElementById('load-date').valueAsDate = new Date();
+    };
+
+    function initData() {
+      const storedData = localStorage.getItem('kalleAppData');
+      if (storedData) {
+        appData = JSON.parse(storedData);
+      } else {
+        // Alustetaan dokumentin mukaisella testidatalla, jos muisti on tyhjä
+        appData = {
+          ohjelmat: [
+            {viikko: '32', paiva: 'Yläkroppa 1', liike: 'Penkkipunn. +0', tavoite: 'n*47, n*42, n*37'},
+            {viikko: '32', paiva: 'Yläkroppa 1', liike: 'Leuanveto, vasta', tavoite: '2*n*t+v, n*negat. 2s.'},
+            {viikko: '32', paiva: 'Yläkroppa 1', liike: 'Pystyp. laite', tavoite: '3*n*32'},
+            {viikko: '32', paiva: 'Yläkroppa 1', liike: 'Alatalja leveä', tavoite: '3*n*45'},
+            {viikko: '32', paiva: 'Yläkroppa 1', liike: 'Ojentajatalja', tavoite: '2*n*30 stop y+a'},
+            {viikko: '32', paiva: 'Alakroppa 1', liike: 'Jalkakyykky', tavoite: 'n*55, 3*n*47'},
+            {viikko: '32', paiva: 'Alakroppa 1', liike: 'Lantionnosto, laite', tavoite: '3*n*52'}
+          ],
+          toteutumat: [],
+          kuormitukset: []
+        };
+        saveToStorage();
+      }
+    }
+
+    function saveToStorage() {
+      localStorage.setItem('kalleAppData', JSON.stringify(appData));
+    }
+
+    function clearData() {
+      if(confirm('Haluatko varmasti poistaa kaikki tallennetut testitiedot?')) {
+        localStorage.removeItem('kalleAppData');
+        location.reload();
+      }
+    }
+
+    // --- UI Navigointi ---
+    function switchRole(role) {
+      document.getElementById('client-view').classList.remove('active');
+      document.getElementById('coach-view').classList.remove('active');
+      document.getElementById(role + '-view').classList.add('active');
+      
+      document.querySelectorAll('.tabs > .tab-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+
+      if(role === 'coach') renderCoachView();
+    }
+
+    function switchClientTab(tab) {
+      document.getElementById('client-workout').classList.remove('active');
+      document.getElementById('client-load').classList.remove('active');
+      document.getElementById('client-' + tab).classList.add('active');
+      
+      document.querySelectorAll('#client-view > .tabs > .tab-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+    }
+
+    // --- Asiakkaan toiminnot ---
+    function renderExercises() {
+      const container = document.getElementById('exercises-container');
+      container.innerHTML = '';
+      const week = document.getElementById('week-select').value;
+      const day = document.getElementById('day-select').value;
+
+      const exercises = appData.ohjelmat.filter(o => o.viikko == week && o.paiva == day);
+
+      if(exercises.length === 0) {
+        container.innerHTML = '<p class="sub-text">Ei ohjelmoitua treeniä tälle päivälle.</p>';
+        return;
+      }
+
+      exercises.forEach((ex, idx) => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <h3>${ex.liike}</h3>
+          <span class="sub-text">Tavoite: ${ex.tavoite}</span>
+          <div id="sets-${idx}">
+            ${createSetHTML(idx, 0)}
+          </div>
+          <button class="add-set-btn" onclick="addSet(${idx})">+ Lisää sarja</button>
+          <textarea id="comment-${idx}" placeholder="Kommentit (esim. lisäpainot, tuntuma)"></textarea>
+          <button class="primary" onclick="saveExercise('${ex.liike}', ${idx})">Tallenna Liike</button>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function createSetHTML(exIdx, setIdx) {
+      return `
+        <div class="set-row" data-ex="${exIdx}" data-set="${setIdx}">
+          <input type="number" placeholder="Toistot" class="reps-input">
+          <button class="rir-btn r0" onclick="selectRIR(this, 0)">0</button>
+          <button class="rir-btn r1" onclick="selectRIR(this, 1)">1</button>
+          <button class="rir-btn r2" onclick="selectRIR(this, 2)">2-3</button>
+          <button class="rir-btn r3" onclick="selectRIR(this, 3)">3-4</button>
+        </div>
+      `;
+    }
+
+    function addSet(exIdx) {
+      const container = document.getElementById(`sets-${exIdx}`);
+      const setIdx = container.children.length;
+      container.insertAdjacentHTML('beforeend', createSetHTML(exIdx, setIdx));
+    }
+
+    function selectRIR(btn, rirValue) {
+      const row = btn.parentElement;
+      row.querySelectorAll('.rir-btn').forEach(b => b.classList.remove('selected'));
+      row.dataset.rir = rirValue;
+      btn.classList.add('selected');
+    }
+
+    function saveExercise(liike, exIdx) {
+      const viikko = document.getElementById('week-select').value;
+      const paiva = document.getElementById('day-select').value;
+      const paino = document.getElementById('bw-input').value;
+      const kommentti = document.getElementById(`comment-${exIdx}`).value;
+
+      const setRows = document.querySelectorAll(`#sets-${exIdx} .set-row`);
+      let sarjat = [];
+      let valid = true;
+
+      setRows.forEach(row => {
+        const reps = row.querySelector('.reps-input').value;
+        const rir = row.dataset.rir;
+        if (reps && rir !== undefined) {
+          sarjat.push({ reps: reps, rir: rir });
+        } else if (reps || rir !== undefined) {
+          valid = false;
+        }
+      });
+
+      if (!valid || sarjat.length === 0) {
+        alert('Täytä toistot ja valitse väri (RIR) jokaiseen aloitettuun sarjaan.');
+        return;
+      }
+
+      appData.toteutumat.push({
+        viikko: viikko,
+        paiva: paiva,
+        liike: liike,
+        sarjat: sarjat,
+        paino: paino,
+        kommentti: kommentti
+      });
+      
+      saveToStorage();
+      alert(liike + ' tallennettu selaimen muistiin!');
+    }
+
+    function saveLoad() {
+      const pvm = document.getElementById('load-date').value;
+      const tapahtuma = document.getElementById('load-event').value;
+      const kesto = document.getElementById('load-duration').value;
+      const kuormittavuus = document.getElementById('load-level').value;
+      const mietteet = document.getElementById('load-comments').value;
+
+      if(!tapahtuma) { alert('Syötä tapahtuma'); return; }
+
+      appData.kuormitukset.push({
+        pvm: pvm,
+        tapahtuma: tapahtuma,
+        kesto: kesto,
+        kuormittavuus: kuormittavuus,
+        mietteet: mietteet
+      });
+
+      saveToStorage();
+      alert('Kuormitus tallennettu selaimen muistiin!');
+      document.getElementById('load-event').value = '';
+      document.getElementById('load-comments').value = '';
+    }
+
+    // --- Valmentajan toiminnot ---
+    function renderCoachView() {
+      // Treenit
+      const tbodyTreeni = document.getElementById('coach-table-body');
+      tbodyTreeni.innerHTML = '';
+      
+      appData.toteutumat.forEach(row => {
+        let sarjaString = row.sarjat.map(s => {
+          let colorMark = s.rir == 0 ? '🔴' : s.rir == 1 ? '🟠' : s.rir == 2 ? '🟢' : '🔵';
+          return `${s.reps}${colorMark}`;
+        }).join(', ');
+
+        let tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>Vko ${row.viikko}<br><small>${row.paiva}</small></td>
+          <td>${row.liike}<br><small><i>${row.kommentti}</i></small></td>
+          <td>${sarjaString}</td>
+          <td>${row.paino} kg</td>
+        `;
+        tbodyTreeni.appendChild(tr);
+      });
+
+      // Kuormitus
+      const tbodyLoad = document.getElementById('coach-load-body');
+      tbodyLoad.innerHTML = '';
+
+      appData.kuormitukset.forEach(row => {
+        let tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${row.pvm}</td>
+          <td>${row.tapahtuma}</td>
+          <td>${row.kesto}h<br><small>${row.kuormittavuus}</small></td>
+          <td><small>${row.mietteet}</small></td>
+        `;
+        tbodyLoad.appendChild(tr);
+      });
+    }
+  </script>
+</body>
+</html>
