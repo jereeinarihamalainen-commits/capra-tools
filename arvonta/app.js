@@ -11,22 +11,22 @@
 
   const definitions = [
     ['logo', 'Virallinen logo', null, 25, 4, 250, 0, 0, 0],
-    ['kicker', 'Pieni otsikko', 'ARVONTA', 291, 88, 40, 20, 90, 0],
-    ['headline1', 'Pääotsikko 1', 'VOITA', 46, 246, 125, 45, 165, 0],
-    ['headline2', 'Pääotsikko 2', 'PERUSKURSSI', 47, 366, 75, 35, 110, 0],
-    ['headline3', 'Pääotsikko 3', 'SINULLE JA', 48, 463, 61, 30, 100, 0],
-    ['headline4', 'Pääotsikko 4', 'KAVERILLE', 45, 533, 91, 40, 125, 0],
-    ['prize', 'Palkinto', '2 PERUSKURSSIPAIKKAA', 49, 722, 48, 25, 75, 0],
-    ['value', 'Palkinnon arvo', 'ARVO 240 €', 51, 782, 46, 25, 80, 0],
-    ['steps', 'Osallistumisen vaiheet', 'TYKKÄÄ + JAA + KOMMENTOI', 49, 863, 47, 25, 75, 0],
-    ['question', 'Kommentointikehotus', 'Kenet ottaisit mukaan?', 51, 918, 34, 20, 70, 0],
-    ['deadline', 'Päättymispäivä', 'OSALLISTUMINEN PÄÄTTYY 24.11.', 49, 1000, 34, 20, 65, 0],
+    ['kicker', 'Pieni otsikko', 'ARVONTA', 48, 268, 37, 20, 90, 0],
+    ['headline1', 'Pääotsikko 1', 'VOITA', 46, 321, 125, 45, 165, 0],
+    ['headline2', 'Pääotsikko 2', 'PERUSKURSSI', 47, 432, 75, 35, 110, 0],
+    ['headline3', 'Pääotsikko 3', 'SINULLE JA', 48, 542, 61, 30, 100, 0],
+    ['headline4', 'Pääotsikko 4', 'KAVERILLE', 45, 627, 91, 40, 125, 0],
+    ['prize', 'Palkinto', '2 PERUSKURSSIPAIKKAA · VAPAAOTTELU TAI BJJ', 49, 790, 43, 23, 75, 0],
+    ['value', 'Palkinnon arvo', 'ARVO YHTEENSÄ 240 €', 51, 845, 40, 25, 80, 0],
+    ['steps', 'Osallistumisen vaiheet', 'SEURAA + KOMMENTOI', 49, 912, 45, 25, 75, 0],
+    ['question', 'Kommentointikehotus', 'Merkitse kaveri, jonka kanssa aloittaisit.', 51, 959, 29, 20, 70, 0],
+    ['deadline', 'Päättymispäivä', 'ARVONTA PÄÄTTYY 24.10.', 49, 1021, 35, 20, 65, 0],
   ];
   const fresh = () => Object.fromEntries(definitions.map(([id,,text,x,y,size,min,max]) => [id,{text,x,y,size,min,max,visible:true}]));
-  const state = {layers:fresh(),selected:'headline1',photoSrc:defaultPhoto,photoX:0,photoY:0,zoom:1,shade:.08,accent:'#c8ae4d',paper:'#f6f4ef'};
+  const state = {layers:fresh(),selected:'headline1',photoSrc:defaultPhoto,photoX:0,photoY:0,zoom:1,shade:.03,accent:'#c8ae4d',paper:'#f6f4ef'};
   let drag = null;
   let hitBoxes = [];
-  const imageBox = {x:565,y:0,w:515,h:688};
+  const imageBox = {x:565,y:0,w:515,h:768};
   const textIds = definitions.filter(d => d[2] !== null).map(d => d[0]);
 
   function status(message){$('status').textContent=message}
@@ -41,11 +41,11 @@
     if(photo.complete&&photo.naturalWidth){
       const scale=Math.max(imageBox.w/photo.naturalWidth,imageBox.h/photo.naturalHeight)*state.zoom;
       const dw=photo.naturalWidth*scale,dh=photo.naturalHeight*scale;
-      ctx.drawImage(photo,imageBox.x+(imageBox.w-dw)/2+state.photoX,imageBox.y+(imageBox.h-dh)/2+state.photoY,dw,dh);
+      ctx.save();ctx.filter='brightness(1.07) contrast(1.025) saturate(.96)';ctx.drawImage(photo,imageBox.x+(imageBox.w-dw)/2+state.photoX,imageBox.y+(imageBox.h-dh)/2+state.photoY,dw,dh);ctx.restore();
     }
     ctx.fillStyle=`rgba(0,0,0,${state.shade})`;ctx.fillRect(imageBox.x,imageBox.y,imageBox.w,imageBox.h);
     const fade=ctx.createLinearGradient(imageBox.x,0,imageBox.x+imageBox.w*.35,0);
-    fade.addColorStop(0,'rgba(0,0,0,.86)');fade.addColorStop(1,'rgba(0,0,0,0)');
+    fade.addColorStop(0,'rgba(0,0,0,.78)');fade.addColorStop(1,'rgba(0,0,0,0)');
     ctx.fillStyle=fade;ctx.fillRect(imageBox.x,imageBox.y,imageBox.w*.35,imageBox.h);
     ctx.restore();
   }
@@ -70,10 +70,10 @@
     hitBoxes=[];
     ctx.fillStyle='#000000';ctx.fillRect(0,0,W,H);
     drawImageCover();
-    ctx.fillStyle=state.accent;ctx.fillRect(imageBox.x-8,0,8,688);ctx.fillRect(0,688,W,9);
-    ctx.fillStyle=state.paper;ctx.fillRect(0,697,W,278);
-    ctx.fillStyle='#cfcfc5';ctx.fillRect(48,847,984,2);
-    ctx.fillStyle='#000000';ctx.fillRect(0,975,W,105);
+    ctx.fillStyle=state.accent;ctx.fillRect(imageBox.x-8,0,8,768);ctx.fillRect(0,768,W,9);
+    ctx.fillStyle=state.paper;ctx.fillRect(0,777,W,226);
+    ctx.fillStyle='#cfcfc5';ctx.fillRect(48,906,984,2);
+    ctx.fillStyle='#000000';ctx.fillRect(0,1003,W,77);
     definitions.forEach(([id])=>drawLayer(id));
     if(guides){const box=hitBoxes.find(b=>b.id===state.selected);if(box){ctx.strokeStyle=state.accent;ctx.lineWidth=2;ctx.setLineDash([8,7]);ctx.strokeRect(box.x,box.y,box.w,box.h);ctx.setLineDash([])}}
   }
