@@ -1,12 +1,14 @@
-# Peruskurssin arvonta
+# Capra Combat · peruskurssin arvonta
 
-Capra Toolsin selaimessa toimiva Instagram-mainoseditori. Avaa `index.html` tai julkaistun Capra Tools -sivun `/arvonta/`-osoite.
+Päivitetty 14.10.2026. Avaa [muokattava arvontamainos](https://jereeinarihamalainen-commits.github.io/capra-tools/arvonta/).
 
-- Muokkaa otsikko, palkinto, osallistumisohje ja päättymispäivä Tekstit-kohdassa.
-- Vaihda kuva ja säädä rajausta vetämällä kuvaa esikatselussa tai käyttämällä koon liukusäädintä.
-- Valitse tekstielementti esikatselusta, siirrä sitä, muuta kokoa tai piilota se.
-- Lataa 1080 × 1080 PNG julkaistavaksi.
-- Tallenna JSON-projekti, jos haluat jatkaa myöhemmin samoilla teksteillä, sijainneilla ja omalla kuvalla. Avaa se editorissa Avaa tallennettu projekti -toiminnolla.
+- 1080 × 1080 Instagram-postaus, sama alkuperäinen oletuskuva **default.webp** (henkilöiden yksityiskohtia ei luoda uudelleen).
+- Isompi kamppailukuva ja pienempi alaosa.
+- ARVONTA · VOITA PERUSKURSSI SINULLE JA KAVERILLE.
+- Palkinto 2 peruskurssipaikkaa (vapaaottelu tai BJJ), yhteisarvo 240 €.
+- Osallistumisohje SEURAA + KOMMENTOI ja kaverin merkitseminen kommenttiin.
+- Oletuspäivä 24.10. (varmista se ennen julkaisua).
+- Kaikkia tekstikenttiä, kokoa, sijaintia ja näkyvyyttä voi säätää.
+- Kuvan voi vaihtaa; PNG-vienti sekä JSON-projektin tallennus/avaus toimivat editorissa.
 
-Oletuspäivä on `24.11.` ilman viikonpäivää, koska 24.11.2026 on tiistai. Päivämäärä on muokattavissa ennen julkaisua.
-
+Huom: **valmis-mainos.png** on vanha ennen päivitystä luotu vientitiedosto. **Ajantasainen PNG kannattaa viedä editorin Lataa valmis PNG -painikkeella**, jolloin tallentuu juuri uudistettu asettelu. Tarkista aina arvonnan ehdot ja julkaisun kuvateksti.
