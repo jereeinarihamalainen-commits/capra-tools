@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="fi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0c0a">
+  <title>Vyökorotusgeneraattori · Capra Tools</title>
+  <link rel="stylesheet" href="../vendor/capra-fonts.css">
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #0b0c0a; color: #f2efe7; font: 16px Inter, system-ui, sans-serif; }
+    main { max-width: 930px; margin: auto; padding: 24px 18px; }
+    a { color: #d3ba60; }
+    h1 { font-size: clamp(29px, 6vw, 44px); letter-spacing: -.04em; margin: 14px 0 22px; }
+    .editor { display: grid; gap: 20px; align-items: start; }
+    .controls { display: grid; gap: 14px; padding: 18px; border: 1px solid #30342b; border-radius: 12px; background: #151713; }
+    label { display: grid; gap: 6px; font-size: 14px; font-weight: 650; }
+    input, select, button { font: inherit; width: 100%; min-height: 44px; }
+    input:not([type="range"]), select, button { padding: 9px; color: inherit; background: #242820; border: 1px solid #474c3e; border-radius: 6px; }
+    input[type="range"] { accent-color: #d3ba60; min-height: 30px; margin: 0; }
+    button { background: #d3ba60; color: #12130e; font-weight: 750; cursor: pointer; }
+    button:disabled { opacity: .5; cursor: default; }
+    canvas { display: block; width: 100%; height: auto; border: 1px solid #30342b; }
+    #status { margin: 0; font-size: 14px; }
+    #status:empty { display: none; }
+    @media (min-width: 720px) { .editor { grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); } }
+  </style>
+</head>
+<body>
+  <main>
+    <a href="../">← Capra Tools</a>
+    <h1>Vyökorotusgeneraattori</h1>
+    <div class="editor">
+      <div class="controls">
+        <label>Kuva <input id="photo" type="file" accept="image/*"></label>
+        <label>Nimi <input id="name" type="text" maxlength="70" autocomplete="off" placeholder="Etunimi Sukunimi"></label>
+        <label>Vyön väri
+          <select id="belt">
+            <option value="#f0eee6">Valkoinen</option>
+            <option value="#a0a4a8">Harmaa</option>
+            <option value="#e7c848">Keltainen</option>
+            <option value="#e8843d">Oranssi</option>
+            <option value="#519763">Vihreä</option>
+            <option value="#366fd5" selected>Sininen</option>
+            <option value="#8b55bd">Violetti</option>
+            <option value="#996144">Ruskea</option>
+            <option value="#111111">Musta</option>
+            <option value="#b93336">Punainen</option>
+          </select>
+        </label>
+        <label>Zoomaus <input id="zoom" type="range" min="1" max="2.5" step=".01" value="1"></label>
+        <label>Rajaus vaakasuunnassa <input id="horizontal" type="range" min="0" max="100" value="50"></label>
+        <label>Rajaus pystysuunnassa <input id="vertical" type="range" min="0" max="100" value="65"></label>
+        <button id="save" type="button" disabled>Lataa PNG · 1080 × 1350</button>
+        <p id="status" role="status"></p>
+      </div>
+      <canvas id="preview" width="1080" height="1350" aria-label="Vyökorotuspostauksen esikatselu"></canvas>
+    </div>
+  </main>
+  <script>
+    const byId = id => document.getElementById(id);
+    const photo = byId('photo');
+    const name = byId('name');
+    const belt = byId('belt');
+    const zoom = byId('zoom');
+    const horizontal = byId('horizontal');
+    const vertical = byId('vertical');
+    const save = byId('save');
+    const status = byId('status');
+    const canvas = byId('preview');
+    const ctx = canvas.getContext('2d');
+    const { width, height } = canvas;
+    const logo = new Image();
+    let picture;
+    let selection = 0;
+    let loadingPhoto = false;
+
+    function nameText() {
+      return name.value.trim().replace(/\s+/g, ' ').toLocaleUpperCase('fi') || 'ETUNIMI SUKUNIMI';
+    }
+
+    function draw() {
+      ctx.fillStyle = '#171a15';
+      ctx.fillRect(0, 0, width, height);
+      if (picture) {
+        const scale = Math.max(width / picture.naturalWidth, height / picture.naturalHeight) * Number(zoom.value);
+        const photoWidth = picture.naturalWidth * scale;
+        const photoHeight = picture.naturalHeight * scale;
+        ctx.drawImage(picture, (width - photoWidth) * horizontal.value / 100,
+          (height - photoHeight) * vertical.value / 100, photoWidth, photoHeight);
+      }
+
+      const topFade = ctx.createLinearGradient(0, 0, 0, 250);
+      topFade.addColorStop(0, 'rgba(0,0,0,.68)');
+      topFade.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = topFade;
+      ctx.fillRect(0, 0, width, 250);
+
+      const bottomFade = ctx.createLinearGradient(0, 915, 0, height);
+      bottomFade.addColorStop(0, 'rgba(0,0,0,0)');
+      bottomFade.addColorStop(.7, 'rgba(0,0,0,.75)');
+      bottomFade.addColorStop(1, 'rgba(0,0,0,.94)');
+      ctx.fillStyle = bottomFade;
+      ctx.fillRect(0, 915, width, height - 915);
+
+      if (logo.naturalWidth) {
+        ctx.drawImage(logo, 58, 48, 96, 96 * logo.naturalHeight / logo.naturalWidth);
+      }
+
+      const text = nameText();
+      let size = 94;
+      ctx.font = `800 ${size}px "Barlow Condensed", sans-serif`;
+      const availableWidth = width - 116;
+      if (ctx.measureText(text).width > availableWidth) {
+        size *= availableWidth / ctx.measureText(text).width;
+        ctx.font = `800 ${Math.floor(size)}px "Barlow Condensed", sans-serif`;
+      }
+      ctx.fillStyle = '#f6f3eb';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'alphabetic';
+      ctx.fillText(text, width / 2, 1195, availableWidth);
+
+      ctx.fillStyle = belt.value;
+      ctx.fillRect(260, 1235, 560, 15);
+      if (belt.value === '#111111') {
+        ctx.strokeStyle = '#94958e';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(260, 1235, 560, 15);
+      }
+
+      save.disabled = loadingPhoto || !picture || !name.value.trim() || !logo.naturalWidth;
+    }
+
+    photo.addEventListener('change', async () => {
+      const file = photo.files[0];
+      if (!file) return;
+      const currentSelection = ++selection;
+      const url = URL.createObjectURL(file);
+      loadingPhoto = true;
+      status.textContent = '';
+      draw();
+
+      try {
+        const nextPicture = new Image();
+        nextPicture.src = url;
+        await nextPicture.decode();
+        if (currentSelection !== selection) return;
+        picture = nextPicture;
+        zoom.value = '1';
+        horizontal.value = '50';
+        vertical.value = '65';
+      } catch {
+        if (currentSelection === selection) {
+          picture = undefined;
+          photo.value = '';
+          status.textContent = 'Kuvaa ei voitu avata. Kokeile JPG- tai PNG-kuvaa.';
+        }
+      } finally {
+        URL.revokeObjectURL(url);
+        if (currentSelection === selection) {
+          loadingPhoto = false;
+          draw();
+        }
+      }
+    });
+
+    for (const control of [name, belt, zoom, horizontal, vertical]) {
+      control.addEventListener('input', draw);
+    }
+
+    save.addEventListener('click', async () => {
+      const filename = name.value.trim().toLocaleLowerCase('fi')
+        .replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-|-$/g, '') || 'vyokorotus';
+      await loadFont();
+      if (save.disabled) return;
+      canvas.toBlob(blob => {
+        if (!blob) {
+          status.textContent = 'PNG-tiedoston luonti epäonnistui.';
+          return;
+        }
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `capra-${filename}.png`;
+        document.body.append(link);
+        link.click();
+        link.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 30000);
+      }, 'image/png');
+    });
+
+    async function loadFont() {
+      try {
+        await document.fonts.load('800 94px "Barlow Condensed"', nameText());
+      } finally {
+        draw();
+      }
+    }
+
+    logo.addEventListener('load', draw);
+    logo.addEventListener('error', () => {
+      status.textContent = 'Capran logoa ei voitu ladata. Päivitä sivu ja yritä uudelleen.';
+    });
+    logo.src = '../assets/capra-logo.png';
+    draw();
+    loadFont().catch(draw);
+  </script>
+</body>
+</html>
